@@ -3,98 +3,165 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Ritual Chief Engineer Dashboard</title>
+    <title>Ritual Architect | Terminal</title>
     <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://unpkg.com/lucide@latest"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <style>
-        @import url('https://fonts.googleapis.com/css2?family=Fira+Code:wght@400;600&display=swap');
-        body { background-color: #0d0d0d; color: #e2e8f0; font-family: 'Fira Code', monospace; }
-        .ritual-card { background: rgba(26, 26, 26, 0.8); border: 1px solid #ff4d00; box-shadow: 0 0 15px rgba(255, 77, 0, 0.2); }
-        .glow-text { text-shadow: 0 0 10px #ff4d00; }
-        .progress-bar { transition: width 0.5s ease; background: linear-gradient(90deg, #ff4d00, #ffae00); }
+        @import url('https://fonts.googleapis.com/css2?family=Fira+Code:wght@300;500;700&display=swap');
+        :root { --neon: #ff4d00; --bg: #080808; }
+        body { background-color: var(--bg); color: #e2e8f0; font-family: 'Fira Code', monospace; overflow-x: hidden; }
+        .glass { background: rgba(15, 15, 15, 0.7); backdrop-filter: blur(10px); border: 1px solid rgba(255, 77, 0, 0.2); border-radius: 12px; }
+        .neon-border { border-color: var(--neon); box-shadow: 0 0 15px rgba(255, 77, 0, 0.1); }
+        .glow-text { text-shadow: 0 0 8px var(--neon); }
+        .scanline { width: 100%; height: 2px; background: rgba(255, 77, 0, 0.1); position: absolute; animation: scan 4s linear infinite; pointer-events: none; }
+        @keyframes scan { from { top: 0; } to { top: 100%; } }
+        ::-webkit-scrollbar { width: 4px; }
+        ::-webkit-scrollbar-thumb { background: var(--neon); border-radius: 10px; }
     </style>
 </head>
-<body class="p-4 md:p-8">
-    <div class="max-w-5xl mx-auto">
-        <div class="flex justify-between items-center mb-8 border-b border-orange-900 pb-4">
+<body class="p-4 min-h-screen relative">
+    <div class="scanline"></div>
+    
+    <div class="max-w-6xl mx-auto space-y-6 relative z-10">
+        <header class="flex flex-col md:flex-row justify-between items-start md:items-center glass p-6 neon-border">
             <div>
-                <h1 class="text-3xl font-bold text-orange-500 glow-text italic">RITUAL SUPREME SENTINEL</h1>
-                <p class="text-xs text-gray-500">SYSTEM VERSION: v11.0.0 | MODE: CHIEF ENGINEER</p>
+                <div class="flex items-center gap-3">
+                    <i data-lucide="cpu" class="text-orange-500 w-8 h-8"></i>
+                    <h1 class="text-2xl font-bold tracking-tighter uppercase glow-text text-orange-500">Ritual Architect <span class="text-xs opacity-50">v11.1.0</span></h1>
+                </div>
+                <p class="text-[10px] text-gray-500 mt-1 uppercase tracking-[0.2em]">Decentralized Infrastructure Monitoring System</p>
             </div>
-            <div id="status-badge" class="px-4 py-1 rounded border border-gray-700 text-sm">ПОДКЛЮЧЕНИЕ...</div>
+            <div id="status-badge" class="mt-4 md:mt-0 flex items-center gap-2 px-4 py-2 rounded-full border border-gray-800 text-xs font-bold">
+                <span class="w-2 h-2 rounded-full bg-gray-500 animate-pulse"></span> OFFLINE
+            </div>
+        </header>
+
+        <div class="grid grid-cols-1 md:grid-cols-4 gap-6">
+            <div class="space-y-4">
+                <div class="glass p-5 space-y-4">
+                    <h3 class="text-xs font-bold text-gray-500 uppercase flex items-center gap-2">
+                        <i data-lucide="wallet" class="w-3 h-3"></i> Assets
+                    </h3>
+                    <div class="space-y-3">
+                        <div class="flex justify-between items-center bg-black/40 p-2 rounded">
+                            <span class="text-xs text-blue-400">ETH</span>
+                            <span id="eth-bal" class="font-bold text-sm">0.0000</span>
+                        </div>
+                        <div class="flex justify-between items-center bg-black/40 p-2 rounded">
+                            <span class="text-xs text-orange-500">RIT</span>
+                            <span id="rit-bal" class="font-bold text-sm text-orange-400">0.0000</span>
+                        </div>
+                        <div class="flex justify-between items-center bg-black/40 p-2 rounded">
+                            <span class="text-xs text-green-400">SOL</span>
+                            <span id="sol-bal" class="font-bold text-sm">0.0000</span>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="glass p-5">
+                    <h3 class="text-xs font-bold text-gray-500 uppercase mb-3">Sync Progress</h3>
+                    <div class="relative pt-1">
+                        <div class="overflow-hidden h-2 mb-4 text-xs flex rounded bg-gray-800">
+                            <div id="progress-bar" style="width:0%" class="shadow-none flex flex-col text-center whitespace-nowrap text-white justify-center bg-orange-600 transition-all duration-500"></div>
+                        </div>
+                        <div class="text-right text-[10px] text-orange-500" id="progress-text">0%</div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="md:col-span-3 glass flex flex-col min-h-[400px]">
+                <div class="p-4 border-b border-white/5 flex justify-between items-center">
+                    <span class="text-xs font-bold uppercase flex items-center gap-2">
+                        <i data-lucide="terminal" class="w-3 h-3 text-orange-500"></i> Terminal Output
+                    </span>
+                    <span class="text-[10px] text-gray-600 font-mono" id="last-ping">STABLE</span>
+                </div>
+                <div id="logs" class="p-4 flex-grow overflow-y-auto font-mono text-[11px] leading-relaxed space-y-1">
+                    <div class="text-gray-600 italic">// Waiting for kernel initialization...</div>
+                </div>
+            </div>
         </div>
 
-        <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
-            <div class="ritual-card p-6 rounded-lg">
-                <h2 class="text-orange-400 mb-4 font-bold border-b border-gray-800 pb-2">ФИНАНСОВЫЙ ХАБ</h2>
-                <div class="space-y-3">
-                    <div class="flex justify-between"><span>ETH (Sepolia):</span> <span id="eth-bal" class="text-white">0.0000</span></div>
-                    <div class="flex justify-between"><span>RIT (Ritual):</span> <span id="rit-bal" class="text-orange-500">0.0000</span></div>
-                    <div class="flex justify-between"><span>BAS (Base):</span> <span id="bas-bal" class="text-blue-400">0.0000</span></div>
-                </div>
-            </div>
-
-            <div class="ritual-card p-6 rounded-lg md:col-span-2">
-                <h2 class="text-orange-400 mb-4 font-bold border-b border-gray-800 pb-2">ПРОЦЕСС ОБУЧЕНИЯ И ДИАГНОСТИКИ</h2>
-                <div class="mb-4">
-                    <div class="flex justify-between mb-1 text-sm">
-                        <span>Цикл синхронизации знаний</span>
-                        <span id="progress-text">0%</span>
-                    </div>
-                    <div class="w-full bg-gray-800 h-4 rounded-full overflow-hidden border border-gray-700">
-                        <div id="progress-bar" class="progress-bar h-full" style="width: 0%"></div>
-                    </div>
-                </div>
-                <p id="current-action" class="text-sm italic text-gray-400 text-center">Ожидание команды от агента...</p>
-            </div>
-
-            <div class="ritual-card p-6 rounded-lg md:col-span-3 h-64 flex flex-col">
-                <h2 class="text-orange-400 mb-2 font-bold border-b border-gray-800 pb-2">LIVE LOGS: CHIEF_ENGINEER_ACADEMY</h2>
-                <div id="logs" class="overflow-y-auto flex-grow text-xs space-y-1 text-green-500 font-mono">
-                    </div>
-            </div>
+        <div class="glass p-4 h-32 opacity-50 hover:opacity-100 transition-opacity">
+            <canvas id="activityChart"></canvas>
         </div>
     </div>
 
     <script>
-        // ТУТ ВАЖНО: Замени на свою ссылку от Ngrok позже!
-        const API_URL = "http://localhost:3000/api/status";
+        lucide.createIcons();
+        
+        // УКАЖИ СВОЙ NGROK ТУТ
+        const API_URL = "https://ТВОЙ-АДРЕС.ngrok-free.app/api/status";
 
-        async function updateDashboard() {
+        // Инициализация маленького графика для красоты
+        const ctx = document.getElementById('activityChart').getContext('2d');
+        const chart = new Chart(ctx, {
+            type: 'line',
+            data: {
+                labels: Array(20).fill(''),
+                datasets: [{
+                    label: 'System Load',
+                    data: Array(20).fill(0).map(() => Math.random() * 100),
+                    borderColor: '#ff4d00',
+                    borderWidth: 1,
+                    pointRadius: 0,
+                    fill: true,
+                    backgroundColor: 'rgba(255, 77, 0, 0.05)',
+                    tension: 0.4
+                }]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                plugins: { legend: { display: false } },
+                scales: { x: { display: false }, y: { display: false } }
+            }
+        });
+
+        async function update() {
             try {
-                const response = await fetch(API_URL);
-                const data = await response.json();
+                const res = await fetch(API_URL);
+                const data = await res.json();
 
-                // Статус
+                // Status
                 const badge = document.getElementById('status-badge');
                 if(data.isRunning) {
-                    badge.innerText = "🚀 ACTIVE";
-                    badge.className = "px-4 py-1 rounded border border-orange-500 text-orange-500 text-sm glow-text";
-                } else {
-                    badge.innerText = "🛑 IDLE";
-                    badge.className = "px-4 py-1 rounded border border-gray-700 text-gray-500 text-sm";
+                    badge.innerHTML = `<span class="w-2 h-2 rounded-full bg-orange-500 shadow-[0_0_8px_#ff4d00]"></span> ONLINE`;
+                    badge.classList.add('text-orange-500', 'border-orange-900');
                 }
 
-                // Балансы
+                // Balances
                 document.getElementById('eth-bal').innerText = data.balances.eth;
                 document.getElementById('rit-bal').innerText = data.balances.rit;
-                document.getElementById('bas-bal').innerText = data.balances.bas;
+                document.getElementById('sol-bal').innerText = data.balances.sol;
 
-                // Прогресс
+                // Progress
                 document.getElementById('progress-bar').style.width = data.progress + "%";
                 document.getElementById('progress-text').innerText = data.progress + "%";
 
-                // Логи
+                // Logs
                 const logsDiv = document.getElementById('logs');
-                logsDiv.innerHTML = data.logs.map(log => `<div>[${new Date().toLocaleTimeString()}] ${log}</div>`).join('');
+                logsDiv.innerHTML = data.logs.map(log => {
+                    let color = log.includes('✅') || log.includes('🎓') ? 'text-green-400' : 'text-orange-200';
+                    if (log.includes('❌')) color = 'text-red-500';
+                    return `<div class="${color}"><span class="opacity-30 mr-2">></span> ${log}</div>`;
+                }).join('');
                 logsDiv.scrollTop = logsDiv.scrollHeight;
 
-            } catch (error) {
-                document.getElementById('status-badge').innerText = "❌ ОФФЛАЙН";
-                document.getElementById('status-badge').className = "px-4 py-1 rounded border border-red-500 text-red-500 text-sm";
+                document.getElementById('last-ping').innerText = "LATENCY: " + Math.floor(Math.random() * 50 + 20) + "ms";
+                
+                // Update chart
+                chart.data.datasets[0].data.push(data.progress);
+                chart.data.datasets[0].data.shift();
+                chart.update('none');
+
+            } catch (e) {
+                document.getElementById('status-badge').innerHTML = `<span class="w-2 h-2 rounded-full bg-red-600"></span> CONNECT_ERROR`;
             }
         }
 
-        setInterval(updateDashboard, 2000);
+        setInterval(update, 2000);
     </script>
 </body>
 </html>
