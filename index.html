@@ -3,149 +3,188 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>RITUAL | TERMINAL</title>
+    <title>Ritual Teacher | AI Control</title>
     <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Fira+Code:wght@400;600&display=swap" rel="stylesheet">
     <style>
-        @import url('https://fonts.googleapis.com/css2?family=Space+Mono:wght@400;700&display=swap');
-        
-        :root {
-            --neon-blue: #00f3ff;
-            --neon-purple: #bc13fe;
-            --dark-bg: #050505;
-        }
-
         body {
-            background-color: var(--dark-bg);
-            color: #fff;
-            font-family: 'Space Mono', monospace;
-            background-image: 
-                linear-gradient(rgba(0, 243, 255, 0.05) 1px, transparent 1px),
-                linear-gradient(90deg, rgba(0, 243, 255, 0.05) 1px, transparent 1px);
-            background-size: 30px 30px;
+            background-color: #0a0a0c;
+            color: #d1d5db;
+            font-family: 'Fira Code', monospace;
         }
-
-        .cyber-card {
-            background: rgba(15, 15, 15, 0.9);
-            border: 1px solid #333;
-            position: relative;
-            transition: all 0.3s ease;
+        .panel {
+            background: rgba(23, 23, 26, 0.8);
+            border: 1px solid #2d2d33;
+            border-radius: 12px;
         }
-
-        .cyber-card:hover {
-            border-color: var(--neon-blue);
-            box-shadow: 0 0 15px rgba(0, 243, 255, 0.2);
+        .neon-text { text-shadow: 0 0 10px rgba(96, 165, 250, 0.5); }
+        .progress-bar {
+            height: 6px;
+            background: #1f1f23;
+            border-radius: 3px;
+            overflow: hidden;
         }
-
-        .status-glitch {
-            text-shadow: 2px 2px var(--neon-purple);
-            animation: glitch 3s infinite;
-        }
-
-        @keyframes glitch {
-            0% { transform: translate(0); }
-            2% { transform: translate(-2px, 2px); }
-            4% { transform: translate(2px, -2px); }
-            6% { transform: translate(0); }
-        }
-
-        .bar-fill {
+        .progress-fill {
             height: 100%;
-            background: linear-gradient(90deg, var(--neon-purple), var(--neon-blue));
-            box-shadow: 0 0 10px var(--neon-blue);
-            transition: width 1s ease-in-out;
+            background: linear-gradient(90deg, #3b82f6, #8b5cf6);
+            width: 45%; /* Пример прогресса */
+        }
+        textarea {
+            background: #111113;
+            border: 1px solid #2d2d33;
+            color: #9ca3af;
+            resize: none;
+        }
+        textarea:focus {
+            border-color: #3b82f6;
+            outline: none;
+        }
+        .btn-action {
+            background: #3b82f6;
+            color: white;
+            transition: all 0.2s;
+        }
+        .btn-action:hover {
+            background: #2563eb;
+            transform: translateY(-1px);
         }
     </style>
 </head>
-<body class="p-6">
+<body class="p-4 md:p-10">
     <div class="max-w-6xl mx-auto">
-        <!-- TOP NAV -->
-        <div class="flex justify-between items-center border-b border-zinc-800 pb-4 mb-8">
-            <div class="flex items-center gap-4">
-                <div class="w-10 h-10 bg-zinc-900 border border-zinc-700 flex items-center justify-center font-bold text-cyan-400">R</div>
-                <div>
-                    <h1 class="text-xl font-bold tracking-tighter uppercase status-glitch">Ritual Node Operator</h1>
-                    <p class="text-[10px] text-zinc-500 font-mono">ENCRYPTED_STREAM_V2.4</p>
+        
+        <!-- HEADER -->
+        <header class="flex flex-col md:flex-row justify-between items-start md:items-center mb-8 border-b border-zinc-800 pb-6">
+            <div>
+                <h1 class="text-3xl font-bold text-white neon-text">Ritual <span class="text-blue-500">Teacher</span></h1>
+                <p class="text-zinc-500 text-sm mt-1">AI Agent Learning & Validation System</p>
+            </div>
+            <div class="flex items-center gap-4 mt-4 md:mt-0">
+                <div class="text-right">
+                    <p class="text-[10px] text-zinc-500 uppercase tracking-widest">Network Status</p>
+                    <p id="status-text" class="text-xs text-green-500 font-bold uppercase">Online • 0.0001 ETH</p>
+                </div>
+                <div class="w-10 h-10 rounded-full bg-blue-500/10 border border-blue-500/50 flex items-center justify-center">
+                    <div class="w-2 h-2 rounded-full bg-blue-500 animate-pulse"></div>
                 </div>
             </div>
-            <div class="text-right">
-                <div id="status-container" class="flex items-center gap-2 px-3 py-1 bg-zinc-900 border border-zinc-800 rounded">
-                    <div id="status-dot" class="w-2 h-2 rounded-full bg-red-600"></div>
-                    <span id="status-text" class="text-[10px] uppercase text-zinc-400">Offline</span>
+        </header>
+
+        <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
+            
+            <!-- COLUMN 1: TRAINING -->
+            <div class="lg:col-span-1 space-y-6">
+                <div class="panel p-6">
+                    <h2 class="text-white text-sm font-bold uppercase mb-4 flex items-center gap-2">
+                        <span class="w-2 h-2 bg-purple-500 rounded-full"></span> AI Training Lab
+                    </h2>
+                    <div class="space-y-4">
+                        <div class="bg-black/40 p-4 rounded-lg">
+                            <p class="text-[10px] text-zinc-500 mb-2 uppercase">Learning: Agent_Model_v2</p>
+                            <div class="progress-bar mb-2"><div class="progress-fill" id="training-progress"></div></div>
+                            <div class="flex justify-between text-[10px]">
+                                <span id="training-percent">45% Complete</span>
+                                <span class="text-zinc-600 italic">2.4 hours left</span>
+                            </div>
+                        </div>
+                        <button class="w-full py-2 border border-zinc-700 rounded text-[10px] uppercase hover:bg-zinc-800 transition">Deploy New Trainee</button>
+                    </div>
+                </div>
+
+                <div class="panel p-6">
+                    <h3 class="text-zinc-400 text-[10px] font-bold uppercase mb-4">Node Resources</h3>
+                    <div class="flex justify-between items-center mb-2">
+                        <span class="text-xs">ETH Balance</span>
+                        <span id="eth-balance" class="text-blue-400 font-bold text-sm">0.1234</span>
+                    </div>
+                    <div class="flex justify-between items-center">
+                        <span class="text-xs">CPU Load</span>
+                        <span class="text-zinc-400 text-sm">12%</span>
+                    </div>
                 </div>
             </div>
-        </div>
 
-        <!-- MAIN DATA -->
-        <div class="grid grid-cols-1 md:grid-cols-4 gap-4 mb-8">
-            <div class="cyber-card p-4 col-span-2">
-                <p class="text-zinc-500 text-[10px] uppercase mb-1">Available Liquidity</p>
-                <div class="text-4xl font-bold text-cyan-400"><span id="eth-balance">0.000</span> <span class="text-lg text-zinc-600">ETH</span></div>
-            </div>
-            <div class="cyber-card p-4">
-                <p class="text-zinc-500 text-[10px] uppercase mb-1">Staked Assets</p>
-                <div class="text-2xl font-bold text-purple-500"><span id="ritual-balance">0.0</span> <span class="text-sm">RIT</span></div>
-            </div>
-            <div class="cyber-card p-4">
-                <p class="text-zinc-500 text-[10px] uppercase mb-1">Last Update</p>
-                <div id="last-update" class="text-xl font-bold text-zinc-300">--:--:--</div>
-            </div>
-        </div>
+            <!-- COLUMN 2 & 3: INTERACTION -->
+            <div class="lg:col-span-2 space-y-6">
+                <!-- AI Content Checker -->
+                <div class="panel p-6">
+                    <h2 class="text-white text-sm font-bold uppercase mb-4">AI Content Validator</h2>
+                    <div class="space-y-4">
+                        <p class="text-xs text-zinc-500">Вставьте текст или URL для анализа на предмет использования ИИ-генерации:</p>
+                        <textarea id="ai-input" class="w-full h-32 p-4 rounded-lg text-sm" placeholder="Введите контент для проверки..."></textarea>
+                        <div class="flex gap-4">
+                            <button onclick="checkAI('text')" class="flex-1 btn-action py-3 rounded-lg font-bold text-xs uppercase tracking-wider">Проверить текст</button>
+                            <button onclick="checkAI('content')" class="flex-1 border border-zinc-700 py-3 rounded-lg font-bold text-xs uppercase tracking-wider hover:bg-zinc-800">Проверить файл</button>
+                        </div>
+                    </div>
+                    <!-- Result Placeholder -->
+                    <div id="ai-result" class="hidden mt-6 p-4 bg-blue-500/5 border border-blue-500/20 rounded-lg">
+                        <div class="flex justify-between items-center">
+                            <span class="text-xs uppercase">Результат анализа:</span>
+                            <span class="text-blue-400 font-bold text-sm" id="ai-score">--</span>
+                        </div>
+                    </div>
+                </div>
 
-        <!-- CONSOLE -->
-        <div class="cyber-card rounded-none overflow-hidden">
-            <div class="bg-zinc-900 px-4 py-1 text-[10px] text-zinc-500 border-b border-zinc-800 uppercase flex justify-between">
-                <span>System Console</span>
-                <span class="animate-pulse">● Live Recording</span>
+                <!-- Console -->
+                <div class="panel overflow-hidden">
+                    <div class="bg-zinc-900/50 px-4 py-2 border-b border-zinc-800 text-[10px] text-zinc-500 flex justify-between">
+                        <span>Ritual Network Logs</span>
+                        <span id="last-sync">Last sync: --:--:--</span>
+                    </div>
+                    <div id="console" class="h-40 p-4 font-mono text-[10px] text-zinc-500 overflow-y-auto space-y-1">
+                        <p>> Ritual Teacher online and ready.</p>
+                    </div>
+                </div>
             </div>
-            <div id="console" class="h-64 p-4 overflow-y-auto font-mono text-[11px] text-cyan-500/80 space-y-1">
-                <p>> Initializing ritual link...</p>
-            </div>
-        </div>
 
-        <div class="mt-4 flex gap-4 text-[9px] text-zinc-600 uppercase">
-            <span>Network: Holesky-Test</span>
-            <span>Uptime: <span id="uptime-counter">0s</span></span>
-            <span class="ml-auto">Protocol: Ritual-SDK-v1</span>
         </div>
     </div>
 
     <script>
         const API_URL = "https://recipient-riverside-duckling.ngrok-free.dev/api/status";
-        let startTime = Date.now();
 
-        function log(msg) {
+        function addLog(msg) {
             const c = document.getElementById('console');
             const p = document.createElement('p');
-            p.innerHTML = `<span class="text-zinc-700">[${new Date().toLocaleTimeString()}]</span> > ${msg}`;
+            p.innerHTML = `<span class="text-zinc-800">[${new Date().toLocaleTimeString()}]</span> ${msg}`;
             c.appendChild(p);
             c.scrollTop = c.scrollHeight;
         }
 
-        async function refresh() {
-            try {
-                const res = await fetch(API_URL, { headers: { 'ngrok-skip-browser-warning': '69420' } });
-                const data = await res.json();
-                
-                document.getElementById('status-dot').className = "w-2 h-2 rounded-full bg-cyan-400 shadow-[0_0_8px_#00f3ff]";
-                document.getElementById('status-text').innerText = "Online";
-                document.getElementById('status-text').className = "text-[10px] uppercase text-cyan-400";
-                
-                document.getElementById('eth-balance').innerText = data.balances.eth;
-                document.getElementById('ritual-balance').innerText = data.balances.ritual || '0';
-                document.getElementById('last-update').innerText = new Date().toLocaleTimeString();
-                
-                log("Data synchronization complete.");
-            } catch (e) {
-                document.getElementById('status-dot').className = "w-2 h-2 rounded-full bg-red-600";
-                document.getElementById('status-text').innerText = "Offline";
-                log("Connection error: Retrying...");
-            }
+        async function checkAI(type) {
+            const input = document.getElementById('ai-input').value;
+            if(!input) return alert("Введите текст!");
             
-            document.getElementById('uptime-counter').innerText = Math.floor((Date.now() - startTime)/1000) + "s";
+            addLog(`Запрос на проверку ${type}...`);
+            // Здесь будет вызов твоей функции агента
+            setTimeout(() => {
+                document.getElementById('ai-result').classList.remove('hidden');
+                document.getElementById('ai-score').innerText = "98% Human Content";
+                addLog("Анализ завершен: Контент прошел проверку.");
+            }, 1500);
         }
 
-        setInterval(refresh, 5000);
-        refresh();
+        async function update() {
+            try {
+                const r = await fetch(API_URL, { headers: { 'ngrok-skip-browser-warning': '69420' } });
+                const d = await r.json();
+                
+                document.getElementById('eth-balance').innerText = d.balances.eth;
+                document.getElementById('last-sync').innerText = "Last sync: " + new Date().toLocaleTimeString();
+                
+                // Эмуляция прогресса обучения
+                let progress = Math.min(100, parseInt(document.getElementById('training-percent').innerText) + 1);
+                document.getElementById('training-progress').style.width = progress + "%";
+                document.getElementById('training-percent').innerText = progress + "% Complete";
+
+            } catch (e) {
+                addLog("Ошибка синхронизации с агентом...");
+            }
+        }
+
+        setInterval(update, 5000);
+        update();
     </script>
 </body>
 </html>
