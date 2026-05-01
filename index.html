@@ -3,171 +3,149 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Ritual Terminal | Agent Node</title>
+    <title>RITUAL | TERMINAL</title>
     <script src="https://cdn.tailwindcss.com"></script>
-    <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;700&display=swap" rel="stylesheet">
     <style>
-        body { 
-            background: radial-gradient(circle at top right, #1e293b, #0f172a); 
-            color: #e2e8f0; 
-            font-family: 'JetBrains Mono', monospace;
-            min-height: 100vh;
-        }
-        .glass {
-            background: rgba(30, 41, 59, 0.7);
-            backdrop-filter: blur(12px);
-            border: 1px solid rgba(255, 255, 255, 0.1);
-            box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.37);
-        }
-        .neon-border-blue { border-left: 4px solid #3b82f6; }
-        .neon-border-green { border-left: 4px solid #10b981; }
+        @import url('https://fonts.googleapis.com/css2?family=Space+Mono:wght@400;700&display=swap');
         
-        .pulse-online {
-            animation: pulse 2s infinite;
-            background-color: #10b981;
+        :root {
+            --neon-blue: #00f3ff;
+            --neon-purple: #bc13fe;
+            --dark-bg: #050505;
         }
-        @keyframes pulse {
-            0% { box-shadow: 0 0 0 0 rgba(16, 185, 129, 0.7); }
-            70% { box-shadow: 0 0 0 10px rgba(16, 185, 129, 0); }
-            100% { box-shadow: 0 0 0 0 rgba(16, 185, 129, 0); }
+
+        body {
+            background-color: var(--dark-bg);
+            color: #fff;
+            font-family: 'Space Mono', monospace;
+            background-image: 
+                linear-gradient(rgba(0, 243, 255, 0.05) 1px, transparent 1px),
+                linear-gradient(90deg, rgba(0, 243, 255, 0.05) 1px, transparent 1px);
+            background-size: 30px 30px;
         }
-        .scanline {
-            width: 100%;
-            height: 100px;
-            z-index: 10;
-            background: linear-gradient(0deg, rgba(0, 0, 0, 0) 0%, rgba(59, 130, 246, 0.05) 50%, rgba(0, 0, 0, 0) 100%);
-            opacity: 0.1;
-            position: absolute;
-            bottom: 100%;
-            animation: scanline 8s linear infinite;
+
+        .cyber-card {
+            background: rgba(15, 15, 15, 0.9);
+            border: 1px solid #333;
+            position: relative;
+            transition: all 0.3s ease;
         }
-        @keyframes scanline {
-            0% { bottom: 100%; }
-            100% { bottom: -100px; }
+
+        .cyber-card:hover {
+            border-color: var(--neon-blue);
+            box-shadow: 0 0 15px rgba(0, 243, 255, 0.2);
+        }
+
+        .status-glitch {
+            text-shadow: 2px 2px var(--neon-purple);
+            animation: glitch 3s infinite;
+        }
+
+        @keyframes glitch {
+            0% { transform: translate(0); }
+            2% { transform: translate(-2px, 2px); }
+            4% { transform: translate(2px, -2px); }
+            6% { transform: translate(0); }
+        }
+
+        .bar-fill {
+            height: 100%;
+            background: linear-gradient(90deg, var(--neon-purple), var(--neon-blue));
+            box-shadow: 0 0 10px var(--neon-blue);
+            transition: width 1s ease-in-out;
         }
     </style>
 </head>
-<body class="p-4 md:p-12 relative overflow-hidden">
-    <div class="scanline"></div>
-    
-    <div class="max-w-5xl mx-auto relative z-20">
-        <!-- Header -->
-        <header class="flex flex-col md:flex-row justify-between items-start md:items-center mb-10 gap-4">
-            <div>
-                <h1 class="text-4xl font-bold tracking-tighter text-transparent bg-clip-text bg-gradient-to-r from-blue-400 to-cyan-300">
-                    RITUAL_OPERATOR_v1.0
-                </h1>
-                <p class="text-slate-500 text-sm mt-1 uppercase tracking-widest">Node ID: <span class="text-slate-300">RT-77-ALPHA</span></p>
-            </div>
-            <div class="glass px-6 py-3 rounded-lg flex items-center gap-4">
-                <div id="status-dot" class="w-3 h-3 rounded-full bg-red-500 shadow-[0_0_10px_#ef4444]"></div>
-                <div class="text-sm font-bold uppercase tracking-wider" id="status-text">System Standby</div>
-            </div>
-        </header>
-
-        <!-- Stats Grid -->
-        <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
-            
-            <!-- ETH Balance -->
-            <div class="glass p-6 rounded-2xl neon-border-blue relative overflow-hidden group">
-                <div class="text-slate-500 text-xs font-bold mb-2 uppercase">Fuel Reserve</div>
-                <div class="text-3xl font-bold text-white group-hover:text-blue-400 transition-colors">
-                    <span id="eth-balance">0.0000</span> <span class="text-sm text-slate-500">ETH</span>
-                </div>
-                <div class="mt-4 h-1 bg-slate-700 rounded-full overflow-hidden">
-                    <div class="bg-blue-500 h-full w-2/3 shadow-[0_0_8px_#3b82f6]"></div>
+<body class="p-6">
+    <div class="max-w-6xl mx-auto">
+        <!-- TOP NAV -->
+        <div class="flex justify-between items-center border-b border-zinc-800 pb-4 mb-8">
+            <div class="flex items-center gap-4">
+                <div class="w-10 h-10 bg-zinc-900 border border-zinc-700 flex items-center justify-center font-bold text-cyan-400">R</div>
+                <div>
+                    <h1 class="text-xl font-bold tracking-tighter uppercase status-glitch">Ritual Node Operator</h1>
+                    <p class="text-[10px] text-zinc-500 font-mono">ENCRYPTED_STREAM_V2.4</p>
                 </div>
             </div>
-
-            <!-- Ritual Tokens -->
-            <div class="glass p-6 rounded-2xl neon-border-green relative overflow-hidden group">
-                <div class="text-slate-500 text-xs font-bold mb-2 uppercase">Protocol Stake</div>
-                <div class="text-3xl font-bold text-white group-hover:text-green-400 transition-colors">
-                    <span id="ritual-balance">0.00</span> <span class="text-sm text-slate-500">RIT</span>
-                </div>
-                <div class="mt-4 h-1 bg-slate-700 rounded-full overflow-hidden">
-                    <div class="bg-green-500 h-full w-1/2 shadow-[0_0_8px_#10b981]"></div>
-                </div>
-            </div>
-
-            <!-- System Info -->
-            <div class="glass p-6 rounded-2xl border-t border-slate-700">
-                <div class="text-slate-500 text-xs font-bold mb-4 uppercase">Network Health</div>
-                <div class="space-y-3">
-                    <div class="flex justify-between text-xs">
-                        <span class="text-slate-500 italic">Latency:</span>
-                        <span class="text-blue-400">24ms</span>
-                    </div>
-                    <div class="flex justify-between text-xs">
-                        <span class="text-slate-500 italic">Uptime:</span>
-                        <span id="uptime" class="text-blue-400">00:00:00</span>
-                    </div>
+            <div class="text-right">
+                <div id="status-container" class="flex items-center gap-2 px-3 py-1 bg-zinc-900 border border-zinc-800 rounded">
+                    <div id="status-dot" class="w-2 h-2 rounded-full bg-red-600"></div>
+                    <span id="status-text" class="text-[10px] uppercase text-zinc-400">Offline</span>
                 </div>
             </div>
         </div>
 
-        <!-- Terminal Output -->
-        <div class="mt-8 glass rounded-2xl overflow-hidden">
-            <div class="bg-slate-900/50 px-4 py-2 border-b border-white/5 flex gap-2">
-                <div class="w-3 h-3 rounded-full bg-red-500/20"></div>
-                <div class="w-3 h-3 rounded-full bg-yellow-500/20"></div>
-                <div class="w-3 h-3 rounded-full bg-green-500/20"></div>
-                <span class="text-[10px] text-slate-600 uppercase ml-2">Console log</span>
+        <!-- MAIN DATA -->
+        <div class="grid grid-cols-1 md:grid-cols-4 gap-4 mb-8">
+            <div class="cyber-card p-4 col-span-2">
+                <p class="text-zinc-500 text-[10px] uppercase mb-1">Available Liquidity</p>
+                <div class="text-4xl font-bold text-cyan-400"><span id="eth-balance">0.000</span> <span class="text-lg text-zinc-600">ETH</span></div>
             </div>
-            <div class="p-6 h-48 font-mono text-sm text-blue-300/80 overflow-y-auto space-y-1" id="console">
-                <p>> System initialized...</p>
-                <p>> Waiting for upstream connection...</p>
+            <div class="cyber-card p-4">
+                <p class="text-zinc-500 text-[10px] uppercase mb-1">Staked Assets</p>
+                <div class="text-2xl font-bold text-purple-500"><span id="ritual-balance">0.0</span> <span class="text-sm">RIT</span></div>
+            </div>
+            <div class="cyber-card p-4">
+                <p class="text-zinc-500 text-[10px] uppercase mb-1">Last Update</p>
+                <div id="last-update" class="text-xl font-bold text-zinc-300">--:--:--</div>
             </div>
         </div>
 
-        <footer class="mt-8 flex justify-between items-center text-[10px] text-slate-600 uppercase tracking-widest">
-            <div>© Ritual AI Infrastructure</div>
-            <div>Sync: <span id="last-update" class="text-slate-400">--:--:--</span></div>
-        </footer>
+        <!-- CONSOLE -->
+        <div class="cyber-card rounded-none overflow-hidden">
+            <div class="bg-zinc-900 px-4 py-1 text-[10px] text-zinc-500 border-b border-zinc-800 uppercase flex justify-between">
+                <span>System Console</span>
+                <span class="animate-pulse">● Live Recording</span>
+            </div>
+            <div id="console" class="h-64 p-4 overflow-y-auto font-mono text-[11px] text-cyan-500/80 space-y-1">
+                <p>> Initializing ritual link...</p>
+            </div>
+        </div>
+
+        <div class="mt-4 flex gap-4 text-[9px] text-zinc-600 uppercase">
+            <span>Network: Holesky-Test</span>
+            <span>Uptime: <span id="uptime-counter">0s</span></span>
+            <span class="ml-auto">Protocol: Ritual-SDK-v1</span>
+        </div>
     </div>
 
     <script>
         const API_URL = "https://recipient-riverside-duckling.ngrok-free.dev/api/status";
+        let startTime = Date.now();
 
-        function addLog(message) {
-            const consoleBox = document.getElementById('console');
+        function log(msg) {
+            const c = document.getElementById('console');
             const p = document.createElement('p');
-            p.innerText = `> ${new Date().toLocaleTimeString()}: ${message}`;
-            consoleBox.appendChild(p);
-            if (consoleBox.childNodes.length > 8) consoleBox.removeChild(consoleBox.firstChild);
-            consoleBox.scrollTop = consoleBox.scrollHeight;
+            p.innerHTML = `<span class="text-zinc-700">[${new Date().toLocaleTimeString()}]</span> > ${msg}`;
+            c.appendChild(p);
+            c.scrollTop = c.scrollHeight;
         }
 
-        async function updateStatus() {
-            const statusDot = document.getElementById('status-dot');
-            const statusText = document.getElementById('status-text');
-            
+        async function refresh() {
             try {
-                const response = await fetch(API_URL, {
-                    headers: { 'ngrok-skip-browser-warning': 'true' }
-                });
-                const data = await response.json();
-
-                // UI Updates
-                statusDot.className = 'w-3 h-3 rounded-full pulse-online';
-                statusText.innerText = 'System Online';
-                statusText.className = 'text-green-400 text-sm font-bold uppercase tracking-wider';
+                const res = await fetch(API_URL, { headers: { 'ngrok-skip-browser-warning': '69420' } });
+                const data = await res.json();
+                
+                document.getElementById('status-dot').className = "w-2 h-2 rounded-full bg-cyan-400 shadow-[0_0_8px_#00f3ff]";
+                document.getElementById('status-text').innerText = "Online";
+                document.getElementById('status-text').className = "text-[10px] uppercase text-cyan-400";
+                
                 document.getElementById('eth-balance').innerText = data.balances.eth;
-                document.getElementById('ritual-balance').innerText = data.balances.ritual || '0.00';
+                document.getElementById('ritual-balance').innerText = data.balances.ritual || '0';
                 document.getElementById('last-update').innerText = new Date().toLocaleTimeString();
                 
-                addLog("Data packet received successfully.");
-
-            } catch (error) {
-                statusDot.className = 'w-3 h-3 rounded-full bg-red-500 shadow-[0_0_10px_#ef4444]';
-                statusText.innerText = 'Connection Lost';
-                statusText.className = 'text-red-500 text-sm font-bold uppercase tracking-wider';
-                addLog("Error: Failed to fetch data from agent.");
+                log("Data synchronization complete.");
+            } catch (e) {
+                document.getElementById('status-dot').className = "w-2 h-2 rounded-full bg-red-600";
+                document.getElementById('status-text').innerText = "Offline";
+                log("Connection error: Retrying...");
             }
+            
+            document.getElementById('uptime-counter').innerText = Math.floor((Date.now() - startTime)/1000) + "s";
         }
 
-        setInterval(updateStatus, 5000);
-        updateStatus();
+        setInterval(refresh, 5000);
+        refresh();
     </script>
 </body>
 </html>
