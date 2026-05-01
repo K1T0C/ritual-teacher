@@ -104,9 +104,9 @@
                 // Добавляем заголовок, который отключает предупреждение Ngrok
                 const response = await fetch(API_URL, {
     method: 'GET',
+    // Убираем лишние заголовки, оставляем только тот, что нужен для Ngrok
     headers: {
-        'ngrok-skip-browser-warning': 'true',
-        'Accept': 'application/json'
+        'ngrok-skip-browser-warning': 'true'
     }
 });
 
