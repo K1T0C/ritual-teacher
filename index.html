@@ -100,16 +100,40 @@
 const API_URL = "https://recipient-riverside-duckling.ngrok-free.dev";
 
 async function updateStatus() {
-    const startTime = Date.now();
+    const statusDot = document.getElementById('status-dot');
+    const statusText = document.getElementById('status-text');
+    const lastUpdate = document.getElementById('last-update');
+
     try {
-        // Убедись, что ниже ТОЛЬКО ОДИН 'const response'
+        // Здесь должен быть ТОЛЬКО ОДИН 'const response'
         const response = await fetch(API_URL, {
             headers: {
                 "ngrok-skip-browser-warning": "69420"
             }
         });
 
+        if (!response.ok) throw new Error('Network response was not ok');
+        
         const data = await response.json();
+
+        // Обновляем UI
+        statusDot.className = 'status-dot online';
+        statusText.innerText = 'System Online';
+        statusText.className = 'status-text text-green-400';
+        lastUpdate.innerText = new Date().toLocaleTimeString();
+
+        // Если есть балансы, обновляем и их
+        if (data.balances) {
+            document.getElementById('eth-balance').innerText = data.balances.eth || '0';
+        }
+
+    } catch (error) {
+        console.error('Fetch error:', error);
+        statusDot.className = 'status-dot offline';
+        statusText.innerText = 'System Offline';
+        statusText.className = 'status-text text-red-400';
+    }
+}
         
         // ... далее код отрисовки данных
                 // Добавляем заголовок, который отключает предупреждение Ngrok
