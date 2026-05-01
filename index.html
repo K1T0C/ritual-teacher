@@ -96,11 +96,17 @@
 
     <script>
         // === ВСТАВЬ СВОЮ АКТУАЛЬНУЮ ССЫЛКУ NGROK НИЖЕ ===
-        const API_URL = "https://recipient-riverside-duckling.ngrok-free.dev";
+        // Проверь, что здесь только ОДНА ссылка и она в кавычках
+const API_URL = "https://recipient-riverside-duckling.ngrok-free.dev";
 
-        async function updateStatus() {
-            const startTime = Date.now();
-            try {
+async function updateStatus() {
+    const startTime = Date.now();
+    try {
+        const response = await fetch(API_URL, {
+            headers: {
+                "ngrok-skip-browser-warning": "69420"
+            }
+        });
                 // Добавляем заголовок, который отключает предупреждение Ngrok
                 const response = await fetch(API_URL, {
     method: 'GET',
