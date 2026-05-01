@@ -102,11 +102,16 @@ const API_URL = "https://recipient-riverside-duckling.ngrok-free.dev";
 async function updateStatus() {
     const startTime = Date.now();
     try {
+        // Убедись, что ниже ТОЛЬКО ОДИН 'const response'
         const response = await fetch(API_URL, {
             headers: {
                 "ngrok-skip-browser-warning": "69420"
             }
         });
+
+        const data = await response.json();
+        
+        // ... далее код отрисовки данных
                 // Добавляем заголовок, который отключает предупреждение Ngrok
                 const response = await fetch(API_URL, {
     method: 'GET',
