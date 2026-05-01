@@ -3,106 +3,170 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Ritual Agent Dashboard</title>
+    <title>Ritual Terminal | Agent Node</title>
     <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;700&display=swap" rel="stylesheet">
     <style>
-        .status-dot { height: 12px; width: 12px; border-radius: 50%; display: inline-block; margin-right: 8px; }
-        .online { background-color: #4ade80; box-shadow: 0 0 10px #4ade80; }
-        .offline { background-color: #f87171; box-shadow: 0 0 10px #f87171; }
-        body { background-color: #0f172a; color: white; font-family: sans-serif; }
+        body { 
+            background: radial-gradient(circle at top right, #1e293b, #0f172a); 
+            color: #e2e8f0; 
+            font-family: 'JetBrains Mono', monospace;
+            min-height: 100vh;
+        }
+        .glass {
+            background: rgba(30, 41, 59, 0.7);
+            backdrop-filter: blur(12px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.37);
+        }
+        .neon-border-blue { border-left: 4px solid #3b82f6; }
+        .neon-border-green { border-left: 4px solid #10b981; }
+        
+        .pulse-online {
+            animation: pulse 2s infinite;
+            background-color: #10b981;
+        }
+        @keyframes pulse {
+            0% { box-shadow: 0 0 0 0 rgba(16, 185, 129, 0.7); }
+            70% { box-shadow: 0 0 0 10px rgba(16, 185, 129, 0); }
+            100% { box-shadow: 0 0 0 0 rgba(16, 185, 129, 0); }
+        }
+        .scanline {
+            width: 100%;
+            height: 100px;
+            z-index: 10;
+            background: linear-gradient(0deg, rgba(0, 0, 0, 0) 0%, rgba(59, 130, 246, 0.05) 50%, rgba(0, 0, 0, 0) 100%);
+            opacity: 0.1;
+            position: absolute;
+            bottom: 100%;
+            animation: scanline 8s linear infinite;
+        }
+        @keyframes scanline {
+            0% { bottom: 100%; }
+            100% { bottom: -100px; }
+        }
     </style>
 </head>
-<body class="p-8">
-    <div class="max-w-4xl mx-auto">
-        <header class="flex justify-between items-center mb-12 border-b border-slate-700 pb-6">
+<body class="p-4 md:p-12 relative overflow-hidden">
+    <div class="scanline"></div>
+    
+    <div class="max-w-5xl mx-auto relative z-20">
+        <!-- Header -->
+        <header class="flex flex-col md:flex-row justify-between items-start md:items-center mb-10 gap-4">
             <div>
-                <h1 class="text-3xl font-bold text-blue-400">Ritual Agent <span class="text-slate-500 text-lg font-normal">v1.0</span></h1>
-                <p class="text-slate-400 mt-1">Blockchain AI Infrastructure</p>
+                <h1 class="text-4xl font-bold tracking-tighter text-transparent bg-clip-text bg-gradient-to-r from-blue-400 to-cyan-300">
+                    RITUAL_OPERATOR_v1.0
+                </h1>
+                <p class="text-slate-500 text-sm mt-1 uppercase tracking-widest">Node ID: <span class="text-slate-300">RT-77-ALPHA</span></p>
             </div>
-            <div class="text-right">
-                <div class="flex items-center justify-end">
-                    <span id="status-dot" class="status-dot offline"></span>
-                    <span id="status-text" class="text-red-400 font-mono">System Offline</span>
-                </div>
-                <p class="text-xs text-slate-500 mt-1 italic">Last update: <span id="last-update">-</span></p>
+            <div class="glass px-6 py-3 rounded-lg flex items-center gap-4">
+                <div id="status-dot" class="w-3 h-3 rounded-full bg-red-500 shadow-[0_0_10px_#ef4444]"></div>
+                <div class="text-sm font-bold uppercase tracking-wider" id="status-text">System Standby</div>
             </div>
         </header>
 
-        <main class="grid grid-cols-1 md:grid-cols-2 gap-6">
-            <!-- Wallet Card -->
-            <div class="bg-slate-800 p-6 rounded-xl border border-slate-700">
-                <h2 class="text-slate-400 text-sm font-semibold uppercase tracking-wider mb-4">Node Balance</h2>
-                <div class="flex items-end space-x-2">
-                    <span id="eth-balance" class="text-4xl font-mono">0.0000</span>
-                    <span class="text-slate-500 mb-1">ETH</span>
+        <!-- Stats Grid -->
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+            
+            <!-- ETH Balance -->
+            <div class="glass p-6 rounded-2xl neon-border-blue relative overflow-hidden group">
+                <div class="text-slate-500 text-xs font-bold mb-2 uppercase">Fuel Reserve</div>
+                <div class="text-3xl font-bold text-white group-hover:text-blue-400 transition-colors">
+                    <span id="eth-balance">0.0000</span> <span class="text-sm text-slate-500">ETH</span>
+                </div>
+                <div class="mt-4 h-1 bg-slate-700 rounded-full overflow-hidden">
+                    <div class="bg-blue-500 h-full w-2/3 shadow-[0_0_8px_#3b82f6]"></div>
                 </div>
             </div>
 
-            <!-- Ritual Info -->
-            <div class="bg-slate-800 p-6 rounded-xl border border-slate-700">
-                <h2 class="text-slate-400 text-sm font-semibold uppercase tracking-wider mb-4">Ritual Network</h2>
-                <div class="space-y-2">
-                    <div class="flex justify-between">
-                        <span class="text-slate-500">Chain:</span>
-                        <span class="text-blue-300">Holesky Testnet</span>
+            <!-- Ritual Tokens -->
+            <div class="glass p-6 rounded-2xl neon-border-green relative overflow-hidden group">
+                <div class="text-slate-500 text-xs font-bold mb-2 uppercase">Protocol Stake</div>
+                <div class="text-3xl font-bold text-white group-hover:text-green-400 transition-colors">
+                    <span id="ritual-balance">0.00</span> <span class="text-sm text-slate-500">RIT</span>
+                </div>
+                <div class="mt-4 h-1 bg-slate-700 rounded-full overflow-hidden">
+                    <div class="bg-green-500 h-full w-1/2 shadow-[0_0_8px_#10b981]"></div>
+                </div>
+            </div>
+
+            <!-- System Info -->
+            <div class="glass p-6 rounded-2xl border-t border-slate-700">
+                <div class="text-slate-500 text-xs font-bold mb-4 uppercase">Network Health</div>
+                <div class="space-y-3">
+                    <div class="flex justify-between text-xs">
+                        <span class="text-slate-500 italic">Latency:</span>
+                        <span class="text-blue-400">24ms</span>
                     </div>
-                    <div class="flex justify-between">
-                        <span class="text-slate-500">Agent Role:</span>
-                        <span class="text-blue-300">Inference Node</span>
+                    <div class="flex justify-between text-xs">
+                        <span class="text-slate-500 italic">Uptime:</span>
+                        <span id="uptime" class="text-blue-400">00:00:00</span>
                     </div>
                 </div>
             </div>
-        </main>
+        </div>
 
-        <footer class="mt-12 text-center text-slate-600 text-sm">
-            <p>Connected via Secure Ngrok Tunnel</p>
+        <!-- Terminal Output -->
+        <div class="mt-8 glass rounded-2xl overflow-hidden">
+            <div class="bg-slate-900/50 px-4 py-2 border-b border-white/5 flex gap-2">
+                <div class="w-3 h-3 rounded-full bg-red-500/20"></div>
+                <div class="w-3 h-3 rounded-full bg-yellow-500/20"></div>
+                <div class="w-3 h-3 rounded-full bg-green-500/20"></div>
+                <span class="text-[10px] text-slate-600 uppercase ml-2">Console log</span>
+            </div>
+            <div class="p-6 h-48 font-mono text-sm text-blue-300/80 overflow-y-auto space-y-1" id="console">
+                <p>> System initialized...</p>
+                <p>> Waiting for upstream connection...</p>
+            </div>
+        </div>
+
+        <footer class="mt-8 flex justify-between items-center text-[10px] text-slate-600 uppercase tracking-widest">
+            <div>© Ritual AI Infrastructure</div>
+            <div>Sync: <span id="last-update" class="text-slate-400">--:--:--</span></div>
         </footer>
     </div>
 
     <script>
-        // ТУТ ЗАМЕНИ НА СВОЙ АДРЕС ИЗ ТЕРМИНАЛА NGROK
         const API_URL = "https://recipient-riverside-duckling.ngrok-free.dev/api/status";
+
+        function addLog(message) {
+            const consoleBox = document.getElementById('console');
+            const p = document.createElement('p');
+            p.innerText = `> ${new Date().toLocaleTimeString()}: ${message}`;
+            consoleBox.appendChild(p);
+            if (consoleBox.childNodes.length > 8) consoleBox.removeChild(consoleBox.firstChild);
+            consoleBox.scrollTop = consoleBox.scrollHeight;
+        }
 
         async function updateStatus() {
             const statusDot = document.getElementById('status-dot');
             const statusText = document.getElementById('status-text');
-            const lastUpdate = document.getElementById('last-update');
-            const ethBalance = document.getElementById('eth-balance');
-
+            
             try {
                 const response = await fetch(API_URL, {
-                    method: 'GET',
-                    headers: {
-                        'ngrok-skip-browser-warning': 'true',
-                        'Accept': 'application/json'
-                    }
+                    headers: { 'ngrok-skip-browser-warning': 'true' }
                 });
-
-                if (!response.ok) throw new Error('Server not responding');
-
                 const data = await response.json();
 
-                // Обновление интерфейса при успехе
-                statusDot.className = 'status-dot online';
+                // UI Updates
+                statusDot.className = 'w-3 h-3 rounded-full pulse-online';
                 statusText.innerText = 'System Online';
-                statusText.className = 'text-green-400 font-mono';
-                lastUpdate.innerText = new Date().toLocaleTimeString();
+                statusText.className = 'text-green-400 text-sm font-bold uppercase tracking-wider';
+                document.getElementById('eth-balance').innerText = data.balances.eth;
+                document.getElementById('ritual-balance').innerText = data.balances.ritual || '0.00';
+                document.getElementById('last-update').innerText = new Date().toLocaleTimeString();
                 
-                if (data.balances && data.balances.eth) {
-                    ethBalance.innerText = parseFloat(data.balances.eth).toFixed(4);
-                }
+                addLog("Data packet received successfully.");
 
             } catch (error) {
-                console.error("Fetch Error:", error);
-                statusDot.className = 'status-dot offline';
-                statusText.innerText = 'System Offline';
-                statusText.className = 'text-red-400 font-mono';
+                statusDot.className = 'w-3 h-3 rounded-full bg-red-500 shadow-[0_0_10px_#ef4444]';
+                statusText.innerText = 'Connection Lost';
+                statusText.className = 'text-red-500 text-sm font-bold uppercase tracking-wider';
+                addLog("Error: Failed to fetch data from agent.");
             }
         }
 
-        // Запуск обновления каждые 5 секунд
         setInterval(updateStatus, 5000);
-        // Первый запуск сразу
         updateStatus();
     </script>
 </body>
