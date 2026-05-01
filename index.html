@@ -103,10 +103,12 @@
             try {
                 // Добавляем заголовок, который отключает предупреждение Ngrok
                 const response = await fetch(API_URL, {
-                    headers: {
-                        "ngrok-skip-browser-warning": "69420"
-                    }
-                });
+    method: 'GET',
+    mode: 'cors', // Явно указываем режим CORS
+    headers: {
+        'ngrok-skip-browser-warning': 'true'
+    }
+});
 
                 if (!response.ok) throw new Error('Network response was not ok');
                 
