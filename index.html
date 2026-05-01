@@ -3,191 +3,107 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Ritual Architect | Dashboard</title>
+    <title>Ritual Agent Dashboard</title>
     <script src="https://cdn.tailwindcss.com"></script>
-    <link href="https://fonts.googleapis.com/css2?family=Fira+Code:wght@400;600&display=swap" rel="stylesheet">
     <style>
-        body {
-            font-family: 'Fira Code', monospace;
-            background-color: #0a0a0c;
-            color: #00ff9d;
-        }
-        .neo-card {
-            background: rgba(16, 16, 20, 0.8);
-            border: 1px solid #1f2937;
-            box-shadow: 0 0 20px rgba(0, 255, 157, 0.05);
-        }
-        .status-pulse {
-            animation: pulse 2s infinite;
-        }
-        @keyframes pulse {
-            0% { opacity: 1; }
-            50% { opacity: 0.4; }
-            100% { opacity: 1; }
-        }
-        .progress-bar {
-            transition: width 0.5s ease-in-out;
-            background: linear-gradient(90deg, #00ff9d, #008cff);
-        }
+        .status-dot { height: 12px; width: 12px; border-radius: 50%; display: inline-block; margin-right: 8px; }
+        .online { background-color: #4ade80; box-shadow: 0 0 10px #4ade80; }
+        .offline { background-color: #f87171; box-shadow: 0 0 10px #f87171; }
+        body { background-color: #0f172a; color: white; font-family: sans-serif; }
     </style>
 </head>
-<body class="p-4 md:p-8">
-    <div class="max-w-6xl mx-auto">
-        <!-- Header -->
-        <header class="flex justify-between items-center mb-8 border-b border-gray-800 pb-4">
+<body class="p-8">
+    <div class="max-w-4xl mx-auto">
+        <header class="flex justify-between items-center mb-12 border-b border-slate-700 pb-6">
             <div>
-                <h1 class="text-2xl font-bold tracking-tighter uppercase">Ritual <span class="text-white">Architect</span></h1>
-                <p class="text-xs text-gray-500 mt-1">v11.1.0 // Infrastructure Monitor</p>
+                <h1 class="text-3xl font-bold text-blue-400">Ritual Agent <span class="text-slate-500 text-lg font-normal">v1.0</span></h1>
+                <p class="text-slate-400 mt-1">Blockchain AI Infrastructure</p>
             </div>
-            <div id="status-badge" class="px-3 py-1 rounded border border-gray-700 text-xs flex items-center gap-2 bg-gray-900">
-                <div class="w-2 h-2 rounded-full bg-red-500"></div>
-                <span class="text-gray-400 font-bold uppercase tracking-widest">Offline</span>
+            <div class="text-right">
+                <div class="flex items-center justify-end">
+                    <span id="status-dot" class="status-dot offline"></span>
+                    <span id="status-text" class="text-red-400 font-mono">System Offline</span>
+                </div>
+                <p class="text-xs text-slate-500 mt-1 italic">Last update: <span id="last-update">-</span></p>
             </div>
         </header>
 
-        <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
-            <!-- Balances -->
-            <div class="neo-card p-6 rounded-lg">
-                <h3 class="text-gray-500 text-xs mb-4 uppercase tracking-widest font-bold">Node Assets</h3>
-                <div id="balances" class="space-y-4">
-                    <div class="flex justify-between border-b border-gray-900 pb-2">
-                        <span class="text-white">SOL</span><span id="sol-val">0.00</span>
-                    </div>
-                    <div class="flex justify-between border-b border-gray-900 pb-2 text-[#00ff9d]">
-                        <span>RIT</span><span id="rit-val">0.00</span>
-                    </div>
-                    <div class="flex justify-between border-b border-gray-900 pb-2">
-                        <span class="text-white">ETH</span><span id="eth-val">0.00</span>
-                    </div>
+        <main class="grid grid-cols-1 md:grid-cols-2 gap-6">
+            <!-- Wallet Card -->
+            <div class="bg-slate-800 p-6 rounded-xl border border-slate-700">
+                <h2 class="text-slate-400 text-sm font-semibold uppercase tracking-wider mb-4">Node Balance</h2>
+                <div class="flex items-end space-x-2">
+                    <span id="eth-balance" class="text-4xl font-mono">0.0000</span>
+                    <span class="text-slate-500 mb-1">ETH</span>
                 </div>
             </div>
 
-            <!-- Progress -->
-            <div class="neo-card p-6 rounded-lg md:col-span-2">
-                <h3 class="text-gray-500 text-xs mb-4 uppercase tracking-widest font-bold">Inference Training Progress</h3>
-                <div class="flex justify-between mb-2 text-sm">
-                    <span id="task-name">Current Skill: Infra-Tutor</span>
-                    <span id="progress-text">0%</span>
-                </div>
-                <div class="w-full bg-gray-800 h-4 rounded-full overflow-hidden border border-gray-700">
-                    <div id="progress-bar" class="progress-bar h-full w-0"></div>
-                </div>
-                <div class="mt-6 grid grid-cols-2 gap-4">
-                    <div class="bg-black/50 p-3 rounded">
-                        <p class="text-[10px] text-gray-500 uppercase">System Uptime</p>
-                        <p class="text-lg text-white font-bold tracking-tighter">04:12:00:23</p>
+            <!-- Ritual Info -->
+            <div class="bg-slate-800 p-6 rounded-xl border border-slate-700">
+                <h2 class="text-slate-400 text-sm font-semibold uppercase tracking-wider mb-4">Ritual Network</h2>
+                <div class="space-y-2">
+                    <div class="flex justify-between">
+                        <span class="text-slate-500">Chain:</span>
+                        <span class="text-blue-300">Holesky Testnet</span>
                     </div>
-                    <div class="bg-black/50 p-3 rounded">
-                        <p class="text-[10px] text-gray-500 uppercase">Network Latency</p>
-                        <p id="latency" class="text-lg text-white font-bold tracking-tighter">-- ms</p>
+                    <div class="flex justify-between">
+                        <span class="text-slate-500">Agent Role:</span>
+                        <span class="text-blue-300">Inference Node</span>
                     </div>
                 </div>
             </div>
+        </main>
 
-            <!-- Logs -->
-            <div class="neo-card p-6 rounded-lg md:col-span-3">
-                <h3 class="text-gray-500 text-xs mb-4 uppercase tracking-widest font-bold">Live System Logs</h3>
-                <div id="logs-container" class="space-y-2 text-xs font-mono max-h-48 overflow-y-auto">
-                    <div class="text-gray-600 italic">Waiting for incoming data stream...</div>
-                </div>
-            </div>
-        </div>
+        <footer class="mt-12 text-center text-slate-600 text-sm">
+            <p>Connected via Secure Ngrok Tunnel</p>
+        </footer>
     </div>
 
     <script>
-        // === ВСТАВЬ СВОЮ АКТУАЛЬНУЮ ССЫЛКУ NGROK НИЖЕ ===
-        // Проверь, что здесь только ОДНА ссылка и она в кавычках
-const API_URL = "https://recipient-riverside-duckling.ngrok-free.dev";
+        // ТУТ ЗАМЕНИ НА СВОЙ АДРЕС ИЗ ТЕРМИНАЛА NGROK
+        const API_URL = "https://https://recipient-riverside-duckling.ngrok-free.dev";
 
-async function updateStatus() {
-    const statusDot = document.getElementById('status-dot');
-    const statusText = document.getElementById('status-text');
-    const lastUpdate = document.getElementById('last-update');
+        async function updateStatus() {
+            const statusDot = document.getElementById('status-dot');
+            const statusText = document.getElementById('status-text');
+            const lastUpdate = document.getElementById('last-update');
+            const ethBalance = document.getElementById('eth-balance');
 
-    try {
-        // Здесь должен быть ТОЛЬКО ОДИН 'const response'
-        const response = await fetch(API_URL, {
-            headers: {
-                "ngrok-skip-browser-warning": "69420"
-            }
-        });
-
-        if (!response.ok) throw new Error('Network response was not ok');
-        
-        const data = await response.json();
-
-        // Обновляем UI
-        statusDot.className = 'status-dot online';
-        statusText.innerText = 'System Online';
-        statusText.className = 'status-text text-green-400';
-        lastUpdate.innerText = new Date().toLocaleTimeString();
-
-        // Если есть балансы, обновляем и их
-        if (data.balances) {
-            document.getElementById('eth-balance').innerText = data.balances.eth || '0';
-        }
-
-    } catch (error) {
-        console.error('Fetch error:', error);
-        statusDot.className = 'status-dot offline';
-        statusText.innerText = 'System Offline';
-        statusText.className = 'status-text text-red-400';
-    }
-}
-        
-        // ... далее код отрисовки данных
-                // Добавляем заголовок, который отключает предупреждение Ngrok
+            try {
                 const response = await fetch(API_URL, {
-    method: 'GET',
-    headers: {
-        'ngrok-skip-browser-warning': 'true'
-    }
-});
-        // Это заставит Ngrok пропустить запрос мимо страницы с предупреждением
-        'ngrok-skip-browser-warning': '69420', 
-        'Accept': 'application/json'
-    }
-});
+                    method: 'GET',
+                    headers: {
+                        'ngrok-skip-browser-warning': 'true',
+                        'Accept': 'application/json'
+                    }
+                });
 
-                if (!response.ok) throw new Error('Network response was not ok');
-                
+                if (!response.ok) throw new Error('Server not responding');
+
                 const data = await response.json();
-                const latency = Date.now() - startTime;
 
-                // Обновляем статус бейджа
-                const badge = document.getElementById('status-badge');
-                if (data.isRunning) {
-                    badge.innerHTML = `<div class="w-2 h-2 rounded-full bg-[#00ff9d] status-pulse"></div><span class="text-[#00ff9d] font-bold uppercase tracking-widest">🚀 Online</span>`;
-                } else {
-                    badge.innerHTML = `<div class="w-2 h-2 rounded-full bg-orange-500"></div><span class="text-orange-500 font-bold uppercase tracking-widest">Idle</span>`;
+                // Обновление интерфейса при успехе
+                statusDot.className = 'status-dot online';
+                statusText.innerText = 'System Online';
+                statusText.className = 'text-green-400 font-mono';
+                lastUpdate.innerText = new Date().toLocaleTimeString();
+                
+                if (data.balances && data.balances.eth) {
+                    ethBalance.innerText = parseFloat(data.balances.eth).toFixed(4);
                 }
 
-                // Обновляем балансы
-                document.getElementById('sol-val').innerText = data.balances.sol;
-                document.getElementById('rit-val').innerText = data.balances.rit;
-                document.getElementById('eth-val').innerText = data.balances.eth;
-                document.getElementById('latency').innerText = `${latency} ms`;
-
-                // Обновляем прогресс
-                document.getElementById('progress-bar').style.width = `${data.progress}%`;
-                document.getElementById('progress-text').innerText = `${data.progress}%`;
-
-                // Обновляем логи
-                const logsContainer = document.getElementById('logs-container');
-                logsContainer.innerHTML = data.logs.map(log => 
-                    `<div class="border-l-2 border-gray-800 pl-3 py-1"><span class="text-gray-500">[${new Date().toLocaleTimeString()}]</span> <span class="text-gray-300">${log}</span></div>`
-                ).join('');
-
             } catch (error) {
-                console.error("Fetch error:", error);
-                const badge = document.getElementById('status-badge');
-                badge.innerHTML = `<div class="w-2 h-2 rounded-full bg-red-600"></div><span class="text-red-600 font-bold uppercase tracking-widest">Error Connection</span>`;
+                console.error("Fetch Error:", error);
+                statusDot.className = 'status-dot offline';
+                statusText.innerText = 'System Offline';
+                statusText.className = 'text-red-400 font-mono';
             }
         }
 
-        // Запуск цикла обновления (каждые 2 секунды)
-        setInterval(updateStatus, 2000);
-        updateStatus(); // Первый запуск сразу
+        // Запуск обновления каждые 5 секунд
+        setInterval(updateStatus, 5000);
+        // Первый запуск сразу
+        updateStatus();
     </script>
 </body>
 </html>
