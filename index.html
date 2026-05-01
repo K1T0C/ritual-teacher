@@ -104,9 +104,9 @@
                 // Добавляем заголовок, который отключает предупреждение Ngrok
                 const response = await fetch(API_URL, {
     method: 'GET',
-    mode: 'cors', // Явно указываем режим CORS
     headers: {
-        'ngrok-skip-browser-warning': 'true'
+        'ngrok-skip-browser-warning': 'true',
+        'Accept': 'application/json'
     }
 });
 
