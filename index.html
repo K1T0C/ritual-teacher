@@ -213,3 +213,54 @@
     </script>
 </body>
 </html>
+<div class="bg-slate-900 border border-slate-800 rounded-xl p-6 mt-6">
+    <h3 class="text-xl font-bold text-slate-200 mb-4">📷 Проверка Фото и Видео на ИИ</h3>
+    
+    <div class="flex flex-col gap-4">
+        <input type="file" id="mediaFileInput" accept="image/*,video/*" class="w-full bg-slate-950 border border-slate-800 rounded-lg p-3 text-slate-300 focus:outline-none focus:border-blue-500 transition" />
+        
+        <button onclick="checkFile()" id="btnCheckFile" class="w-full bg-emerald-600 hover:bg-emerald-700 font-bold py-3 px-4 rounded-lg transition">
+            📤 Загрузить и проверить файл
+        </button>
+    </div>
+
+    <div id="fileResult" class="hidden mt-4 p-4 bg-slate-950 border border-slate-800 rounded-lg text-center">
+        <p id="fileVerdict" class="text-xl font-black mb-2"></p>
+        <p id="fileMarkers" class="text-xs text-slate-400"></p>
+    </div>
+</div>
+
+<script>
+async function checkFile() {
+    const fileInput = document.getElementById('mediaFileInput');
+    if (!fileInput.files[0]) return alert("Выберите файл для загрузки!");
+
+    const formData = new FormData();
+    formData.append('media', fileInput.files[0]);
+
+    const resultDiv = document.getElementById('fileResult');
+    const verdictLabel = document.getElementById('fileVerdict');
+    const markersLabel = document.getElementById('fileMarkers');
+
+    try {
+        // Замени на актуальный URL твоего Ngrok или localhost
+        const response = await fetch('http://localhost:3000/api/check-file', {
+            method: 'POST',
+            body: formData
+        });
+
+        const data = await response.json();
+        resultDiv.classList.remove('hidden');
+
+        verdictLabel.innerText = `${data.verdict} (${data.aiProbability}%)`;
+        verdictLabel.className = data.isAI ? "text-xl font-black text-red-400" : "text-xl font-black text-emerald-400";
+        
+        markersLabel.innerText = data.detectedMarkers.length > 0 
+            ? `Маркеры: ${data.detectedMarkers.join(', ')}` 
+            : "Специфических ИИ-маркеров не найдено.";
+
+    } catch (err) {
+        alert("Ошибка при проверке файла агентом.");
+    }
+}
+</script>
