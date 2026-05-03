@@ -3,264 +3,200 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Ritual Teacher | AI Control</title>
-    <script src="https://cdn.tailwindcss.com"></script>
-    <link href="https://fonts.googleapis.com/css2?family=Fira+Code:wght@400;600&display=swap" rel="stylesheet">
-    <style>
-        body {
-            background-color: #0a0a0c;
-            color: #d1d5db;
-            font-family: 'Fira Code', monospace;
-        }
-        .panel {
-            background: rgba(23, 23, 26, 0.8);
-            border: 1px solid #2d2d33;
-            border-radius: 12px;
-        }
-        .neon-text { text-shadow: 0 0 10px rgba(96, 165, 250, 0.5); }
-        .progress-bar {
-            height: 6px;
-            background: #1f1f23;
-            border-radius: 3px;
-            overflow: hidden;
-        }
-        .progress-fill {
-            height: 100%;
-            background: linear-gradient(90deg, #3b82f6, #8b5cf6);
-            width: 45%; /* Пример прогресса */
-        }
-        textarea {
-            background: #111113;
-            border: 1px solid #2d2d33;
-            color: #9ca3af;
-            resize: none;
-        }
-        textarea:focus {
-            border-color: #3b82f6;
-            outline: none;
-        }
-        .btn-action {
-            background: #3b82f6;
-            color: white;
-            transition: all 0.2s;
-        }
-        .btn-action:hover {
-            background: #2563eb;
-            transform: translateY(-1px);
-        }
-    </style>
+    <title>Ritual AI Validator Dashboard</title>
+    <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
 </head>
-<body class="p-4 md:p-10">
-    <div class="max-w-6xl mx-auto">
+<body class="bg-slate-950 text-slate-100 min-h-screen font-sans antialiased">
+
+    <div class="max-w-4xl mx-auto px-4 py-8">
         
-        <!-- HEADER -->
-        <header class="flex flex-col md:flex-row justify-between items-start md:items-center mb-8 border-b border-zinc-800 pb-6">
+        <div class="flex flex-col md:flex-row md:items-center md:justify-between border-b border-slate-800 pb-6 mb-8 gap-4">
             <div>
-                <h1 class="text-3xl font-bold text-white neon-text">Ritual <span class="text-blue-500">Teacher</span></h1>
-                <p class="text-zinc-500 text-sm mt-1">AI Agent Learning & Validation System</p>
+                <h1 class="text-2xl md:text-3xl font-black tracking-tight text-transparent bg-clip-text bg-gradient-to-r from-blue-400 to-emerald-400">
+                    RITUAL TEACHER ALPHA
+                </h1>
+                <p class="text-sm text-slate-400 mt-1">ИИ-Оракул валидации контента в сети Ritual Chain</p>
             </div>
-            <div class="flex items-center gap-4 mt-4 md:mt-0">
-                <div class="text-right">
-                    <p class="text-[10px] text-zinc-500 uppercase tracking-widest">Network Status</p>
-                    <p id="status-text" class="text-xs text-green-500 font-bold uppercase">Online • 0.0001 ETH</p>
-                </div>
-                <div class="w-10 h-10 rounded-full bg-blue-500/10 border border-blue-500/50 flex items-center justify-center">
-                    <div class="w-2 h-2 rounded-full bg-blue-500 animate-pulse"></div>
-                </div>
+            <div id="nodeStatusBadge" class="self-start md:self-center px-4 py-2 rounded-lg bg-slate-900 border border-slate-800 text-xs font-semibold flex items-center gap-2">
+                <span class="relative flex h-2 w-2">
+                    <span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-emerald-400 opacity-75"></span>
+                    <span class="relative inline-flex rounded-full h-2 w-2 bg-emerald-500"></span>
+                </span>
+                Агент: <span id="statusText" class="text-emerald-400">Подключение...</span>
             </div>
-        </header>
+        </div>
 
-        <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
-            
-            <!-- COLUMN 1: TRAINING -->
-            <div class="lg:col-span-1 space-y-6">
-                <div class="panel p-6">
-                    <h2 class="text-white text-sm font-bold uppercase mb-4 flex items-center gap-2">
-                        <span class="w-2 h-2 bg-purple-500 rounded-full"></span> AI Training Lab
-                    </h2>
-                    <div class="space-y-4">
-                        <div class="bg-black/40 p-4 rounded-lg">
-                            <p class="text-[10px] text-zinc-500 mb-2 uppercase">Learning: Agent_Model_v2</p>
-                            <div class="progress-bar mb-2"><div class="progress-fill" id="training-progress"></div></div>
-                            <div class="flex justify-between text-[10px]">
-                                <span id="training-percent">45% Complete</span>
-                                <span class="text-zinc-600 italic">2.4 hours left</span>
-                            </div>
-                        </div>
-                        <button class="w-full py-2 border border-zinc-700 rounded text-[10px] uppercase hover:bg-zinc-800 transition">Deploy New Trainee</button>
-                    </div>
+        <div class="grid grid-cols-1 gap-6">
+
+            <div class="bg-slate-900 border border-slate-800 rounded-xl p-6">
+                <h3 class="text-lg font-bold text-slate-200 mb-2 flex items-center gap-2">
+                    📝 Проверка Текста на ИИ
+                </h3>
+                <p class="text-xs text-slate-400 mb-4">Вставьте текст, чтобы ИИ-агент оценил его лексическую сложность и натуральность.</p>
+
+                <div class="relative w-full mb-4">
+                    <textarea id="textInput" rows="5" 
+                        class="w-full bg-slate-950 border border-slate-800 rounded-lg p-4 pr-12 text-sm text-slate-300 focus:outline-none focus:border-blue-500 transition resize-none" 
+                        placeholder="Введите или вставьте текст для проверки..."></textarea>
+                    
+                    <button onclick="clearTextInput()" id="btnClearText" 
+                        class="absolute top-3 right-3 text-slate-500 hover:text-slate-300 bg-slate-900/80 hover:bg-slate-800 p-1.5 rounded-md transition focus:outline-none flex items-center justify-center" 
+                        title="Очистить текст">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
+                        </svg>
+                    </button>
                 </div>
 
-                <div class="panel p-6">
-                    <h3 class="text-zinc-400 text-[10px] font-bold uppercase mb-4">Node Resources</h3>
-                    <div class="flex justify-between items-center mb-2">
-                        <span class="text-xs">ETH Balance</span>
-                        <span id="eth-balance" class="text-blue-400 font-bold text-sm">0.1234</span>
-                    </div>
-                    <div class="flex justify-between items-center">
-                        <span class="text-xs">CPU Load</span>
-                        <span class="text-zinc-400 text-sm">12%</span>
-                    </div>
+                <button onclick="checkText()" class="w-full bg-blue-600 hover:bg-blue-700 font-bold py-3 px-4 rounded-lg transition text-sm">
+                    🔍 Проверить текст в Ritual
+                </button>
+
+                <div id="textResultPanel" class="hidden mt-4 bg-slate-950 p-4 rounded-lg border border-slate-800 text-center">
+                    <span class="block text-xs text-slate-400 mb-1">Вердикт по тексту:</span>
+                    <div id="textVerdictBadge" class="text-lg font-black tracking-wider p-2 rounded-lg"></div>
                 </div>
             </div>
 
-            <!-- COLUMN 2 & 3: INTERACTION -->
-            <div class="lg:col-span-2 space-y-6">
-                <!-- AI Content Checker -->
-                <div class="panel p-6">
-                    <h2 class="text-white text-sm font-bold uppercase mb-4">AI Content Validator</h2>
-                    <div class="space-y-4">
-                        <p class="text-xs text-zinc-500">Вставьте текст или URL для анализа на предмет использования ИИ-генерации:</p>
-                        <textarea id="ai-input" class="w-full h-32 p-4 rounded-lg text-sm" placeholder="Введите контент для проверки..."></textarea>
-                        <div class="flex gap-4">
-                            <button onclick="checkAI('text')" class="flex-1 btn-action py-3 rounded-lg font-bold text-xs uppercase tracking-wider">Проверить текст</button>
-                            <button onclick="checkAI('content')" class="flex-1 border border-zinc-700 py-3 rounded-lg font-bold text-xs uppercase tracking-wider hover:bg-zinc-800">Проверить файл</button>
-                        </div>
-                    </div>
-                    <!-- Result Placeholder -->
-                    <div id="ai-result" class="hidden mt-6 p-4 bg-blue-500/5 border border-blue-500/20 rounded-lg">
-                        <div class="flex justify-between items-center">
-                            <span class="text-xs uppercase">Результат анализа:</span>
-                            <span class="text-blue-400 font-bold text-sm" id="ai-score">--</span>
-                        </div>
-                    </div>
-                </div>
+            <div class="bg-slate-900 border border-slate-800 rounded-xl p-6">
+                <h3 class="text-lg font-bold text-slate-200 mb-2 flex items-center gap-2">
+                    📷 Проверка Фото и Видео на ИИ
+                </h3>
+                <p class="text-xs text-slate-400 mb-4">
+                    Загрузите файл (PNG, JPEG, MP4) для глубокого аудита метаданных и бинарных паттернов.
+                </p>
+                
+                <input type="file" id="mediaFileInput" accept="image/png, image/jpeg, video/mp4" 
+                    class="w-full bg-slate-950 border border-slate-800 rounded-lg p-3 text-sm text-slate-300 file:mr-4 file:py-2 file:px-4 file:rounded-md file:border-0 file:text-xs file:font-semibold file:bg-blue-600 file:text-slate-100 hover:file:bg-blue-700 file:cursor-pointer transition mb-4" />
 
-                <!-- Console -->
-                <div class="panel overflow-hidden">
-                    <div class="bg-zinc-900/50 px-4 py-2 border-b border-zinc-800 text-[10px] text-zinc-500 flex justify-between">
-                        <span>Ritual Network Logs</span>
-                        <span id="last-sync">Last sync: --:--:--</span>
-                    </div>
-                    <div id="console" class="h-40 p-4 font-mono text-[10px] text-zinc-500 overflow-y-auto space-y-1">
-                        <p>> Ritual Teacher online and ready.</p>
-                    </div>
+                <button onclick="checkMediaFile()" class="w-full bg-emerald-600 hover:bg-emerald-700 font-bold py-3 px-4 rounded-lg transition text-sm">
+                    📤 Отправить файл на анализ
+                </button>
+
+                <div id="fileResultPanel" class="hidden mt-4 bg-slate-950 p-4 rounded-lg border border-slate-800 text-center">
+                    <span class="block text-xs text-slate-400 mb-1">Вердикт по файлу:</span>
+                    <div id="fileVerdictBadge" class="text-lg font-black tracking-wider p-2 rounded-lg mb-3"></div>
+                    <p id="fileMarkersText" class="text-xs text-slate-500 italic"></p>
                 </div>
             </div>
 
         </div>
+
     </div>
 
     <script>
-        const API_URL = "https://recipient-riverside-duckling.ngrok-free.dev/api/status";
+        const API_URL = 'http://localhost:3000';
 
-        function addLog(msg) {
-            const c = document.getElementById('console');
-            const p = document.createElement('p');
-            p.innerHTML = `<span class="text-zinc-800">[${new Date().toLocaleTimeString()}]</span> ${msg}`;
-            c.appendChild(p);
-            c.scrollTop = c.scrollHeight;
-        }
-
-        async function checkAI(type) {
-    const input = document.getElementById('ai-input').value;
-    if(!input) return alert("Введите текст!");
-    
-    const resultBox = document.getElementById('ai-result');
-    const scoreText = document.getElementById('ai-score');
-    
-    addLog(`Отправка текста на анализ Ritual Teacher...`);
-    
-    try {
-        const response = await fetch("https://recipient-riverside-duckling.ngrok-free.dev/api/check-ai", {
-            method: 'POST',
-            headers: { 
-                'Content-Type': 'application/json',
-                'ngrok-skip-browser-warning': 'true' 
-            },
-            body: JSON.stringify({ text: input })
-        });
-
-        const data = await response.json();
-        
-        resultBox.classList.remove('hidden');
-        scoreText.innerText = `${data.humanProbability}% Human / ${data.aiProbability}% AI`;
-        
-        if (data.isAI) {
-            scoreText.className = "text-red-400 font-bold text-sm";
-            addLog("ВНИМАНИЕ: Обнаружен контент, созданный ИИ.");
-        } else {
-            scoreText.className = "text-green-400 font-bold text-sm";
-            addLog("Проверка пройдена: Вероятно, текст написан человеком.");
-        }
-
-    } catch (error) {
-        console.error(error);
-        addLog("Ошибка: Агент не смог обработать запрос.");
-    }
-}
-
-        async function update() {
+        // ПРОВЕРКА СТАТУСА АГЕНТА ПРИ ЗАГРУЗКЕ
+        async function fetchStatus() {
+            const statusText = document.getElementById('statusText');
             try {
-                const r = await fetch(API_URL, { headers: { 'ngrok-skip-browser-warning': '69420' } });
-                const d = await r.json();
-                
-                document.getElementById('eth-balance').innerText = d.balances.eth;
-                document.getElementById('last-sync').innerText = "Last sync: " + new Date().toLocaleTimeString();
-                
-                // Эмуляция прогресса обучения
-                let progress = Math.min(100, parseInt(document.getElementById('training-percent').innerText) + 1);
-                document.getElementById('training-progress').style.width = progress + "%";
-                document.getElementById('training-percent').innerText = progress + "% Complete";
+                const res = await fetch(`${API_URL}/api/status`);
+                const data = await res.json();
+                if (data.isRunning) {
+                    statusText.innerText = data.modelReady ? "Активен" : "Загрузка модели...";
+                    statusText.className = data.modelReady ? "text-emerald-400" : "text-amber-400";
+                }
+            } catch (err) {
+                statusText.innerText = "Отключен";
+                statusText.className = "text-red-500";
+            }
+        }
+        fetchStatus();
 
-            } catch (e) {
-                addLog("Ошибка синхронизации с агентом...");
+        // ОЧИСТКА ТЕКСТОВОГО ПОЛЯ
+        function clearTextInput() {
+            const textInput = document.getElementById('textInput');
+            if (textInput) {
+                textInput.value = '';
+                textInput.focus();
             }
         }
 
-        setInterval(update, 5000);
-        update();
+        // ВАЛИДАЦИЯ ТЕКСТА
+        async function checkText() {
+            const textInput = document.getElementById('textInput');
+            const text = textInput.value.trim();
+
+            if (!text) return alert("Введите текст для проверки!");
+
+            const resultPanel = document.getElementById('textResultPanel');
+            const verdictBadge = document.getElementById('textVerdictBadge');
+
+            resultPanel.classList.remove('hidden');
+            verdictBadge.innerText = "⏳ Анализируем...";
+            verdictBadge.className = "text-lg font-black p-2 rounded-lg bg-slate-800 text-slate-400 border border-slate-700 animate-pulse";
+
+            try {
+                const response = await fetch(`${API_URL}/api/check-ai`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ text })
+                });
+                const data = await response.json();
+
+                if (data.error) return alert("Ошибка: " + data.error);
+
+                if (data.isAI) {
+                    verdictBadge.innerText = `🤖 AI GENERATED (${data.aiProbability}%)`;
+                    verdictBadge.className = "text-lg font-black p-2 rounded-lg bg-red-950 text-red-400 border border-red-800 shadow-[0_0_12px_rgba(239,68,68,0.2)]";
+                } else {
+                    verdictBadge.innerText = `👤 HUMAN ORIGINAL (${data.humanProbability}%)`;
+                    verdictBadge.className = "text-lg font-black p-2 rounded-lg bg-emerald-950 text-emerald-400 border border-emerald-800 shadow-[0_0_12px_rgba(16,185,129,0.2)]";
+                }
+            } catch (err) {
+                alert("Ошибка отправки запроса на валидацию текста.");
+                verdictBadge.innerText = "❌ Ошибка";
+            }
+        }
+
+        // ВАЛИДАЦИЯ ФАЙЛОВ
+        async function checkMediaFile() {
+            const fileInput = document.getElementById('mediaFileInput');
+            if (!fileInput.files || fileInput.files.length === 0) {
+                return alert("Выберите PNG, JPEG или MP4 файл.");
+            }
+
+            const file = fileInput.files[0];
+            const formData = new FormData();
+            formData.append('media', file);
+
+            const resultPanel = document.getElementById('fileResultPanel');
+            const verdictBadge = document.getElementById('fileVerdictBadge');
+            const markersText = document.getElementById('fileMarkersText');
+
+            resultPanel.classList.remove('hidden');
+            verdictBadge.innerText = "⏳ Анализируем...";
+            verdictBadge.className = "text-lg font-black p-2 rounded-lg bg-slate-800 text-slate-400 border border-slate-700 animate-pulse";
+            markersText.innerText = "";
+
+            try {
+                const response = await fetch(`${API_URL}/api/check-file`, {
+                    method: 'POST',
+                    body: formData
+                });
+                const data = await response.json();
+
+                if (data.error) return alert("Ошибка агента: " + data.error);
+
+                if (data.isAI) {
+                    verdictBadge.innerText = `🤖 AI GENERATED (${data.aiProbability}%)`;
+                    verdictBadge.className = "text-lg font-black p-2 rounded-lg bg-red-950 text-red-400 border border-red-800 shadow-[0_0_12px_rgba(239,68,68,0.2)]";
+                } else {
+                    verdictBadge.innerText = `👤 HUMAN ORIGINAL (${data.humanProbability}%)`;
+                    verdictBadge.className = "text-lg font-black p-2 rounded-lg bg-emerald-950 text-emerald-400 border border-emerald-800 shadow-[0_0_12px_rgba(16,185,129,0.2)]";
+                }
+
+                if (data.detectedMarkers && data.detectedMarkers.length > 0) {
+                    markersText.innerText = `Паттерны: ${data.detectedMarkers.join(', ')}`;
+                } else {
+                    markersText.innerText = "Специфических ИИ-маркеров не обнаружено.";
+                }
+            } catch (err) {
+                alert("Ошибка отправки медиафайла на валидацию.");
+                verdictBadge.innerText = "❌ Ошибка";
+            }
+        }
     </script>
 </body>
 </html>
-<div class="bg-slate-900 border border-slate-800 rounded-xl p-6 mt-6">
-    <h3 class="text-xl font-bold text-slate-200 mb-4">📷 Проверка Фото и Видео на ИИ</h3>
-    
-    <div class="flex flex-col gap-4">
-        <input type="file" id="mediaFileInput" accept="image/*,video/*" class="w-full bg-slate-950 border border-slate-800 rounded-lg p-3 text-slate-300 focus:outline-none focus:border-blue-500 transition" />
-        
-        <button onclick="checkFile()" id="btnCheckFile" class="w-full bg-emerald-600 hover:bg-emerald-700 font-bold py-3 px-4 rounded-lg transition">
-            📤 Загрузить и проверить файл
-        </button>
-    </div>
-
-    <div id="fileResult" class="hidden mt-4 p-4 bg-slate-950 border border-slate-800 rounded-lg text-center">
-        <p id="fileVerdict" class="text-xl font-black mb-2"></p>
-        <p id="fileMarkers" class="text-xs text-slate-400"></p>
-    </div>
-</div>
-
-<script>
-async function checkFile() {
-    const fileInput = document.getElementById('mediaFileInput');
-    if (!fileInput.files[0]) return alert("Выберите файл для загрузки!");
-
-    const formData = new FormData();
-    formData.append('media', fileInput.files[0]);
-
-    const resultDiv = document.getElementById('fileResult');
-    const verdictLabel = document.getElementById('fileVerdict');
-    const markersLabel = document.getElementById('fileMarkers');
-
-    try {
-        // Замени на актуальный URL твоего Ngrok или localhost
-        const response = await fetch('http://localhost:3000/api/check-file', {
-            method: 'POST',
-            body: formData
-        });
-
-        const data = await response.json();
-        resultDiv.classList.remove('hidden');
-
-        verdictLabel.innerText = `${data.verdict} (${data.aiProbability}%)`;
-        verdictLabel.className = data.isAI ? "text-xl font-black text-red-400" : "text-xl font-black text-emerald-400";
-        
-        markersLabel.innerText = data.detectedMarkers.length > 0 
-            ? `Маркеры: ${data.detectedMarkers.join(', ')}` 
-            : "Специфических ИИ-маркеров не найдено.";
-
-    } catch (err) {
-        alert("Ошибка при проверке файла агентом.");
-    }
-}
-</script>
