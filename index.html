@@ -122,21 +122,31 @@
         const API_URL = 'http://localhost:3000';
 
         // ПРОВЕРКА СТАТУСА АГЕНТА ПРИ ЗАГРУЗКЕ
-        async function fetchStatus() {
-            const statusText = document.getElementById('statusText');
-            try {
-                const res = await fetch(`${API_URL}/api/status`);
-                const data = await res.json();
-                if (data.isRunning) {
-                    statusText.innerText = data.modelReady ? "Активен" : "Загрузка модели...";
-                    statusText.className = data.modelReady ? "text-emerald-400" : "text-amber-400";
-                }
-            } catch (err) {
-                statusText.innerText = "Отключен";
-                statusText.className = "text-red-500";
-            }
+       // УЛУЧШЕННАЯ ПРОВЕРКА СТАТУСА АГЕНТА ПРИ ЗАГРУЗКЕ
+async function fetchStatus() {
+    const statusText = document.getElementById('statusText');
+    try {
+        const res = await fetch(`${API_URL}/api/status`);
+        const data = await res.json();
+        
+        // Проверяем статус по любому из флагов (isRunning, modelReady или status === 'active')
+        if (data.isRunning || data.status === 'active' || data.modelReady) {
+            statusText.innerText = data.modelReady ? "Активен" : "Загрузка модели...";
+            statusText.className = "text-emerald-400 font-bold";
+        } else {
+            statusText.innerText = "Загрузка...";
+            statusText.className = "text-amber-400";
         }
-        fetchStatus();
+    } catch (err) {
+        statusText.innerText = "Отключен";
+        statusText.className = "text-red-500 font-bold";
+        console.error("Ошибка подключения к агенту:", err);
+    }
+}
+// Запускаем проверку статуса
+fetchStatus();
+// Также будем обновлять статус каждые 10 секунд
+setInterval(fetchStatus, 10000);
 
         // ОЧИСТКА ПОЛЯ ПРОВЕРКИ ТЕКСТА
         function clearTextInput() {
