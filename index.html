@@ -86,6 +86,37 @@
 
     <script>
         const API_URL = 'http://localhost:3000';
+        <div class="bg-slate-900 border border-slate-800 rounded-xl p-6 mt-6">
+    <h3 class="text-lg font-bold text-slate-200 mb-2 flex items-center gap-2">
+        ✍️ Очеловечивание ИИ-Текста
+    </h3>
+    <p class="text-xs text-slate-400 mb-4">
+        Вставьте сгенерированный ИИ-текст. Агент перепишет его так, чтобы он выглядел написанным человеком.
+    </p>
+
+    <div class="relative w-full mb-4">
+        <textarea id="humanizeInput" rows="4" 
+            class="w-full bg-slate-950 border border-slate-800 rounded-lg p-4 pr-12 text-sm text-slate-300 focus:outline-none focus:border-blue-500 transition resize-none" 
+            placeholder="Вставьте ИИ-текст для переработки..."></textarea>
+        
+        <button onclick="clearHumanizeInput()" class="absolute top-3 right-3 text-slate-500 hover:text-slate-300 bg-slate-900/80 hover:bg-slate-800 p-1.5 rounded-md transition focus:outline-none flex items-center justify-center">
+            <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
+            </svg>
+        </button>
+    </div>
+
+    <button onclick="humanizeText()" class="w-full bg-violet-600 hover:bg-violet-700 font-bold py-3 px-4 rounded-lg transition text-sm mb-4">
+        ✨ Очеловечить текст
+    </button>
+
+    <div id="humanizeResultPanel" class="hidden bg-slate-950 p-4 rounded-lg border border-slate-800">
+        <span class="block text-xs text-slate-400 mb-2">Очеловеченный текст:</span>
+        <textarea id="humanizeOutput" rows="4" readonly
+            class="w-full bg-slate-900 border border-slate-800 rounded-lg p-3 text-sm text-emerald-300 focus:outline-none resize-none select-all"></textarea>
+        <p class="text-[10px] text-slate-500 mt-2">💡 Текст готов! Его можно скопировать и отправить на повторную валидацию выше.</p>
+    </div>
+</div>
 
         // ПРОВЕРКА СТАТУСА АГЕНТА ПРИ ЗАГРУЗКЕ
         async function fetchStatus() {
