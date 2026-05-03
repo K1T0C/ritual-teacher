@@ -15,7 +15,7 @@
                 <h1 class="text-2xl md:text-3xl font-black tracking-tight text-transparent bg-clip-text bg-gradient-to-r from-blue-400 to-emerald-400">
                     RITUAL TEACHER ALPHA
                 </h1>
-                <p class="text-sm text-slate-400 mt-1">ИИ-Оракул валидации контента в сети Ritual Chain</p>
+                <p class="text-sm text-slate-400 mt-1">ИИ-Оракул валидации и обработки контента в сети Ritual Chain</p>
             </div>
             <div id="nodeStatusBadge" class="self-start md:self-center px-4 py-2 rounded-lg bg-slate-900 border border-slate-800 text-xs font-semibold flex items-center gap-2">
                 <span class="relative flex h-2 w-2">
@@ -35,7 +35,7 @@
                 <p class="text-xs text-slate-400 mb-4">Вставьте текст, чтобы ИИ-агент оценил его лексическую сложность и натуральность.</p>
 
                 <div class="relative w-full mb-4">
-                    <textarea id="textInput" rows="5" 
+                    <textarea id="textInput" rows="4" 
                         class="w-full bg-slate-950 border border-slate-800 rounded-lg p-4 pr-12 text-sm text-slate-300 focus:outline-none focus:border-blue-500 transition resize-none" 
                         placeholder="Введите или вставьте текст для проверки..."></textarea>
                     
@@ -55,6 +55,40 @@
                 <div id="textResultPanel" class="hidden mt-4 bg-slate-950 p-4 rounded-lg border border-slate-800 text-center">
                     <span class="block text-xs text-slate-400 mb-1">Вердикт по тексту:</span>
                     <div id="textVerdictBadge" class="text-lg font-black tracking-wider p-2 rounded-lg"></div>
+                </div>
+            </div>
+
+            <div class="bg-slate-900 border border-slate-800 rounded-xl p-6">
+                <h3 class="text-lg font-bold text-slate-200 mb-2 flex items-center gap-2">
+                    ✍️ Очеловечивание ИИ-Текста
+                </h3>
+                <p class="text-xs text-slate-400 mb-4">
+                    Вставьте сгенерированный ИИ текст. Агент перепишет его так, чтобы он выглядел написанным человеком.
+                </p>
+
+                <div class="relative w-full mb-4">
+                    <textarea id="humanizeInput" rows="4" 
+                        class="w-full bg-slate-950 border border-slate-800 rounded-lg p-4 pr-12 text-sm text-slate-300 focus:outline-none focus:border-violet-500 transition resize-none" 
+                        placeholder="Вставьте ИИ-текст для переработки..."></textarea>
+                    
+                    <button onclick="clearHumanizeInput()" id="btnClearHumanize" 
+                        class="absolute top-3 right-3 text-slate-500 hover:text-slate-300 bg-slate-900/80 hover:bg-slate-800 p-1.5 rounded-md transition focus:outline-none flex items-center justify-center" 
+                        title="Очистить текст">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
+                        </svg>
+                    </button>
+                </div>
+
+                <button onclick="humanizeText()" class="w-full bg-violet-600 hover:bg-violet-700 font-bold py-3 px-4 rounded-lg transition text-sm mb-4">
+                    ✨ Очеловечить текст
+                </button>
+
+                <div id="humanizeResultPanel" class="hidden bg-slate-950 p-4 rounded-lg border border-slate-800">
+                    <span class="block text-xs text-slate-400 mb-2">Очеловеченный текст:</span>
+                    <textarea id="humanizeOutput" rows="4" readonly
+                        class="w-full bg-slate-900 border border-slate-800 rounded-lg p-3 text-sm text-emerald-300 focus:outline-none resize-none select-all"></textarea>
+                    <p class="text-[10px] text-slate-500 mt-2">💡 Текст готов! Его можно скопировать и отправить на повторную валидацию выше.</p>
                 </div>
             </div>
 
@@ -86,37 +120,6 @@
 
     <script>
         const API_URL = 'http://localhost:3000';
-        <div class="bg-slate-900 border border-slate-800 rounded-xl p-6 mt-6">
-    <h3 class="text-lg font-bold text-slate-200 mb-2 flex items-center gap-2">
-        ✍️ Очеловечивание ИИ-Текста
-    </h3>
-    <p class="text-xs text-slate-400 mb-4">
-        Вставьте сгенерированный ИИ-текст. Агент перепишет его так, чтобы он выглядел написанным человеком.
-    </p>
-
-    <div class="relative w-full mb-4">
-        <textarea id="humanizeInput" rows="4" 
-            class="w-full bg-slate-950 border border-slate-800 rounded-lg p-4 pr-12 text-sm text-slate-300 focus:outline-none focus:border-blue-500 transition resize-none" 
-            placeholder="Вставьте ИИ-текст для переработки..."></textarea>
-        
-        <button onclick="clearHumanizeInput()" class="absolute top-3 right-3 text-slate-500 hover:text-slate-300 bg-slate-900/80 hover:bg-slate-800 p-1.5 rounded-md transition focus:outline-none flex items-center justify-center">
-            <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
-            </svg>
-        </button>
-    </div>
-
-    <button onclick="humanizeText()" class="w-full bg-violet-600 hover:bg-violet-700 font-bold py-3 px-4 rounded-lg transition text-sm mb-4">
-        ✨ Очеловечить текст
-    </button>
-
-    <div id="humanizeResultPanel" class="hidden bg-slate-950 p-4 rounded-lg border border-slate-800">
-        <span class="block text-xs text-slate-400 mb-2">Очеловеченный текст:</span>
-        <textarea id="humanizeOutput" rows="4" readonly
-            class="w-full bg-slate-900 border border-slate-800 rounded-lg p-3 text-sm text-emerald-300 focus:outline-none resize-none select-all"></textarea>
-        <p class="text-[10px] text-slate-500 mt-2">💡 Текст готов! Его можно скопировать и отправить на повторную валидацию выше.</p>
-    </div>
-</div>
 
         // ПРОВЕРКА СТАТУСА АГЕНТА ПРИ ЗАГРУЗКЕ
         async function fetchStatus() {
@@ -135,12 +138,21 @@
         }
         fetchStatus();
 
-        // ОЧИСТКА ТЕКСТОВОГО ПОЛЯ
+        // ОЧИСТКА ПОЛЯ ПРОВЕРКИ ТЕКСТА
         function clearTextInput() {
             const textInput = document.getElementById('textInput');
             if (textInput) {
                 textInput.value = '';
                 textInput.focus();
+            }
+        }
+
+        // ОЧИСТКА ПОЛЯ ОЧЕЛОВЕЧИВАНИЯ
+        function clearHumanizeInput() {
+            const humanizeInput = document.getElementById('humanizeInput');
+            if (humanizeInput) {
+                humanizeInput.value = '';
+                humanizeInput.focus();
             }
         }
 
@@ -161,111 +173,3 @@
             try {
                 const response = await fetch(`${API_URL}/api/check-ai`, {
                     method: 'POST',
-                    headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({ text })
-                });
-                const data = await response.json();
-
-                if (data.error) return alert("Ошибка: " + data.error);
-
-                if (data.isAI) {
-                    verdictBadge.innerText = `🤖 AI GENERATED (${data.aiProbability}%)`;
-                    verdictBadge.className = "text-lg font-black p-2 rounded-lg bg-red-950 text-red-400 border border-red-800 shadow-[0_0_12px_rgba(239,68,68,0.2)]";
-                } else {
-                    verdictBadge.innerText = `👤 HUMAN ORIGINAL (${data.humanProbability}%)`;
-                    verdictBadge.className = "text-lg font-black p-2 rounded-lg bg-emerald-950 text-emerald-400 border border-emerald-800 shadow-[0_0_12px_rgba(16,185,129,0.2)]";
-                }
-            } catch (err) {
-                alert("Ошибка отправки запроса на валидацию текста.");
-                verdictBadge.innerText = "❌ Ошибка";
-            }
-        }
-
-        // ВАЛИДАЦИЯ ФАЙЛОВ
-        async function checkMediaFile() {
-            const fileInput = document.getElementById('mediaFileInput');
-            if (!fileInput.files || fileInput.files.length === 0) {
-                return alert("Выберите PNG, JPEG или MP4 файл.");
-            }
-
-            const file = fileInput.files[0];
-            const formData = new FormData();
-            formData.append('media', file);
-
-            const resultPanel = document.getElementById('fileResultPanel');
-            const verdictBadge = document.getElementById('fileVerdictBadge');
-            const markersText = document.getElementById('fileMarkersText');
-
-            resultPanel.classList.remove('hidden');
-            verdictBadge.innerText = "⏳ Анализируем...";
-            verdictBadge.className = "text-lg font-black p-2 rounded-lg bg-slate-800 text-slate-400 border border-slate-700 animate-pulse";
-            markersText.innerText = "";
-
-            try {
-                const response = await fetch(`${API_URL}/api/check-file`, {
-                    method: 'POST',
-                    body: formData
-                });
-                const data = await response.json();
-
-                if (data.error) return alert("Ошибка агента: " + data.error);
-
-                if (data.isAI) {
-                    verdictBadge.innerText = `🤖 AI GENERATED (${data.aiProbability}%)`;
-                    verdictBadge.className = "text-lg font-black p-2 rounded-lg bg-red-950 text-red-400 border border-red-800 shadow-[0_0_12px_rgba(239,68,68,0.2)]";
-                } else {
-                    verdictBadge.innerText = `👤 HUMAN ORIGINAL (${data.humanProbability}%)`;
-                    verdictBadge.className = "text-lg font-black p-2 rounded-lg bg-emerald-950 text-emerald-400 border border-emerald-800 shadow-[0_0_12px_rgba(16,185,129,0.2)]";
-                }
-
-                if (data.detectedMarkers && data.detectedMarkers.length > 0) {
-                    markersText.innerText = `Паттерны: ${data.detectedMarkers.join(', ')}`;
-                } else {
-                    markersText.innerText = "Специфических ИИ-маркеров не обнаружено.";
-                }
-            } catch (err) {
-                alert("Ошибка отправки медиафайла на валидацию.");
-                verdictBadge.innerText = "❌ Ошибка";
-            }
-        }
-    </script>
-    // Очистка поля для очеловечивания
-function clearHumanizeInput() {
-    const input = document.getElementById('humanizeInput');
-    if (input) {
-        input.value = '';
-        input.focus();
-    }
-}
-
-// Отправка текста на очеловечивание
-async function humanizeText() {
-    const input = document.getElementById('humanizeInput');
-    const text = input.value.trim();
-
-    if (!text) return alert("Введите текст для переработки!");
-
-    const resultPanel = document.getElementById('humanizeResultPanel');
-    const outputArea = document.getElementById('humanizeOutput');
-
-    try {
-        const response = await fetch(`${API_URL}/api/humanize`, {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({ text })
-        });
-        const data = await response.json();
-
-        if (data.error) return alert("Ошибка: " + data.error);
-
-        // Показываем результат
-        resultPanel.classList.remove('hidden');
-        outputArea.value = data.humanizedText;
-
-    } catch (err) {
-        alert("Ошибка при переработке текста.");
-    }
-}
-</body>
-</html>
-
