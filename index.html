@@ -229,5 +229,43 @@
             }
         }
     </script>
+    // Очистка поля для очеловечивания
+function clearHumanizeInput() {
+    const input = document.getElementById('humanizeInput');
+    if (input) {
+        input.value = '';
+        input.focus();
+    }
+}
+
+// Отправка текста на очеловечивание
+async function humanizeText() {
+    const input = document.getElementById('humanizeInput');
+    const text = input.value.trim();
+
+    if (!text) return alert("Введите текст для переработки!");
+
+    const resultPanel = document.getElementById('humanizeResultPanel');
+    const outputArea = document.getElementById('humanizeOutput');
+
+    try {
+        const response = await fetch(`${API_URL}/api/humanize`, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ text })
+        });
+        const data = await response.json();
+
+        if (data.error) return alert("Ошибка: " + data.error);
+
+        // Показываем результат
+        resultPanel.classList.remove('hidden');
+        outputArea.value = data.humanizedText;
+
+    } catch (err) {
+        alert("Ошибка при переработке текста.");
+    }
+}
 </body>
 </html>
+
