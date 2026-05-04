@@ -191,7 +191,16 @@
     <footer class="py-4 text-center text-secondary border-top border-dark mt-auto">
         <small>Powered by Ritual Foundation Architecture & Your Mentor Agent</small>
     </footer>
-
+// Внутри doFileAction после получения data:
+fileResult.innerHTML = `
+    <div class="p-3 border border-secondary rounded bg-black">
+        <h4 class="${data.isAI ? 'text-danger' : 'text-success'}">
+            ${data.isAI ? '🤖 AI Generated' : '✍️ Human Made'}
+        </h4>
+        <p class="mb-1"><b>Confidence:</b> ${data.aiProbability}%</p>
+        <p class="small text-info italic">${data.analysis || ''}</p>
+    </div>
+`;
     <script>
         async function connect() {
             if(!window.ethereum) return alert("Please install MetaMask");
