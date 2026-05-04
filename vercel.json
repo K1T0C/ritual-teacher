@@ -1,6 +1,9 @@
 {
+  "version": 2,
   "cleanUrls": true,
-  "framework": null,
-  "installCommand": null,
-  "buildCommand": null
+  "routes": [
+    { "src": "/", "dest": "/index.html" },
+    { "src": "/academy", "dest": "/academy.html" },
+    { "src": "/academy.html", "dest": "/academy.html" }
+  ]
 }
