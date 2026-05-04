@@ -1,0 +1,132 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AI Training Academy | Level Up Your Agent</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@700&family=Rajdhani:wght@500;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        body { 
+            background: #040707; 
+            color: #e2e8f0; 
+            font-family: 'Rajdhani', sans-serif;
+            letter-spacing: 0.5px;
+        }
+        .navbar {
+            background: rgba(4, 7, 7, 0.8);
+            backdrop-filter: blur(12px);
+            border-bottom: 1px solid rgba(0, 255, 135, 0.15);
+        }
+        .cyber-card { 
+            background: rgba(11, 23, 19, 0.6); 
+            border: 1px solid rgba(0, 255, 135, 0.12); 
+            border-radius: 12px; 
+            backdrop-filter: blur(8px);
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            height: 100%;
+        }
+        .cyber-card:hover { 
+            border-color: #00ff87; 
+            box-shadow: 0 0 25px rgba(0, 255, 135, 0.15); 
+            transform: translateY(-2px);
+        }
+        .skill-icon { 
+            font-size: 2.3rem; 
+            color: #00ff87; 
+            margin-bottom: 1.2rem; 
+            text-shadow: 0 0 10px rgba(0, 255, 135, 0.3);
+        }
+        .btn-train { 
+            background: transparent; 
+            border: 1px solid rgba(0, 255, 135, 0.3); 
+            color: #00ff87; 
+            font-weight: 700; 
+            width: 100%; 
+            margin-top: auto; 
+            padding: 10px;
+            letter-spacing: 1px;
+            text-transform: uppercase;
+            transition: all 0.3s ease;
+        }
+        .btn-train:hover { 
+            background: #00ff87; 
+            color: #040707; 
+            box-shadow: 0 0 15px rgba(0, 255, 135, 0.2);
+        }
+    </style>
+</head>
+<body>
+
+    <nav class="navbar fixed-top py-3 mb-5">
+        <div class="container d-flex justify-content-between align-items-center">
+            <a class="text-decoration-none" href="/" style="color:#00ff87; font-family:'Orbitron'; font-weight:700;">
+                <i class="fa-solid fa-arrow-left me-2"></i> BACK TO DASHBOARD
+            </a>
+            <span class="text-secondary opacity-75">Academy Portal v1.0</span>
+        </div>
+    </nav>
+
+    <div class="container text-center mb-5" style="margin-top: 130px;">
+        <h1 style="font-family: 'Orbitron'; font-weight:700;" class="mb-2">SELECT TRAINING MODULE</h1>
+        <p class="text-secondary fs-5">Decentralized, automated node validation skills for autonomous units.</p>
+    </div>
+
+    <div class="container">
+        <div class="row g-4" id="skillGrid">
+            <div class="col-md-4">
+                <div class="cyber-card p-4 d-flex flex-column">
+                    <i class="fa-solid fa-shield-halved skill-icon"></i>
+                    <h3 style="font-family: 'Orbitron'; font-size: 1.35rem;">Self-Diagnostic</h3>
+                    <p class="text-secondary small mb-4">Complete module on security operations, EVM error extraction, and self-debugging in node crashes.</p>
+                    <button class="btn btn-train" onclick="buySkill('Self-Diagnostic-SecOps')">0.001 ETH</button>
+                </div>
+            </div>
+            <div class="col-md-4">
+                <div class="cyber-card p-4 d-flex flex-column">
+                    <i class="fa-solid fa-terminal skill-icon"></i>
+                    <h3 style="font-family: 'Orbitron'; font-size: 1.35rem;">Web3 Prompting</h3>
+                    <p class="text-secondary small mb-4">Advanced lexical syntax. Instructs your model how to interact with the Ritual RPC effortlessly.</p>
+                    <button class="btn btn-train" onclick="buySkill('Web3-Prompt-Master')">0.001 ETH</button>
+                </div>
+            </div>
+            <div class="col-md-4">
+                <div class="cyber-card p-4 d-flex flex-column">
+                    <i class="fa-solid fa-bolt skill-icon"></i>
+                    <h3 style="font-family: 'Orbitron'; font-size: 1.35rem;">Auto Web3 Action</h3>
+                    <p class="text-secondary small mb-4">Unlocks autonomous transaction signing, gas estimation, and dynamic blockchain task execution.</p>
+                    <button class="btn btn-train" onclick="buySkill('Autonomous-Web3-Action')">0.001 ETH</button>
+                </div>
+            </div>
+        </div>
+        <div id="status" class="mt-5 text-center fs-5 text-info" style="font-family:'Orbitron';"></div>
+    </div>
+
+    <footer class="py-5 text-center text-secondary border-top border-dark mt-5">
+        <small>Official Certification Program | Ritual Network Infrastructure</small>
+    </footer>
+
+    <script src="https://cdn.jsdelivr.net/npm/ethers@6.13.1/dist/ethers.umd.min.js"></script>
+    <script>
+        const CONTRACT_ADDRESS = "0xТВОЙ_НОВЫЙ_ПЛАТНЫЙ_КОНТРАКТ_ИЗ_REMIX"; 
+        const ABI = ["function requestTraining(string memory _skillName) external payable", "function trainingFee() external view returns (uint256)"];
+
+        async function buySkill(name) {
+            if(!window.ethereum) return alert("Install MetaMask");
+            const provider = new ethers.BrowserProvider(window.ethereum);
+            const signer = await provider.getSigner();
+            const contract = new ethers.Contract(CONTRACT_ADDRESS, ABI, signer);
+            const fee = await contract.trainingFee();
+            
+            document.getElementById('status').innerText = "Initiating training: " + name + "...";
+            try {
+                const tx = await contract.requestTraining(name, { value: fee });
+                document.getElementById('status').innerText = "Awaiting block verification... TX: " + tx.hash;
+                await tx.wait();
+                document.getElementById('status').innerText = "✅ Succesfully trained! Your certificate is registered.";
+            } catch(e) { document.getElementById('status').innerText = "Error: " + e.message; }
+        }
+    </script>
+</body>
+</html>
