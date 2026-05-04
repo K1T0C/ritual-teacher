@@ -1,264 +1,199 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="ru">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Ritual Hub | AI Utility Dashboard</title>
+    <title>Ritual AI | Text Mentor</title>
+    <!-- Подключаем стильный шрифт и Bootstrap -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;800&display=swap" rel="stylesheet">
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
-    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@700&family=Rajdhani:wght@500;700&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
-        body { 
-            background: #040707; /* Ультра-тёмный зелёный оттенок */
-            color: #f1f5f9; 
-            font-family: 'Rajdhani', sans-serif;
-            letter-spacing: 0.5px;
-        }
-        
-        /* HEADER И NAVIGATION */
-        .navbar {
-            background: rgba(4, 7, 7, 0.8);
-            backdrop-filter: blur(12px);
-            border-bottom: 1px solid rgba(0, 255, 135, 0.15);
-        }
-        .brand-title {
-            font-family: 'Orbitron', sans-serif;
-            font-weight: 700;
-            background: linear-gradient(45deg, #00ff87, #60afff);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-        }
-        .btn-wallet {
-            background: transparent;
-            border: 1px solid rgba(0, 255, 135, 0.3);
-            color: #00ff87;
-            font-weight: 700;
-            border-radius: 6px;
-            transition: all 0.3s ease;
-        }
-        .btn-wallet:hover {
-            background: rgba(0, 255, 135, 0.1);
-            box-shadow: 0 0 15px rgba(0, 255, 135, 0.2);
-            border-color: #00ff87;
-            color: #fff;
+        :root {
+            --bg-color: #0a0a0c;
+            --card-bg: #141417;
+            --primary-accent: #6366f1; /* Индиго */
+            --secondary-accent: #10b981; /* Изумрудный */
+            --text-main: #f8fafc;
         }
 
-        /* HERO SECTION */
-        .hero-bg {
-            background: linear-gradient(rgba(4, 7, 7, 0.85), rgba(4, 7, 7, 0.95)), url('https://images.unsplash.com/photo-1639762681485-074b7f938ba0?q=80&w=1632&auto=format&fit=crop');
-            background-size: cover;
-            background-position: center;
-            padding: 90px 0;
-            border-bottom: 1px solid rgba(0, 255, 135, 0.1);
+        body {
+            background-color: var(--bg-color);
+            color: var(--text-main);
+            font-family: 'Inter', sans-serif;
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
         }
 
-        /* КАРТОЧКИ (В стиле Ritual Skills) */
-        .tool-card { 
-            background: rgba(11, 23, 19, 0.6); 
-            border: 1px solid rgba(0, 255, 135, 0.12); 
-            border-radius: 12px; 
-            padding: 28px; 
-            height: 100%; 
-            backdrop-filter: blur(8px);
-            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-        }
-        .tool-card:hover { 
-            border-color: rgba(0, 255, 135, 0.4);
-            box-shadow: 0 0 25px rgba(0, 255, 135, 0.1);
-            transform: translateY(-2px);
-        }
-        .card-header-title {
-            font-family: 'Orbitron', sans-serif;
-            color: #00ff87;
-            font-size: 1.25rem;
-            text-shadow: 0 0 10px rgba(0, 255, 135, 0.2);
+        .mentor-card {
+            background: var(--card-bg);
+            border: 1px solid #27272a;
+            border-radius: 24px;
+            padding: 2.5rem;
+            box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.5);
         }
 
-        /* КНОПКИ ДЕЙСТВИЙ */
-        .btn-cyber { 
-            background: #00ff87; 
-            color: #040707; 
-            font-weight: 700; 
-            border-radius: 6px; 
-            border: none; 
-            padding: 12px 24px; 
-            text-transform: uppercase;
-            letter-spacing: 1px;
-            transition: all 0.3s ease;
-        }
-        .btn-cyber:hover { 
-            background: #fff;
-            box-shadow: 0 0 20px rgba(0, 255, 135, 0.4);
-            transform: scale(1.01);
-        }
+        h2 { font-weight: 800; letter-spacing: -0.025em; margin-bottom: 1.5rem; }
 
-        .form-control { 
-            background: #091210; 
-            border: 1px solid rgba(0, 255, 135, 0.1); 
-            color: #fff; 
-            border-radius: 6px;
-        }
-        .form-control:focus {
-            background: #091210;
-            border-color: #00ff87;
-            box-shadow: 0 0 10px rgba(0, 255, 135, 0.15);
-            color: #fff;
-        }
-
-        /* ГЛАВНАЯ КНОПКА (CTA) */
-        .train-cta { 
-            background: linear-gradient(rgba(4, 30, 20, 0.75), rgba(9, 18, 16, 0.9)), url('https://images.unsplash.com/photo-1620712943543-bcc4628c975c?q=80&w=1528&auto=format&fit=crop');
-            background-size: cover; 
-            background-position: center;
-            border: 1px solid rgba(0, 255, 135, 0.3); 
+        .text-area-custom {
+            background: #1c1c21 !important;
+            border: 1px solid #3f3f46 !important;
+            color: #fff !important;
             border-radius: 16px;
-            padding: 65px; 
-            text-align: center; 
-            cursor: pointer;
-            transition: all 0.4s ease; 
-            text-decoration: none; 
-            display: block; 
-            margin-top: 50px;
+            padding: 1.2rem;
+            font-size: 1rem;
+            transition: all 0.3s ease;
+            resize: none;
         }
-        .train-cta:hover { 
-            transform: translateY(-3px); 
-            border-color: #00ff87;
-            box-shadow: 0 0 40px rgba(0, 255, 135, 0.25); 
+
+        .text-area-custom:focus {
+            border-color: var(--primary-accent) !important;
+            box-shadow: 0 0 0 4px rgba(99, 102, 241, 0.2) !important;
         }
-        .train-cta h2 { 
-            font-family: 'Orbitron'; 
-            font-size: 2.8rem; 
-            color: #fff; 
-            text-shadow: 0 0 20px rgba(0, 255, 135, 0.5);
-            margin: 0;
+
+        .btn-action {
+            border-radius: 12px;
+            padding: 0.8rem 1.5rem;
+            font-weight: 600;
+            transition: transform 0.2s;
         }
+
+        .btn-action:active { transform: scale(0.98); }
+
+        .btn-check { background: transparent; border: 2px solid var(--secondary-accent); color: var(--secondary-accent); }
+        .btn-check:hover { background: var(--secondary-accent); color: #fff; }
+
+        .btn-humanize { background: var(--primary-accent); border: none; color: #fff; }
+        .btn-humanize:hover { background: #4f46e5; box-shadow: 0 0 20px rgba(99, 102, 241, 0.4); }
+
+        #resultBlock {
+            margin-top: 2rem;
+            animation: fadeIn 0.5s ease;
+        }
+
+        .output-box {
+            background: #000;
+            border-radius: 16px;
+            padding: 1.5rem;
+            border-left: 4px solid var(--primary-accent);
+            font-size: 0.95rem;
+            line-height: 1.6;
+            color: #cbd5e1;
+            white-space: pre-wrap;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .loader { width: 20px; height: 20px; border: 3px solid #fff; border-bottom-color: transparent; border-radius: 50%; display: inline-block; animation: rotation 1s linear infinite; vertical-align: middle; margin-right: 8px; }
+        @keyframes rotation { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
+        .hidden { display: none; }
     </style>
 </head>
 <body>
 
-    <nav class="navbar fixed-top py-3">
-        <div class="container d-flex justify-content-between align-items-center">
-            <h3 class="m-0 brand-title">RITUAL HUB</h3>
-            <button id="connectBtn" class="btn btn-wallet px-4" onclick="connect()">CONNECT WALLET</button>
-        </div>
-    </nav>
-
-    <header class="hero-bg text-center mt-5">
-        <div class="container mt-4">
-            <h1 class="display-4 fw-bold mb-3" style="font-family: 'Orbitron';">AI UTILITY ENGINE</h1>
-            <p class="lead text-secondary" style="font-size: 1.2rem;">Next-generation decentralized text processing for the Ritual ecosystem.</p>
-        </div>
-    </header>
-<!-- Ищи этот блок в коде -->
-<div class="cyber-card p-4">
-    <h3 class="h5 mb-3">FILE DIAGNOSTIC</h3>
-    <input type="file" id="fileInput" class="form-control bg-dark text-light border-secondary mb-3">
-    
-    <!-- Кнопка должна вызывать doFileAction(), а не doAction('detect') -->
-    <button class="btn btn-cyber-outline w-100 mt-2" onclick="doFileAction()">DETECT AI</button>
-    
-    <div id="fileResult" class="mt-3 small text-secondary"></div>
-</div>
-    <div class="container mt-5 pt-3">
-        <div class="row g-4">
-            <div class="col-md-6">
-                <div class="tool-card">
-                    <h4 class="card-header-title mb-3"><i class="fa-solid fa-feather me-2"></i> TEXT HUMANIZER</h4>
-                    <p class="text-secondary small">Refine artificial syntax into a highly convincing organic voice.</p>
-                    <textarea id="hInput" class="form-control mb-3" rows="4" placeholder="Paste robotic AI text here..."></textarea>
-                    <button class="btn btn-cyber w-100" onclick="doAction('humanize')">HUMANIZE TEXT</button>
-                    <div id="hResult" class="mt-3 small text-secondary"></div>
+<div class="container">
+    <div class="row justify-content-center">
+        <div class="col-lg-8">
+            <div class="mentor-card">
+                <div class="d-flex align-items-center mb-4">
+                    <div style="background: var(--primary-accent); width: 12px; height: 32px; border-radius: 4px; margin-right: 15px;"></div>
+                    <h2 class="m-0">Ritual Text Mentor</h2>
                 </div>
-            </div>
-            <div class="col-md-6">
-                <div class="tool-card">
-                    <h4 class="card-header-title mb-3"><i class="fa-solid fa-magnifying-glass me-2"></i> AI DETECTOR & FILE SCAN</h4>
-                    <p class="text-secondary small">Comprehensive verification protocols for raw text and digital files.</p>
-                    <textarea id="dInput" class="form-control mb-2" rows="2" placeholder="Analyze plain text..."></textarea>
-                    <input type="file" id="fInput" class="form-control mb-3">
-                    <button class="btn btn-cyber w-100" onclick="doAction('detect')">SCAN AUDIT</button>
-                    <div id="dResult" class="mt-3 small text-secondary"></div>
+
+                <textarea id="inputText" class="form-control text-area-custom mb-4" rows="10" placeholder="Вставьте ваш текст для анализа или очеловечивания..."></textarea>
+
+                <div class="row g-3">
+                    <div class="col-md-6">
+                        <button id="btnCheck" onclick="handleAction('check')" class="btn btn-action btn-check w-100">
+                            <span id="loadCheck" class="loader hidden"></span>
+                            🔍 Проверить на ИИ
+                        </button>
+                    </div>
+                    <div class="col-md-6">
+                        <button id="btnHuman" onclick="handleAction('humanize')" class="btn btn-action btn-humanize w-100">
+                            <span id="loadHuman" class="loader hidden"></span>
+                            ✨ Очеловечить текст
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Блок результата -->
+                <div id="resultBlock" class="hidden">
+                    <div class="d-flex justify-content-between align-items-center mb-2">
+                        <label class="text-secondary small fw-bold">ВЕРДИКТ ОРАКУЛА</label>
+                        <button onclick="copyResult()" class="btn btn-sm btn-link text-decoration-none p-0" style="color: var(--primary-accent);">Копировать</button>
+                    </div>
+                    <div id="output" class="output-box"></div>
                 </div>
             </div>
         </div>
-
-        <a href="academy.html" class="train-cta mb-5">
-            <h2>TRAIN YOUR AGENT</h2>
-            <p class="text-secondary fs-5 mt-2">Equip your autonomous unit with the latest smart contract execution protocols</p>
-        </a>
     </div>
+</div>
 
-    <footer class="py-4 text-center text-secondary border-top border-dark mt-auto">
-        <small>Powered by Ritual Foundation Architecture & Your Mentor Agent</small>
-    </footer>
-// Внутри doFileAction после получения data:
-if (data.success) {
-            // Очищаем и заполняем блок результата
-            fileResult.innerHTML = `
-                <div class="p-3 border border-secondary rounded bg-dark shadow-sm">
-                    <div class="d-flex align-items-center mb-2">
-                        <h4 class="m-0 ${data.isAI ? 'text-danger' : 'text-success'}">
-                            ${data.isAI ? '🤖 AI DETECTED' : '✍️ HUMAN MADE'}
-                        </h4>
-                        <span class="ms-auto badge bg-secondary">${data.aiProbability}%</span>
-                    </div>
-                    
-                    <!-- ВОТ ЗДЕСЬ ВЫВОДИМ АНАЛИЗ ОТ GROQ -->
-                    <div class="mt-3">
-                        <label class="small text-uppercase text-secondary fw-bold">Oracle Verdict:</label>
-                        <p class="small text-light bg-black p-2 rounded border border-secondary mt-1">
-                            ${data.analysis || 'No detailed analysis provided.'}
-                        </p>
-                    </div>
-                    
-                    <div class="small text-muted mt-2">
-                        File: ${data.fileName}
-                    </div>
-                </div>`;
-        } else {
-            fileResult.innerHTML = `<div class="text-danger">❌ Error: ${data.error}</div>`;
+<script>
+    // ЗАМЕНИ НА СВОЙ АДРЕС NGROK
+    const API_BASE = "https://ТВОЙ-АДРЕС.ngrok-free.app/api/process-text";
+
+    async function handleAction(action) {
+        const text = document.getElementById('inputText').value;
+        const btnCheck = document.getElementById('btnCheck');
+        const btnHuman = document.getElementById('btnHuman');
+        const loadCheck = document.getElementById('loadCheck');
+        const loadHuman = document.getElementById('loadHuman');
+        const resultBlock = document.getElementById('resultBlock');
+        const output = document.getElementById('output');
+
+        if (!text || text.length < 5) {
+            alert("Пожалуйста, введите текст подлиннее.");
+            return;
         }
-    <script>
-        async function connect() {
-            if(!window.ethereum) return alert("Please install MetaMask");
-            const accs = await window.ethereum.request({method: 'eth_requestAccounts'});
-            document.getElementById('connectBtn').innerText = accs[0].substring(0,6) + "..." + accs[0].substring(38) + " CONNECTED";
+
+        // Индикация загрузки
+        const isCheck = action === 'check';
+        if (isCheck) { loadCheck.classList.remove('hidden'); btnCheck.disabled = true; }
+        else { loadHuman.classList.remove('hidden'); btnHuman.disabled = true; }
+
+        try {
+            const response = await fetch(API_BASE, {
+                method: 'POST',
+                headers: { 
+                    'Content-Type': 'application/json',
+                    'ngrok-skip-browser-warning': 'true' // Убирает страницу заглушку ngrok
+                },
+                body: JSON.stringify({ text, action })
+            });
+
+            const data = await response.json();
+
+            if (data.success) {
+                output.innerText = data.result;
+                resultBlock.classList.remove('hidden');
+                // Прокрутка к результату
+                resultBlock.scrollIntoView({ behavior: 'smooth' });
+            } else {
+                alert("Ошибка Агента: " + data.error);
+            }
+        } catch (err) {
+            console.error(err);
+            alert("Не удалось связаться с Агентом. Проверьте ngrok и сервер.");
+        } finally {
+            // Снимаем загрузку
+            loadCheck.classList.add('hidden');
+            loadHuman.classList.add('hidden');
+            btnCheck.disabled = false;
+            btnHuman.disabled = false;
         }
-        async function doFileAction() {
-    console.log("Button clicked!"); // Это должно появиться в консоли F12
-    const baseUrl = "http://localhost:3000"; 
-
-    const fileInput = document.getElementById('fileInput');
-    const fileResult = document.getElementById('fileResult');
-
-    if (!fileInput.files || fileInput.files.length === 0) {
-        alert("Please select a file first!");
-        return;
     }
 
-    const file = fileInput.files[0];
-    console.log("File selected:", file.name);
-    fileResult.innerHTML = "⏳ Scanning file...";
-
-    const formData = new FormData();
-    formData.append('file', file); 
-
-    try {
-        const response = await fetch(`${baseUrl}/api/check-ai-file`, {
-            method: 'POST',
-            body: formData,
-            headers: { 'ngrok-skip-browser-warning': 'true' }
-        });
-
-        const data = await response.json();
-        console.log("Server response:", data);
-
-        fileResult.innerHTML = `<b>Result:</b> ${data.isAI ? '🤖 AI' : '✍️ Human'} (${data.aiProbability}%)`;
-    } catch (error) {
-        console.error("Fetch error:", error);
-        fileResult.innerHTML = "❌ Connection Error. Check PowerShell console.";
+    function copyResult() {
+        const text = document.getElementById('output').innerText;
+        navigator.clipboard.writeText(text);
+        alert("Текст скопирован!");
     }
-}
-    </script>
+</script>
+
 </body>
 </html>
