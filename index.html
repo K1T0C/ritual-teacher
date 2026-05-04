@@ -149,7 +149,16 @@
             <p class="lead text-secondary" style="font-size: 1.2rem;">Next-generation decentralized text processing for the Ritual ecosystem.</p>
         </div>
     </header>
-
+<!-- Ищи этот блок в коде -->
+<div class="cyber-card p-4">
+    <h3 class="h5 mb-3">FILE DIAGNOSTIC</h3>
+    <input type="file" id="fileInput" class="form-control bg-dark text-light border-secondary mb-3">
+    
+    <!-- Кнопка должна вызывать doFileAction(), а не doAction('detect') -->
+    <button class="btn btn-cyber-outline w-100 mt-2" onclick="doFileAction()">DETECT AI</button>
+    
+    <div id="fileResult" class="mt-3 small text-secondary"></div>
+</div>
     <div class="container mt-5 pt-3">
         <div class="row g-4">
             <div class="col-md-6">
