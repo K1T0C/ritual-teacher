@@ -198,9 +198,49 @@
             const accs = await window.ethereum.request({method: 'eth_requestAccounts'});
             document.getElementById('connectBtn').innerText = accs[0].substring(0,6) + "..." + accs[0].substring(38) + " CONNECTED";
         }
-        async function doAction(type) {
-    // 1. ЗАМЕНИ ЭТУ ССЫЛКУ НА ТУ, КОТОРУЮ СЕЙЧАС ВЫДАЛ NGROK
+        async function doFileAction() {
+    // ВАЖНО: Проверь, что здесь твоя актуальная ссылка ngrok!
     const baseUrl = "http://127.0.0.1:3000"; 
+
+    const fileInput = document.getElementById('fileInput');
+    const fileResult = document.getElementById('fileResult');
+
+    if (!fileInput.files || fileInput.files.length === 0) {
+        return alert("Please select a file first!");
+    }
+
+    const file = fileInput.files[0];
+    fileResult.innerHTML = `<span class="text-info">⏳ Scanning ${file.name}...</span>`;
+
+    const formData = new FormData();
+    formData.append('file', file); // Имя 'file' должно совпадать с тем, что в agent.ts
+
+    try {
+        const response = await fetch(`${baseUrl}/api/check-ai-file`, {
+            method: 'POST',
+            body: formData,
+            // Заголовки Content-Type здесь НЕ НУЖНЫ, браузер поставит их сам для FormData
+            headers: {
+                'ngrok-skip-browser-warning': 'true'
+            }
+        });
+
+        const data = await response.json();
+        
+        if (data.success) {
+            fileResult.innerHTML = `
+                <div class="p-2 border border-secondary rounded">
+                    <b>Result:</b> ${data.isAI ? '🤖 AI Generated' : '✍️ Human Made'}<br>
+                    <b>Confidence:</b> ${data.aiProbability}%
+                </div>`;
+        } else {
+            fileResult.innerText = "❌ Error: " + (data.error || "Unknown error");
+        }
+    } catch (error) {
+        console.error(error);
+        fileResult.innerText = "❌ Connection failed. Check your Agent/Ngrok.";
+    }
+}
     
     if (type === 'humanize') {
         const textInput = document.getElementById('hInput').value;
