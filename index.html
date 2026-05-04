@@ -190,8 +190,48 @@
             document.getElementById('connectBtn').innerText = accs[0].substring(0,6) + "..." + accs[0].substring(38) + " CONNECTED";
         }
         async function doAction(type) {
-            alert("API connection to /api/" + type + " triggered.");
+    // 1. ЗАМЕНИ ЭТУ ССЫЛКУ НА ТУ, КОТОРУЮ СЕЙЧАС ВЫДАЛ NGROK
+    const baseUrl = "https://1234-56-78.ngrok-free.app"; 
+    
+    if (type === 'humanize') {
+        const textInput = document.getElementById('hInput').value;
+        if (!textInput) return alert("Please enter text first!");
+
+        document.getElementById('hResult').innerText = "⏳ Processing by AI Mentor...";
+
+        try {
+            const response = await fetch(`${baseUrl}/api/humanize`, {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ text: textInput })
+            });
+            const data = await response.json();
+            document.getElementById('hResult').innerText = data.humanizedText;
+        } catch (error) {
+            console.error("Error:", error);
+            document.getElementById('hResult').innerText = "❌ Connection failed. Is ngrok running?";
         }
+
+    } else if (type === 'detect') {
+        const textInput = document.getElementById('dInput').value;
+        if (!textInput) return alert("Please enter text to scan!");
+
+        document.getElementById('dResult').innerText = "🔍 Scanning for AI traces...";
+
+        try {
+            const response = await fetch(`${baseUrl}/api/check-ai`, {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ text: textInput })
+            });
+            const data = await response.json();
+            document.getElementById('dResult').innerHTML = `<b>Result:</b> ${data.isAI ? '🤖 AI' : '✍️ Human'} (${data.aiProbability}%)`;
+        } catch (error) {
+            console.error("Error:", error);
+            document.getElementById('dResult').innerText = "❌ Scan failed. Check server connection.";
+        }
+    }
+}
     </script>
 </body>
 </html>
