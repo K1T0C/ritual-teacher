@@ -1,261 +1,196 @@
 <!DOCTYPE html>
-<html lang="ru">
+<html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Ritual AI Validator Dashboard</title>
-    <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
-</head>
-<body class="bg-slate-950 text-slate-100 min-h-screen font-sans antialiased">
-
-    <div class="max-w-4xl mx-auto px-4 py-8">
+    <title>Ritual Hub | AI Utility Dashboard</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@700&family=Rajdhani:wght@500;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        body { 
+            background: #040707; /* Ультра-тёмный зелёный оттенок */
+            color: #f1f5f9; 
+            font-family: 'Rajdhani', sans-serif;
+            letter-spacing: 0.5px;
+        }
         
-        <div class="flex flex-col md:flex-row md:items-center md:justify-between border-b border-slate-800 pb-6 mb-8 gap-4">
-            <div>
-                <h1 class="text-2xl md:text-3xl font-black tracking-tight text-transparent bg-clip-text bg-gradient-to-r from-blue-400 to-emerald-400">
-                    RITUAL TEACHER ALPHA
-                </h1>
-                <p class="text-sm text-slate-400 mt-1">ИИ-Оракул валидации и обработки контента в сети Ritual Chain</p>
+        /* HEADER И NAVIGATION */
+        .navbar {
+            background: rgba(4, 7, 7, 0.8);
+            backdrop-filter: blur(12px);
+            border-bottom: 1px solid rgba(0, 255, 135, 0.15);
+        }
+        .brand-title {
+            font-family: 'Orbitron', sans-serif;
+            font-weight: 700;
+            background: linear-gradient(45deg, #00ff87, #60afff);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+        .btn-wallet {
+            background: transparent;
+            border: 1px solid rgba(0, 255, 135, 0.3);
+            color: #00ff87;
+            font-weight: 700;
+            border-radius: 6px;
+            transition: all 0.3s ease;
+        }
+        .btn-wallet:hover {
+            background: rgba(0, 255, 135, 0.1);
+            box-shadow: 0 0 15px rgba(0, 255, 135, 0.2);
+            border-color: #00ff87;
+            color: #fff;
+        }
+
+        /* HERO SECTION */
+        .hero-bg {
+            background: linear-gradient(rgba(4, 7, 7, 0.85), rgba(4, 7, 7, 0.95)), url('https://images.unsplash.com/photo-1639762681485-074b7f938ba0?q=80&w=1632&auto=format&fit=crop');
+            background-size: cover;
+            background-position: center;
+            padding: 90px 0;
+            border-bottom: 1px solid rgba(0, 255, 135, 0.1);
+        }
+
+        /* КАРТОЧКИ (В стиле Ritual Skills) */
+        .tool-card { 
+            background: rgba(11, 23, 19, 0.6); 
+            border: 1px solid rgba(0, 255, 135, 0.12); 
+            border-radius: 12px; 
+            padding: 28px; 
+            height: 100%; 
+            backdrop-filter: blur(8px);
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+        .tool-card:hover { 
+            border-color: rgba(0, 255, 135, 0.4);
+            box-shadow: 0 0 25px rgba(0, 255, 135, 0.1);
+            transform: translateY(-2px);
+        }
+        .card-header-title {
+            font-family: 'Orbitron', sans-serif;
+            color: #00ff87;
+            font-size: 1.25rem;
+            text-shadow: 0 0 10px rgba(0, 255, 135, 0.2);
+        }
+
+        /* КНОПКИ ДЕЙСТВИЙ */
+        .btn-cyber { 
+            background: #00ff87; 
+            color: #040707; 
+            font-weight: 700; 
+            border-radius: 6px; 
+            border: none; 
+            padding: 12px 24px; 
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            transition: all 0.3s ease;
+        }
+        .btn-cyber:hover { 
+            background: #fff;
+            box-shadow: 0 0 20px rgba(0, 255, 135, 0.4);
+            transform: scale(1.01);
+        }
+
+        .form-control { 
+            background: #091210; 
+            border: 1px solid rgba(0, 255, 135, 0.1); 
+            color: #fff; 
+            border-radius: 6px;
+        }
+        .form-control:focus {
+            background: #091210;
+            border-color: #00ff87;
+            box-shadow: 0 0 10px rgba(0, 255, 135, 0.15);
+            color: #fff;
+        }
+
+        /* ГЛАВНАЯ КНОПКА (CTA) */
+        .train-cta { 
+            background: linear-gradient(rgba(4, 30, 20, 0.75), rgba(9, 18, 16, 0.9)), url('https://images.unsplash.com/photo-1620712943543-bcc4628c975c?q=80&w=1528&auto=format&fit=crop');
+            background-size: cover; 
+            background-position: center;
+            border: 1px solid rgba(0, 255, 135, 0.3); 
+            border-radius: 16px;
+            padding: 65px; 
+            text-align: center; 
+            cursor: pointer;
+            transition: all 0.4s ease; 
+            text-decoration: none; 
+            display: block; 
+            margin-top: 50px;
+        }
+        .train-cta:hover { 
+            transform: translateY(-3px); 
+            border-color: #00ff87;
+            box-shadow: 0 0 40px rgba(0, 255, 135, 0.25); 
+        }
+        .train-cta h2 { 
+            font-family: 'Orbitron'; 
+            font-size: 2.8rem; 
+            color: #fff; 
+            text-shadow: 0 0 20px rgba(0, 255, 135, 0.5);
+            margin: 0;
+        }
+    </style>
+</head>
+<body>
+
+    <nav class="navbar fixed-top py-3">
+        <div class="container d-flex justify-content-between align-items-center">
+            <h3 class="m-0 brand-title">RITUAL HUB</h3>
+            <button id="connectBtn" class="btn btn-wallet px-4" onclick="connect()">CONNECT WALLET</button>
+        </div>
+    </nav>
+
+    <header class="hero-bg text-center mt-5">
+        <div class="container mt-4">
+            <h1 class="display-4 fw-bold mb-3" style="font-family: 'Orbitron';">AI UTILITY ENGINE</h1>
+            <p class="lead text-secondary" style="font-size: 1.2rem;">Next-generation decentralized text processing for the Ritual ecosystem.</p>
+        </div>
+    </header>
+
+    <div class="container mt-5 pt-3">
+        <div class="row g-4">
+            <div class="col-md-6">
+                <div class="tool-card">
+                    <h4 class="card-header-title mb-3"><i class="fa-solid fa-feather me-2"></i> TEXT HUMANIZER</h4>
+                    <p class="text-secondary small">Refine artificial syntax into a highly convincing organic voice.</p>
+                    <textarea id="hInput" class="form-control mb-3" rows="4" placeholder="Paste robotic AI text here..."></textarea>
+                    <button class="btn btn-cyber w-100" onclick="doAction('humanize')">HUMANIZE TEXT</button>
+                    <div id="hResult" class="mt-3 small text-secondary"></div>
+                </div>
             </div>
-            <div id="nodeStatusBadge" class="self-start md:self-center px-4 py-2 rounded-lg bg-slate-900 border border-slate-800 text-xs font-semibold flex items-center gap-2">
-                <span class="relative flex h-2 w-2">
-                    <span id="statusPing" class="animate-ping absolute inline-flex h-full w-full rounded-full bg-amber-400 opacity-75"></span>
-                    <span id="statusDot" class="relative inline-flex rounded-full h-2 w-2 bg-amber-500"></span>
-                </span>
-                Агент: <span id="statusText" class="text-amber-400">Подключение...</span>
+            <div class="col-md-6">
+                <div class="tool-card">
+                    <h4 class="card-header-title mb-3"><i class="fa-solid fa-magnifying-glass me-2"></i> AI DETECTOR & FILE SCAN</h4>
+                    <p class="text-secondary small">Comprehensive verification protocols for raw text and digital files.</p>
+                    <textarea id="dInput" class="form-control mb-2" rows="2" placeholder="Analyze plain text..."></textarea>
+                    <input type="file" id="fInput" class="form-control mb-3">
+                    <button class="btn btn-cyber w-100" onclick="doAction('detect')">SCAN AUDIT</button>
+                    <div id="dResult" class="mt-3 small text-secondary"></div>
+                </div>
             </div>
         </div>
 
-        <div class="grid grid-cols-1 gap-6">
-
-            <div class="bg-slate-900 border border-slate-800 rounded-xl p-6">
-                <h3 class="text-lg font-bold text-slate-200 mb-2 flex items-center gap-2">
-                    📝 Проверка Текста на ИИ
-                </h3>
-                <p class="text-xs text-slate-400 mb-4">Вставьте текст, чтобы ИИ-агент оценил его лексическую сложность и натуральность.</p>
-
-                <div class="relative w-full mb-4">
-                    <textarea id="textInput" rows="4" 
-                        class="w-full bg-slate-950 border border-slate-800 rounded-lg p-4 pr-12 text-sm text-slate-300 focus:outline-none focus:border-blue-500 transition resize-none" 
-                        placeholder="Введите или вставьте текст для проверки..."></textarea>
-                    
-                    <button onclick="clearTextInput()" id="btnClearText" 
-                        class="absolute top-3 right-3 text-slate-500 hover:text-slate-300 bg-slate-900/80 hover:bg-slate-800 p-1.5 rounded-md transition focus:outline-none flex items-center justify-center" 
-                        title="Очистить текст">
-                        <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
-                        </svg>
-                    </button>
-                </div>
-
-                <button onclick="checkText()" class="w-full bg-blue-600 hover:bg-blue-700 font-bold py-3 px-4 rounded-lg transition text-sm cursor-pointer">
-                    🔍 Проверить текст в Ritual
-                </button>
-
-                <div id="textResultPanel" class="hidden mt-4 bg-slate-950 p-4 rounded-lg border border-slate-800 text-center">
-                    <span class="block text-xs text-slate-400 mb-1">Вердикт по тексту:</span>
-                    <div id="textVerdictBadge" class="text-lg font-black tracking-wider p-2 rounded-lg"></div>
-                </div>
-            </div>
-
-            <div class="bg-slate-900 border border-slate-800 rounded-xl p-6">
-                <h3 class="text-lg font-bold text-slate-200 mb-2 flex items-center gap-2">
-                    ✍️ Очеловечивание ИИ-Текста
-                </h3>
-                <p class="text-xs text-slate-400 mb-4">
-                    Вставьте сгенерированный ИИ текст. Агент перепишет его так, чтобы он выглядел написанным человеком.
-                </p>
-
-                <div class="relative w-full mb-4">
-                    <textarea id="humanizeInput" rows="4" 
-                        class="w-full bg-slate-950 border border-slate-800 rounded-lg p-4 pr-12 text-sm text-slate-300 focus:outline-none focus:border-violet-500 transition resize-none" 
-                        placeholder="Вставьте ИИ-текст для переработки..."></textarea>
-                    
-                    <button onclick="clearHumanizeInput()" id="btnClearHumanize" 
-                        class="absolute top-3 right-3 text-slate-500 hover:text-slate-300 bg-slate-900/80 hover:bg-slate-800 p-1.5 rounded-md transition focus:outline-none flex items-center justify-center" 
-                        title="Очистить текст">
-                        <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
-                        </svg>
-                    </button>
-                </div>
-
-                <button onclick="humanizeText()" class="w-full bg-violet-600 hover:bg-violet-700 font-bold py-3 px-4 rounded-lg transition text-sm mb-4 cursor-pointer">
-                    ✨ Очеловечить текст
-                </button>
-
-                <div id="humanizeResultPanel" class="hidden bg-slate-950 p-4 rounded-lg border border-slate-800">
-                    <span class="block text-xs text-slate-400 mb-2">Очеловеченный текст:</span>
-                    <textarea id="humanizeOutput" rows="4" readonly
-                        class="w-full bg-slate-900 border border-slate-800 rounded-lg p-3 text-sm text-emerald-300 focus:outline-none resize-none select-all"></textarea>
-                    <p class="text-[10px] text-slate-500 mt-2">💡 Текст готов! Его можно скопировать и отправить на повторную валидацию выше.</p>
-                </div>
-            </div>
-
-            <div class="bg-slate-900 border border-slate-800 rounded-xl p-6">
-                <h3 class="text-lg font-bold text-slate-200 mb-2 flex items-center gap-2">
-                    📷 Проверка Фото и Видео на ИИ
-                </h3>
-                <p class="text-xs text-slate-400 mb-4">
-                    Загрузите файл (PNG, JPEG, MP4) для глубокого аудита метаданных и бинарных паттернов.
-                </p>
-                
-                <input type="file" id="mediaFileInput" accept="image/png, image/jpeg, video/mp4" 
-                    class="w-full bg-slate-950 border border-slate-800 rounded-lg p-3 text-sm text-slate-300 file:mr-4 file:py-2 file:px-4 file:rounded-md file:border-0 file:text-xs file:font-semibold file:bg-blue-600 file:text-slate-100 hover:file:bg-blue-700 file:cursor-pointer transition mb-4" />
-
-                <button onclick="checkMediaFile()" class="w-full bg-emerald-600 hover:bg-emerald-700 font-bold py-3 px-4 rounded-lg transition text-sm cursor-pointer">
-                    📤 Отправить файл на анализ
-                </button>
-
-                <div id="fileResultPanel" class="hidden mt-4 bg-slate-950 p-4 rounded-lg border border-slate-800 text-center">
-                    <span class="block text-xs text-slate-400 mb-1">Вердикт по файлу:</span>
-                    <div id="fileVerdictBadge" class="text-lg font-black tracking-wider p-2 rounded-lg mb-3"></div>
-                    <p id="fileMarkersText" class="text-xs text-slate-500 italic"></p>
-                </div>
-            </div>
-
-        </div>
-
+        <a href="academy.html" class="train-cta mb-5">
+            <h2>TRAIN YOUR AGENT</h2>
+            <p class="text-secondary fs-5 mt-2">Equip your autonomous unit with the latest smart contract execution protocols</p>
+        </a>
     </div>
 
+    <footer class="py-4 text-center text-secondary border-top border-dark mt-auto">
+        <small>Powered by Ritual Foundation Architecture & Your Mentor Agent</small>
+    </footer>
+
     <script>
-        const API_URL = 'http://localhost:3000';
-
-        // УЛУЧШЕННАЯ ПРОВЕРКА СТАТУСА
-        async function fetchStatus() {
-            const statusText = document.getElementById('statusText');
-            const ping = document.getElementById('statusPing');
-            const dot = document.getElementById('statusDot');
-
-            try {
-                const res = await fetch(`${API_URL}/api/status`);
-                const data = await res.json();
-                
-                if (data.isRunning || data.status === 'active' || data.modelReady) {
-                    statusText.innerText = "Активен";
-                    statusText.className = "text-emerald-400";
-                    ping.className = "animate-ping absolute inline-flex h-full w-full rounded-full bg-emerald-400 opacity-75";
-                    dot.className = "relative inline-flex rounded-full h-2 w-2 bg-emerald-500";
-                } else {
-                    statusText.innerText = "Загрузка...";
-                    statusText.className = "text-amber-400";
-                    ping.className = "animate-ping absolute inline-flex h-full w-full rounded-full bg-amber-400 opacity-75";
-                    dot.className = "relative inline-flex rounded-full h-2 w-2 bg-amber-500";
-                }
-            } catch (err) {
-                statusText.innerText = "Отключен";
-                statusText.className = "text-red-500";
-                ping.className = "hidden";
-                dot.className = "relative inline-flex rounded-full h-2 w-2 bg-red-500";
-            }
+        async function connect() {
+            if(!window.ethereum) return alert("Please install MetaMask");
+            const accs = await window.ethereum.request({method: 'eth_requestAccounts'});
+            document.getElementById('connectBtn').innerText = accs[0].substring(0,6) + "..." + accs[0].substring(38) + " CONNECTED";
         }
-        fetchStatus();
-        setInterval(fetchStatus, 5000); // Опрашиваем каждые 5 секунд
-
-        // ОЧИСТКА ПОЛЕЙ
-        function clearTextInput() {
-            document.getElementById('textInput').value = '';
-            document.getElementById('textInput').focus();
-        }
-
-        function clearHumanizeInput() {
-            document.getElementById('humanizeInput').value = '';
-            document.getElementById('humanizeInput').focus();
-        }
-
-        // ВАЛИДАЦИЯ ТЕКСТА
-        async function checkText() {
-            const text = document.getElementById('textInput').value.trim();
-            if (!text) return alert("Введите текст для проверки!");
-
-            const resultPanel = document.getElementById('textResultPanel');
-            const verdictBadge = document.getElementById('textVerdictBadge');
-
-            resultPanel.classList.remove('hidden');
-            verdictBadge.innerText = "⏳ Анализируем...";
-            verdictBadge.className = "text-lg font-black p-2 rounded-lg bg-slate-800 text-slate-400 animate-pulse";
-
-            try {
-                const response = await fetch(`${API_URL}/api/check-ai`, {
-                    method: 'POST',
-                    headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({ text })
-                });
-                const data = await response.json();
-
-                if (data.isAI) {
-                    verdictBadge.innerText = `🤖 AI GENERATED (${data.aiProbability || 100}%)`;
-                    verdictBadge.className = "text-lg font-black p-2 rounded-lg bg-red-950 text-red-400 border border-red-800";
-                } else {
-                    verdictBadge.innerText = `👤 HUMAN ORIGINAL (${data.humanProbability || 100}%)`;
-                    verdictBadge.className = "text-lg font-black p-2 rounded-lg bg-emerald-950 text-emerald-400 border border-emerald-800";
-                }
-            } catch (err) {
-                alert("Ошибка соединения с агентом.");
-                verdictBadge.innerText = "❌ Ошибка";
-            }
-        }
-
-        // ОЧЕЛОВЕЧИВАНИЕ ТЕКСТА
-        async function humanizeText() {
-            const text = document.getElementById('humanizeInput').value.trim();
-            if (!text) return alert("Введите текст для переработки!");
-
-            const resultPanel = document.getElementById('humanizeResultPanel');
-            const outputArea = document.getElementById('humanizeOutput');
-
-            try {
-                const response = await fetch(`${API_URL}/api/humanize`, {
-                    method: 'POST',
-                    headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({ text })
-                });
-                const data = await response.json();
-
-                resultPanel.classList.remove('hidden');
-                outputArea.value = data.humanizedText || "Текст не переработан";
-            } catch (err) {
-                alert("Ошибка при переработке.");
-            }
-        }
-
-        // ВАЛИДАЦИЯ ФАЙЛОВ
-        async function checkMediaFile() {
-            const fileInput = document.getElementById('mediaFileInput');
-            if (!fileInput.files.length) return alert("Выберите файл.");
-
-            const formData = new FormData();
-            formData.append('media', fileInput.files[0]);
-
-            const resultPanel = document.getElementById('fileResultPanel');
-            const verdictBadge = document.getElementById('fileVerdictBadge');
-            const markersText = document.getElementById('fileMarkersText');
-
-            resultPanel.classList.remove('hidden');
-            verdictBadge.innerText = "⏳ Анализируем...";
-            verdictBadge.className = "text-lg font-black p-2 rounded-lg bg-slate-800 text-slate-400 animate-pulse";
-            markersText.innerText = "";
-
-            try {
-                const response = await fetch(`${API_URL}/api/check-file`, {
-                    method: 'POST',
-                    body: formData
-                });
-                const data = await response.json();
-
-                if (data.isAI) {
-                    verdictBadge.innerText = `🤖 AI GENERATED (${data.aiProbability || 100}%)`;
-                    verdictBadge.className = "text-lg font-black p-2 rounded-lg bg-red-950 text-red-400 border border-red-800";
-                } else {
-                    verdictBadge.innerText = `👤 HUMAN ORIGINAL (${data.humanProbability || 100}%)`;
-                    verdictBadge.className = "text-lg font-black p-2 rounded-lg bg-emerald-950 text-emerald-400 border border-emerald-800";
-                }
-
-                markersText.innerText = data.detectedMarkers?.length ? `Паттерны: ${data.detectedMarkers.join(', ')}` : "ИИ-маркеров не обнаружено.";
-            } catch (err) {
-                alert("Ошибка отправки медиафайла.");
-                verdictBadge.innerText = "❌ Ошибка";
-            }
+        async function doAction(type) {
+            alert("API connection to /api/" + type + " triggered.");
         }
     </script>
 </body>
