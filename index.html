@@ -274,49 +274,77 @@
 
     // 6. ГЛАВНАЯ ФУНКЦИЯ ОБРАБОТКИ (Оплата + Запрос)
     async function handleProcess(action) {
-        const inputId = action === 'check' ? 'checkTextInput' : 'humanizeTextInput';
-        const text = document.getElementById(inputId).value;
-        
-        if (!text) {
-            alert("Please enter some text!");
+    const inputId = action === 'check' ? 'checkTextInput' : 'humanizeTextInput';
+    const text = document.getElementById(inputId).value;
+    
+    if (!text) {
+        alert("Please enter some text!");
+        return;
+    }
+
+    // 1. Проверяем, подключен ли кошелек
+    if (!window.ethereum) {
+        alert("Please install or enable MetaMask/Rabby!");
+        return;
+    }
+
+    addLog(`> Initiating ${action.toUpperCase()} protocol. Waiting for payment...`);
+
+    try {
+        // 2. Сначала принудительно запрашиваем аккаунты (если кошелек "спит")
+        const accounts = await window.ethereum.request({ method: 'eth_requestAccounts' });
+        const userAddress = accounts[0];
+
+        // 3. Запускаем транзакцию
+        const txHash = await window.ethereum.request({
+            method: 'eth_sendTransaction',
+            params: [{
+                from: userAddress,
+                to: MY_WALLET,
+                value: '0x38d7ea4c68000', // 0.001 RTL
+            }],
+        });
+
+        // КРИТИЧЕСКАЯ ПРОВЕРКА: Если хэша нет (отмена), прекращаем работу
+        if (!txHash) {
+            addLog(`> Payment cancelled by user.`);
             return;
         }
 
-        addLog(`> Initiating ${action.toUpperCase()} protocol. Waiting for payment...`);
+        addLog(`> Payment Sent! TX: ${txHash.slice(0,10)}...`);
 
-        try {
-            // ШАГ 1: Запрос оплаты
-            if (!window.ethereum) throw new Error("No wallet found");
-            
-            const accounts = await window.ethereum.request({ method: 'eth_requestAccounts' });
-            const userAddress = accounts[0];
+        // 4. Только теперь шлем запрос на сервер
+        const response = await fetch(API_URL, {
+            method: 'POST',
+            headers: { 
+                'Content-Type': 'application/json',
+                'ngrok-skip-browser-warning': 'true' 
+            },
+            body: JSON.stringify({ 
+                text: text, 
+                action: action,
+                txHash: txHash // Теперь тут 100% есть хэш
+            })
+        });
 
-            // 0.001 RTL в шестнадцатеричном формате Wei
-            const txHash = await window.ethereum.request({
-                method: 'eth_sendTransaction',
-                params: [{
-                    from: userAddress,
-                    to: MY_WALLET,
-                    value: '0x38d7ea4c68000', // 0.001 RTL
-                }],
-            });
+        const data = await response.json();
 
-            addLog(`> Payment Sent! TX: ${txHash.slice(0,10)}...`);
-            addLog(`> Requesting AI Oracle...`);
+        if (action === 'humanize') {
+            document.getElementById('humanResultPanel').classList.remove('d-none');
+            document.getElementById('humanResultText').innerText = data.result;
+        } else {
+            document.getElementById('checkResultLabel').innerText = `Report: ${data.result}`;
+        }
 
-            // ШАГ 2: Отправка на бэкенд вместе с txHash
-            const response = await fetch(API_URL, {
-                method: 'POST',
-                headers: { 
-                    'Content-Type': 'application/json',
-                    'ngrok-skip-browser-warning': 'true' 
-                },
-                body: JSON.stringify({ 
-                    text: text, 
-                    action: action,
-                    txHash: txHash 
-                })
-            });
+        addLog(`> Success. Fee: ${data.fee || '0.001 RTL'}`);
+
+    } catch (error) {
+        console.error("Error details:", error);
+        addLog(`> Execution stopped: ${error.message}`);
+        // Очищаем статус, чтобы не вводить в заблуждение
+        if (action === 'check') document.getElementById('checkResultLabel').innerText = "";
+    }
+}
 
             if (!response.ok) throw new Error("Server 404 or Error");
 
