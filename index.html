@@ -231,6 +231,50 @@
 <script>
     // ВСТАВЬ СВОЮ ССЫЛКУ ИЗ NGROK ЗДЕСЬ
     const API_URL = 'https://recipient-riverside-duckling.ngrok-free.dev/api/process-text';
+    async function sendRequestWithPayment(actionType) {
+    const userInput = document.getElementById('userInput').value;
+    const resultBox = document.getElementById('result');
+
+    try {
+        // Шаг 1: Подключение к кошельку
+        if (!window.ethereum) {
+            alert("Установите MetaMask или Rabby!");
+            return;
+        }
+        
+        const accounts = await window.ethereum.request({ method: 'eth_requestAccounts' });
+        const userAddress = accounts[0];
+
+        // Шаг 2: Отправка транзакции в 0.001 RTL
+        // Значение '0x38d7ea4c68000' — это 0.001 в шестнадцатеричном формате Wei
+        const txHash = await window.ethereum.request({
+            method: 'eth_sendTransaction',
+            params: [{
+                from: userAddress,
+                to: '0x5CE75a2486c64dA615fA116B8C53672F0c4A179b', // Замените на свой кошелек для сбора оплаты
+                value: '0x38d7ea4c68000', 
+            }],
+        });
+
+        // Шаг 3: Отправка данных и txHash на ваш сервер
+        const response = await fetch('/api/process-text', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ 
+                text: userInput, 
+                action: actionType,
+                txHash: txHash // Передаем полученный хэш транзакции
+            })
+        });
+
+        const data = await response.json();
+        resultBox.innerText = data.result;
+
+    } catch (error) {
+        console.error("Payment failed:", error);
+        resultBox.innerText = "Ошибка: Оплата не прошла или была отклонена.";
+    }
+}
     async function requestPayment() {
     if (typeof window.ethereum === 'undefined') {
         alert("Пожалуйста, установите MetaMask или Rabby Wallet!");
