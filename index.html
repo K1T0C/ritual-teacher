@@ -187,7 +187,7 @@
 
     async function handleProcess(action) {
         const inputId = action === 'check' ? 'checkTextInput' : 'humanizeTextInput';
-        const text = document.getElementById(inputId).value;
+        const text = document.querySelector('#' + inputId).value.trim();
         const provider = getProvider();
 
         if (!text) return alert("Please enter text!");
@@ -210,9 +210,17 @@
                 }],
             });
 
-            if (!txHash) throw new Error("User cancelled payment.");
+            // ... после вызова транзакции
+if (!txHash || txHash === "" || txHash.length < 10) {
+    addLog("Критическая ошибка: Транзакция не подтверждена кошельком.");
+    alert("Оплата не прошла. Запрос отменен.");
+    return; // Останавливаем выполнение, чтобы не слать пустой запрос
+}
 
-            addLog(`Paid! TX: ${txHash.slice(0,10)}... Calling AI.`);
+addLog(`Оплата получена: ${txHash.slice(0,10)}... Отправка на сервер.`);
+
+// Только теперь идет fetch
+const response = await fetch(API_URL, { ... });
 
             // 3. Отправка на бэкенд
             const response = await fetch(API_URL, {
