@@ -147,36 +147,49 @@
 <!-- РЕЗУЛЬТАТ -->
 <div id="resultArea"></div>
 
+<!-- Убедись, что кнопки выглядят так (id в поле ввода должен быть 'textInput') -->
+<!-- <textarea id="textInput"></textarea> -->
+
 <script>
-    // Убедись, что здесь НЕТ никаких тегов <div> или лишних <script>
+    // 1. Функция ДОЛЖНА быть async
     async function handleText(action) {
-        console.log("Запуск функции:", action);
-        
-        const inputElement = document.getElementById('textInput');
-        if (!inputElement) {
-            alert("Поле ввода не найдено!");
+        console.log("Попытка запуска. Действие:", action);
+
+        const input = document.getElementById('textInput');
+        if (!input) {
+            console.error("Критическая ошибка: Элемент 'textInput' не найден в HTML!");
+            alert("Ошибка в верстке: поле ввода не найдено.");
             return;
         }
 
-        const textInput = inputElement.value;
+        const text = input.value;
         const API_URL = "https://recipient-riverside-duckling.ngrok-free.app";
 
         try {
+            // 2. Путь должен быть полным: /api/process-text
             const response = await fetch(`${API_URL}/api/process-text`, {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
                     'ngrok-skip-browser-warning': 'true'
                 },
-                body: JSON.stringify({ text: textInput, action: action })
+                body: JSON.stringify({ text: text, action: action })
             });
 
             const data = await response.json();
-            document.getElementById('resultArea').innerText = data.result;
             
+            // 3. Вывод результата (убедись, что такой ID есть в твоем HTML)
+            const resultDisplay = document.getElementById('resultArea');
+            if (resultDisplay) {
+                resultDisplay.innerText = data.result;
+            } else {
+                console.log("Результат:", data.result);
+                alert(data.result);
+            }
+
         } catch (error) {
             console.error("Ошибка связи:", error);
-            alert("Агент не отвечает. Проверь терминал!");
+            alert("Не удалось связаться с Агентом. Проверь ngrok!");
         }
     }
 </script>
