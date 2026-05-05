@@ -229,25 +229,28 @@
 </div>
 
     <script>
-    // 1. Конфигурация
+    // 1. Конфигурация (Убедись, что адрес кошелька верный!)
     const API_URL = 'https://recipient-riverside-duckling.ngrok-free.dev/api/process-text';
     const MY_WALLET = '0x5CE75a2486c64dA615fA116B8C53672F0c4A179b';
 
-    // 2. Логирование
+    // 2. Вспомогательные функции
     function addLog(msg) {
         const logs = document.getElementById('logsOutput');
-        logs.innerHTML += `<br>${msg}`;
-        logs.scrollTop = logs.scrollHeight;
+        if (logs) {
+            logs.innerHTML += `<br>${msg}`;
+            logs.scrollTop = logs.scrollHeight;
+        }
     }
 
-    // 3. Очистка полей
     function clearField(id) {
         document.getElementById(id).value = '';
-        if(id === 'humanizeTextInput') document.getElementById('humanResultPanel').classList.add('d-none');
+        if(id === 'humanizeTextInput') {
+            const panel = document.getElementById('humanResultPanel');
+            if (panel) panel.classList.add('d-none');
+        }
         addLog(`> Field ${id} cleared`);
     }
 
-    // 4. Копирование
     async function copyToClipboard() {
         const text = document.getElementById('humanResultText').innerText;
         await navigator.clipboard.writeText(text);
@@ -256,116 +259,98 @@
         setTimeout(() => btn.innerHTML = '<i class="fa-solid fa-copy"></i> Copy', 2000);
     }
 
-    // 5. Подключение кошелька
+    // 3. Подключение кошелька
     async function connectWallet() {
         if (window.ethereum) {
             try {
                 const accounts = await window.ethereum.request({ method: 'eth_requestAccounts' });
-                document.getElementById('connectWalletBtn').innerText = accounts[0].slice(0,6) + '...' + accounts[0].slice(-4);
+                const btn = document.getElementById('connectWalletBtn');
+                if (btn) btn.innerText = accounts[0].slice(0,6) + '...' + accounts[0].slice(-4);
                 addLog(`> Wallet Attached: ${accounts[0]}`);
                 return accounts[0];
             } catch (e) {
                 addLog(`> Wallet connection rejected`);
+                return null;
             }
         } else {
             alert("Please install MetaMask or Rabby!");
+            return null;
         }
     }
 
-    // 6. ГЛАВНАЯ ФУНКЦИЯ ОБРАБОТКИ (Оплата + Запрос)
+    // 4. ГЛАВНАЯ ФУНКЦИЯ (Оплата + Запрос)
     async function handleProcess(action) {
-    const inputId = action === 'check' ? 'checkTextInput' : 'humanizeTextInput';
-    const text = document.getElementById(inputId).value;
-    
-    if (!text) {
-        alert("Please enter some text!");
-        return;
-    }
-
-    // 1. Проверяем, подключен ли кошелек
-    if (!window.ethereum) {
-        alert("Please install or enable MetaMask/Rabby!");
-        return;
-    }
-
-    addLog(`> Initiating ${action.toUpperCase()} protocol. Waiting for payment...`);
-
-    try {
-        // 2. Сначала принудительно запрашиваем аккаунты (если кошелек "спит")
-        const accounts = await window.ethereum.request({ method: 'eth_requestAccounts' });
-        const userAddress = accounts[0];
-
-        // 3. Запускаем транзакцию
-        const txHash = await window.ethereum.request({
-            method: 'eth_sendTransaction',
-            params: [{
-                from: userAddress,
-                to: MY_WALLET,
-                value: '0x38d7ea4c68000', // 0.001 RTL
-            }],
-        });
-
-        // КРИТИЧЕСКАЯ ПРОВЕРКА: Если хэша нет (отмена), прекращаем работу
-        if (!txHash) {
-            addLog(`> Payment cancelled by user.`);
+        const inputId = action === 'check' ? 'checkTextInput' : 'humanizeTextInput';
+        const textInput = document.getElementById(inputId);
+        const text = textInput ? textInput.value : '';
+        
+        if (!text) {
+            alert("Please enter some text!");
             return;
         }
 
-        addLog(`> Payment Sent! TX: ${txHash.slice(0,10)}...`);
-
-        // 4. Только теперь шлем запрос на сервер
-        const response = await fetch(API_URL, {
-            method: 'POST',
-            headers: { 
-                'Content-Type': 'application/json',
-                'ngrok-skip-browser-warning': 'true' 
-            },
-            body: JSON.stringify({ 
-                text: text, 
-                action: action,
-                txHash: txHash // Теперь тут 100% есть хэш
-            })
-        });
-
-        const data = await response.json();
-
-        if (action === 'humanize') {
-            document.getElementById('humanResultPanel').classList.remove('d-none');
-            document.getElementById('humanResultText').innerText = data.result;
-        } else {
-            document.getElementById('checkResultLabel').innerText = `Report: ${data.result}`;
+        if (!window.ethereum) {
+            alert("Wallet not found!");
+            return;
         }
 
-        addLog(`> Success. Fee: ${data.fee || '0.001 RTL'}`);
+        addLog(`> Initiating ${action.toUpperCase()}... Waiting for payment.`);
 
-    } catch (error) {
-        console.error("Error details:", error);
-        addLog(`> Execution stopped: ${error.message}`);
-        // Очищаем статус, чтобы не вводить в заблуждение
-        if (action === 'check') document.getElementById('checkResultLabel').innerText = "";
-    }
-}
+        try {
+            // ШАГ 1: Принудительное получение аккаунта
+            const accounts = await window.ethereum.request({ method: 'eth_requestAccounts' });
+            const userAddress = accounts[0];
 
-            if (!response.ok) throw new Error("Server 404 or Error");
+            // ШАГ 2: Транзакция
+            const txHash = await window.ethereum.request({
+                method: 'eth_sendTransaction',
+                params: [{
+                    from: userAddress,
+                    to: MY_WALLET,
+                    value: '0x38d7ea4c68000', // 0.001 RTL
+                }],
+            });
+
+            // Если пользователь отменил транзакцию (txHash будет пустым)
+            if (!txHash) throw new Error("Transaction cancelled");
+
+            addLog(`> TX Hash: ${txHash.slice(0,15)}...`);
+            addLog(`> Calling AI Oracle...`);
+
+            // ШАГ 3: Запрос на сервер
+            const response = await fetch(API_URL, {
+                method: 'POST',
+                headers: { 
+                    'Content-Type': 'application/json',
+                    'ngrok-skip-browser-warning': 'true' 
+                },
+                body: JSON.stringify({ 
+                    text: text, 
+                    action: action,
+                    txHash: txHash 
+                })
+            });
 
             const data = await response.json();
 
-            // ШАГ 3: Отображение результата
+            // ШАГ 4: Вывод результата
             if (action === 'humanize') {
-                document.getElementById('humanResultPanel').classList.remove('d-none');
-                document.getElementById('humanResultText').innerText = data.result;
+                const resPanel = document.getElementById('humanResultPanel');
+                const resText = document.getElementById('humanResultText');
+                if (resPanel && resText) {
+                    resPanel.classList.remove('d-none');
+                    resText.innerText = data.result;
+                }
             } else {
-                document.getElementById('checkResultLabel').innerText = `Report: ${data.result}`;
+                const resLabel = document.getElementById('checkResultLabel');
+                if (resLabel) resLabel.innerText = `Report: ${data.result}`;
             }
 
-            addLog(`> Success. Fee: ${data.fee || '0.001 RTL'}`);
+            addLog(`> Execution Success. Fee: ${data.fee || '0.001 RTL'}`);
 
         } catch (error) {
             console.error(error);
-            addLog(`> Failed: ${error.message || "User rejected transaction"}`);
-            if (action === 'check') {
-                document.getElementById('checkResultLabel').innerText = `Error: Payment or Connection issue.`;
-            }
+            addLog(`> Process halted: ${error.message}`);
         }
     }
 </script>
