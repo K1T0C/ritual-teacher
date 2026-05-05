@@ -3,200 +3,196 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Ritual AI Agent Hub</title>
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
-    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700&family=Rajdhani:wght@500;600;700&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    
+    <title>Ritual Agent Dashboard</title>
     <style>
-        body {
-            background: #050a08; /* Глубокий зеленый */
-            color: #ecfdf5;
-            font-family: 'Rajdhani', sans-serif;
-            font-size: 1.1rem;
-        }
-        .brand-title {
-            font-family: 'Orbitron', sans-serif;
-            font-weight: 700;
-            background: linear-gradient(45deg, #10b981, #34d399); /* Изумрудный градиент */
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-        }
-        .cyber-card {
-            background: rgba(13, 21, 18, 0.9);
-            border: 1px solid rgba(16, 185, 129, 0.2);
-            border-radius: 12px;
-            box-shadow: 0 0 15px rgba(16, 185, 129, 0.05);
-            transition: all 0.3s ease;
-        }
-        .cyber-card:hover {
-            border-color: rgba(16, 185, 129, 0.6);
-            box-shadow: 0 0 25px rgba(16, 185, 129, 0.2);
-            transform: translateY(-2px);
-        }
-        .btn-cyber {
-            background: linear-gradient(135deg, #10b981 0%, #059669 100%);
-            color: #050a08;
-            font-weight: 700;
-            border: none;
-            text-transform: uppercase;
-            letter-spacing: 1px;
-        }
-        .btn-cyber:hover {
-            box-shadow: 0 0 15px #10b981;
-            color: #fff;
-        }
-        .text-neon {
-            color: #10b981;
-            text-shadow: 0 0 8px rgba(16, 185, 129, 0.4);
+        :root {
+            --bg-color: #0a0f0a;
+            --container-bg: #141d14;
+            --accent-green: #2ecc71;
+            --dark-green: #1b5e20;
+            --text-color: #e0e0e0;
+            --border-color: #2d3e2d;
         }
 
-        /* Кнопка TRAIN YOUR AGENT */
-        .train-portal {
-            margin-top: 3rem;
-            height: 280px;
-            border-radius: 20px;
-            overflow: hidden;
+        body {
+            background-color: var(--bg-color);
+            color: var(--text-color);
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
             display: flex;
-            align-items: center;
             justify-content: center;
-            text-decoration: none;
-            border: 2px solid #10b981;
-            background: linear-gradient(rgba(5, 10, 8, 0.7), rgba(5, 10, 8, 0.8)), 
-                        url('https://images.unsplash.com/photo-1639762681485-074b7f938ba0?q=80&w=2832&auto=format&fit=crop');
-            background-size: cover;
-            background-position: center;
-            transition: 0.4s;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
         }
-        .train-portal:hover {
-            transform: scale(1.02);
-            box-shadow: 0 0 40px rgba(16, 185, 129, 0.3);
+
+        .dashboard {
+            background-color: var(--container-bg);
+            padding: 2rem;
+            border-radius: 12px;
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.5);
+            border: 1px solid var(--border-color);
+            width: 100%;
+            max-width: 500px;
         }
-        .train-portal h1 {
-            font-family: 'Orbitron';
-            color: #fff;
-            font-weight: 800;
-            font-size: 3.5rem;
-            text-shadow: 0 0 20px #10b981;
+
+        h1 {
+            color: var(--accent-green);
+            text-align: center;
+            margin-bottom: 1.5rem;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+        }
+
+        .status-bar {
+            background: rgba(46, 204, 113, 0.1);
+            padding: 10px;
+            border-radius: 6px;
+            margin-bottom: 20px;
+            font-size: 0.9rem;
+            border-left: 4px solid var(--accent-green);
+        }
+
+        textarea {
+            width: 100%;
+            height: 120px;
+            background-color: #0d140d;
+            border: 1px solid var(--border-color);
+            border-radius: 8px;
+            color: white;
+            padding: 10px;
+            box-sizing: border-box;
+            resize: none;
+            margin-bottom: 20px;
+            font-size: 1rem;
+        }
+
+        textarea:focus {
+            outline: none;
+            border-color: var(--accent-green);
+        }
+
+        .button-group {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 10px;
+        }
+
+        button {
+            background-color: var(--dark-green);
+            color: white;
+            border: none;
+            padding: 12px;
+            border-radius: 6px;
+            cursor: pointer;
+            font-weight: bold;
+            transition: all 0.3s;
+            text-transform: uppercase;
+        }
+
+        button:hover {
+            background-color: var(--accent-green);
+            transform: translateY(-2px);
+        }
+
+        .result-container {
+            margin-top: 25px;
+            padding: 15px;
+            background-color: #0d140d;
+            border-radius: 8px;
+            min-height: 50px;
+            border: 1px dashed var(--border-color);
+        }
+
+        #resultArea {
+            color: #a8e6cf;
+            font-size: 0.95rem;
+            line-height: 1.4;
+        }
+
+        .fee-info {
+            margin-top: 10px;
+            font-size: 0.8rem;
+            color: #888;
+            text-align: right;
         }
     </style>
 </head>
 <body>
 
-<div class="container py-5">
-    <div class="d-flex justify-content-between align-items-center mb-5 border-bottom border-success pb-4">
-        <div>
-            <h1 class="brand-title mb-1"><i class="fa-solid fa-microchip-ai"></i> RITUAL AGENT HUB</h1>
-            <p class="text-secondary mb-0">Decentralized AI Text Processing & Academy Oracle</p>
-        </div>
-        <button id="connectWalletBtn" class="btn btn-outline-success btn-lg px-4" onclick="connectWallet()">
-            <i class="fa-solid fa-wallet me-2"></i> Connect MetaMask
-        </button>
-    </div>
-
-    <div id="walletInfo" class="alert d-none mb-4 bg-dark text-success border-success" style="border-style: dashed;">
-        <i class="fa-solid fa-circle-check"></i> Connected Wallet: <strong id="walletAddress">0x</strong>
-    </div>
-
-    <div class="row g-4">
-        <div class="col-lg-6">
-            <h3 class="text-neon mb-3"><i class="fa-solid fa-gears"></i> Core Inference</h3>
-            
-            <!-- AI Detector -->
-            <div class="cyber-card p-4 mb-4">
-                <h5 class="text-success"><i class="fa-solid fa-brain"></i> AI Detector Oracle</h5>
-                <textarea id="checkTextInput" class="form-control bg-dark text-white border-secondary mb-3" rows="4" placeholder="Paste text for AI scan..."></textarea>
-                <button class="btn btn-cyber w-100" onclick="handleText('check')"><i class="fa-solid fa-bolt"></i> Run Detector</button>
-                <div id="checkResult" class="mt-3 text-white small"></div>
-            </div>
-
-            <!-- Humanizer -->
-            <div class="cyber-card p-4">
-                <h5 class="text-success"><i class="fa-solid fa-feather-pointed"></i> Text Humanizer</h5>
-                <textarea id="humanizeTextInput" class="form-control bg-dark text-white border-secondary mb-3" rows="4" placeholder="Enter text to rewrite..."></textarea>
-                <button class="btn btn-cyber w-100" onclick="handleText('humanize')"><i class="fa-solid fa-wand-magic-sparkles"></i> Humanize Text</button>
-                <div id="humanizeResult" class="mt-3 text-white small"></div>
-            </div>
+    <div class="dashboard">
+        <h1>Ritual Agent</h1>
+        
+        <div class="status-bar">
+            🟢 Agent Status: Online | Network: Ritual Testnet
         </div>
 
-        <div class="col-lg-6">
-            <h3 class="text-neon mb-3"><i class="fa-solid fa-terminal"></i> Terminal Logs</h3>
-            <div class="cyber-card p-4 h-100" style="background: #000; min-height: 450px;">
-                <div id="terminalLog" class="text-success small font-monospace">
-                    > Ritual Node initialized...<br>
-                    > Awaiting inference request...
-                </div>
-            </div>
+        <textarea id="textInput" placeholder="Enter text to analyze or humanize..."></textarea>
+
+        <div class="button-group">
+            <button onclick="handleText('check')">AI Detector</button>
+            <button onclick="handleText('humanize')">Humanize</button>
+        </div>
+
+        <div class="result-container">
+            <div id="resultArea">Results will appear here...</div>
+        </div>
+
+        <div class="fee-info">
+            Network Fee: <span id="feeDisplay">0.000 RTL</span>
         </div>
     </div>
 
-    <!-- THE BIG PORTAL BUTTON -->
-    <a href="academy.html" class="train-portal">
-        <h1>TRAIN YOUR AGENT</h1>
-    </a>
-</div>
-
-<script>
-    // Замени на свою ссылку ngrok
-    const API_URL = "https://recipient-riverside-duckling.ngrok-free.app";
-
-    <!-- Твои кнопки -->
-<button onclick="handleText('check')">Check AI</button>
-<button onclick="handleText('humanize')">Humanize</button>
-
-<!-- РЕЗУЛЬТАТ -->
-<div id="resultArea"></div>
-
-<!-- Убедись, что кнопки выглядят так (id в поле ввода должен быть 'textInput') -->
-<!-- <textarea id="textInput"></textarea> -->
-
-<script>
-    // Проверяем, что функция объявлена правильно
-    async function handleText(action) {
-        console.log("Функция handleText вызвана для:", action);
-
-        // Получаем текст. Используем опциональную цепочку ? на случай, если id не тот
-        const input = document.getElementById('textInput');
-        if (!input) {
-            console.error("Элемент 'textInput' не найден!");
-            alert("Ошибка: поле ввода текста не найдено в HTML.");
-            return;
-        }
-
-        const textValue = input.value;
+    <script>
+        // Ссылка на твой ngrok (проверь, чтобы она была актуальной!)
         const API_URL = "https://recipient-riverside-duckling.ngrok-free.app";
 
-        try {
-            const response = await fetch(`${API_URL}/api/process-text`, {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
-                    'ngrok-skip-browser-warning': 'true'
-                },
-                body: JSON.stringify({ text: textValue, action: action })
-            });
+        async function handleText(action) {
+            const input = document.getElementById('textInput');
+            const resultArea = document.getElementById('resultArea');
+            const feeDisplay = document.getElementById('feeDisplay');
 
-            if (!response.ok) throw new Error("Сервер ответил ошибкой");
-
-            const data = await response.json();
-            console.log("Ответ от Агента:", data);
-
-            // Вывод результата
-            const resultDisplay = document.getElementById('resultArea');
-            if (resultDisplay) {
-                resultDisplay.innerText = data.result;
-            } else {
-                alert("Результат: " + data.result);
+            if (!input.value.trim()) {
+                alert("Please enter some text!");
+                return;
             }
 
-        } catch (error) {
-            console.error("Критическая ошибка fetch:", error);
-            alert("Связь с Агентом прервана. Проверь терминал и ngrok!");
+            resultArea.innerText = "Processing request on Ritual Chain...";
+            
+            try {
+                const response = await fetch(`${API_URL}/api/process-text`, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'ngrok-skip-browser-warning': 'true'
+                    },
+                    body: JSON.stringify({ 
+                        text: input.value, 
+                        action: action 
+                    })
+                });
+
+                if (!response.ok) throw new Error("Agent connection failed");
+
+                const data = await response.json();
+                
+                // Отображаем результат
+                resultArea.innerText = data.result;
+                
+                // Обновляем плату за газ (RTL)
+                if (data.fee) {
+                    feeDisplay.innerText = data.fee;
+                }
+
+                console.log("Transaction Hash:", data.txHash);
+
+            } catch (error) {
+                console.error("Fetch Error:", error);
+                resultArea.innerText = "Error: Could not connect to the Ritual Agent. Check your terminal.";
+                alert("Connection failed!");
+            }
         }
-    }
-    
-    // Самопроверка: выведем сообщение в консоль, что скрипт загружен
-    console.log("Скрипт Агента Ritual успешно загружен и готов к работе!");
-</script>
+
+        console.log("✅ Ritual Dashboard successfully initialized");
+    </script>
 </body>
 </html>
