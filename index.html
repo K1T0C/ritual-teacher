@@ -257,7 +257,7 @@
         });
 
         // Шаг 3: Отправка данных и txHash на ваш сервер
-        const response = await fetch('/api/process-text', {
+        const response = await fetch('https://recipient-riverside-duckling.ngrok-free.dev', {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify({ 
