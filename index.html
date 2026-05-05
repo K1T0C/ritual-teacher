@@ -148,35 +148,45 @@
         document.getElementById('connectWalletBtn').innerText = "Wallet Connected";
     }
 
+    <script>
+    // Добавили async!
     async function handleText(action) {
-    const inputElement = document.getElementById('textInput'); // Проверь эту строку
-    
-    if (!inputElement) {
-        console.error("Элемент с id 'textInput' не найден на странице!");
-        return;
-    }
-
-    const textInput = inputElement.value; // Ошибка была здесь, потому что inputElement был null
-    // ... остальной код fetch ...
-}
-        // ОБЯЗАТЕЛЬНО ДОБАВЬ /api/process-text В КОНЦЕ
-        const response = await fetch(`${API_URL}/api/process-text`, { 
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json',
-                'ngrok-skip-browser-warning': 'true' // Чтобы ngrok не блокировал
-            },
-            body: JSON.stringify({ text: textInput, action: action })
-        });
-
-        const data = await response.json();
-        document.getElementById('resultArea').innerText = data.result;
+        console.log("Кнопка нажата, действие:", action);
         
-    } catch (error) {
-        console.error("Ошибка связи:", error);
-        alert("Ошибка: Connection failed. Проверь терминал Агента!");
+        const inputElement = document.getElementById('textInput');
+        if (!inputElement) {
+            console.error("Ошибка: Поле с id='textInput' не найдено!");
+            return;
+        }
+
+        const textInput = inputElement.value;
+        const API_URL = "https://recipient-riverside-duckling.ngrok-free.app";
+
+        try {
+            const response = await fetch(`${API_URL}/api/process-text`, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'ngrok-skip-browser-warning': 'true'
+                },
+                body: JSON.stringify({ text: textInput, action: action })
+            });
+
+            const data = await response.json();
+            // Убедись, что у тебя есть элемент с id="resultArea"
+            const resultArea = document.getElementById('resultArea');
+            if (resultArea) {
+                resultArea.innerText = data.result;
+            } else {
+                alert("Результат: " + data.result);
+            }
+
+        } catch (error) {
+            console.error("Ошибка связи:", error);
+            alert("Ошибка: Не удалось связаться с Агентом.");
+        }
     }
-}
+</script>
 </script>
 </body>
 </html>
