@@ -151,47 +151,52 @@
 <!-- <textarea id="textInput"></textarea> -->
 
 <script>
-    // 1. Функция ДОЛЖНА быть async
+    // Проверяем, что функция объявлена правильно
     async function handleText(action) {
-        console.log("Попытка запуска. Действие:", action);
+        console.log("Функция handleText вызвана для:", action);
 
+        // Получаем текст. Используем опциональную цепочку ? на случай, если id не тот
         const input = document.getElementById('textInput');
         if (!input) {
-            console.error("Критическая ошибка: Элемент 'textInput' не найден в HTML!");
-            alert("Ошибка в верстке: поле ввода не найдено.");
+            console.error("Элемент 'textInput' не найден!");
+            alert("Ошибка: поле ввода текста не найдено в HTML.");
             return;
         }
 
-        const text = input.value;
+        const textValue = input.value;
         const API_URL = "https://recipient-riverside-duckling.ngrok-free.app";
 
         try {
-            // 2. Путь должен быть полным: /api/process-text
             const response = await fetch(`${API_URL}/api/process-text`, {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
                     'ngrok-skip-browser-warning': 'true'
                 },
-                body: JSON.stringify({ text: text, action: action })
+                body: JSON.stringify({ text: textValue, action: action })
             });
 
+            if (!response.ok) throw new Error("Сервер ответил ошибкой");
+
             const data = await response.json();
-            
-            // 3. Вывод результата (убедись, что такой ID есть в твоем HTML)
+            console.log("Ответ от Агента:", data);
+
+            // Вывод результата
             const resultDisplay = document.getElementById('resultArea');
             if (resultDisplay) {
                 resultDisplay.innerText = data.result;
             } else {
-                console.log("Результат:", data.result);
-                alert(data.result);
+                alert("Результат: " + data.result);
             }
 
         } catch (error) {
-            console.error("Ошибка связи:", error);
-            alert("Не удалось связаться с Агентом. Проверь ngrok!");
+            console.error("Критическая ошибка fetch:", error);
+            alert("Связь с Агентом прервана. Проверь терминал и ngrok!");
         }
     }
+    
+    // Самопроверка: выведем сообщение в консоль, что скрипт загружен
+    console.log("Скрипт Агента Ritual успешно загружен и готов к работе!");
 </script>
 </body>
 </html>
