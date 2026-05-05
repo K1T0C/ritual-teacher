@@ -3,196 +3,175 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Ritual Agent Dashboard</title>
+    <title>RITUAL | AI AGENT TERMINAL</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700&family=Rajdhani:wght@500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
     <style>
         :root {
-            --bg-color: #0a0f0a;
-            --container-bg: #141d14;
-            --accent-green: #2ecc71;
-            --dark-green: #1b5e20;
-            --text-color: #e0e0e0;
-            --border-color: #2d3e2d;
+            --ritual-green: #00F58C;
+            --dark-green: #00241B;
+            --deep-black: #000a09;
         }
 
         body {
-            background-color: var(--bg-color);
-            color: var(--text-color);
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: var(--deep-black);
+            color: #f8fafc;
+            font-family: 'Rajdhani', sans-serif;
+        }
+
+        .brand-title {
+            font-family: 'Orbitron', sans-serif;
+            font-weight: 700;
+            color: var(--ritual-green);
+            text-shadow: 0 0 15px rgba(0, 245, 140, 0.3);
+        }
+
+        .cyber-card {
+            background: rgba(0, 36, 27, 0.6);
+            border: 1px solid rgba(0, 245, 140, 0.2);
+            border-radius: 12px;
+            box-shadow: 0 0 15px rgba(0, 245, 140, 0.05);
+            transition: all 0.3s ease;
+        }
+
+        .cyber-card:hover {
+            border-color: var(--ritual-green);
+            box-shadow: 0 0 25px rgba(0, 245, 140, 0.15);
+        }
+
+        .btn-cyber {
+            background: var(--ritual-green);
+            color: var(--deep-black);
+            font-weight: 700;
+            border: none;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        .btn-cyber:hover {
+            box-shadow: 0 0 20px var(--ritual-green);
+            background: #fff;
+        }
+
+        /* BIG TRAIN BUTTON HERO */
+        .train-hero {
+            position: relative;
+            overflow: hidden;
+            background: linear-gradient(rgba(0,36,27,0.85), rgba(0,36,27,0.85)), 
+                        url('https://images.unsplash.com/photo-1620712943543-bcc4628c9457?q=80&w=1000&auto=format&fit=crop');
+            background-size: cover;
+            background-position: center;
+            border: 2px solid var(--ritual-green);
+            height: 250px;
             display: flex;
+            flex-direction: column;
             justify-content: center;
             align-items: center;
-            height: 100vh;
-            margin: 0;
-        }
-
-        .dashboard {
-            background-color: var(--container-bg);
-            padding: 2rem;
-            border-radius: 12px;
-            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.5);
-            border: 1px solid var(--border-color);
-            width: 100%;
-            max-width: 500px;
-        }
-
-        h1 {
-            color: var(--accent-green);
-            text-align: center;
-            margin-bottom: 1.5rem;
-            text-transform: uppercase;
-            letter-spacing: 2px;
-        }
-
-        .status-bar {
-            background: rgba(46, 204, 113, 0.1);
-            padding: 10px;
-            border-radius: 6px;
-            margin-bottom: 20px;
-            font-size: 0.9rem;
-            border-left: 4px solid var(--accent-green);
-        }
-
-        textarea {
-            width: 100%;
-            height: 120px;
-            background-color: #0d140d;
-            border: 1px solid var(--border-color);
-            border-radius: 8px;
-            color: white;
-            padding: 10px;
-            box-sizing: border-box;
-            resize: none;
-            margin-bottom: 20px;
-            font-size: 1rem;
-        }
-
-        textarea:focus {
-            outline: none;
-            border-color: var(--accent-green);
-        }
-
-        .button-group {
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 10px;
-        }
-
-        button {
-            background-color: var(--dark-green);
-            color: white;
-            border: none;
-            padding: 12px;
-            border-radius: 6px;
             cursor: pointer;
-            font-weight: bold;
-            transition: all 0.3s;
-            text-transform: uppercase;
+            transition: 0.4s;
+            text-decoration: none !important;
         }
 
-        button:hover {
-            background-color: var(--accent-green);
-            transform: translateY(-2px);
+        .train-hero:hover {
+            transform: scale(1.01);
+            border-color: #fff;
         }
 
-        .result-container {
-            margin-top: 25px;
-            padding: 15px;
-            background-color: #0d140d;
-            border-radius: 8px;
-            min-height: 50px;
-            border: 1px dashed var(--border-color);
-        }
-
-        #resultArea {
-            color: #a8e6cf;
-            font-size: 0.95rem;
-            line-height: 1.4;
-        }
-
-        .fee-info {
-            margin-top: 10px;
-            font-size: 0.8rem;
-            color: #888;
-            text-align: right;
+        .train-hero h2 {
+            font-family: 'Orbitron';
+            color: var(--ritual-green);
+            font-size: 3rem;
+            margin-bottom: 0;
         }
     </style>
 </head>
 <body>
 
-    <div class="dashboard">
-        <h1>Ritual Agent</h1>
-        
-        <div class="status-bar">
-            🟢 Agent Status: Online | Network: Ritual Testnet
+<div class="container py-5">
+    <div class="d-flex justify-content-between align-items-center mb-5 border-bottom border-success pb-4">
+        <div>
+            <h1 class="brand-title mb-1"><i class="fa-solid fa-microchip"></i> RITUAL AGENT HUB</h1>
+            <p class="text-secondary mb-0">Autonomous Oracle Services & Processing Unit</p>
         </div>
-
-        <textarea id="textInput" placeholder="Enter text to analyze or humanize..."></textarea>
-
-        <div class="button-group">
-            <button onclick="handleText('check')">AI Detector</button>
-            <button onclick="handleText('humanize')">Humanize</button>
-        </div>
-
-        <div class="result-container">
-            <div id="resultArea">Results will appear here...</div>
-        </div>
-
-        <div class="fee-info">
-            Network Fee: <span id="feeDisplay">0.000 RTL</span>
-        </div>
+        <button id="connectWalletBtn" class="btn btn-outline-success btn-lg" onclick="connectWallet()">
+            <i class="fa-solid fa-wallet me-2"></i> Connect Wallet
+        </button>
     </div>
 
-    <script>
-        // Ссылка на твой ngrok (проверь, чтобы она была актуальной!)
-        const API_URL = "https://recipient-riverside-duckling.ngrok-free.dev";
-
-        async function handleText(action) {
-            const input = document.getElementById('textInput');
-            const resultArea = document.getElementById('resultArea');
-            const feeDisplay = document.getElementById('feeDisplay');
-
-            if (!input.value.trim()) {
-                alert("Please enter some text!");
-                return;
-            }
-
-            resultArea.innerText = "Processing request on Ritual Chain...";
+    <div class="row g-4">
+        <!-- AI SERVICES SECTION -->
+        <div class="col-lg-5">
+            <h3 class="text-success mb-3"><i class="fa-solid fa-bolt"></i> Core Processing</h3>
             
-            try {
-                const response = await fetch(`${API_URL}/api/process-text`, {
-                    method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/json',
-                        'ngrok-skip-browser-warning': 'true'
-                    },
-                    body: JSON.stringify({ 
-                        text: input.value, 
-                        action: action 
-                    })
-                });
+            <div class="cyber-card p-4 mb-4">
+                <h5 class="text-white"><i class="fa-solid fa-brain me-2"></i> AI Detection Oracle</h5>
+                <textarea id="checkTextInput" class="form-control bg-dark text-white border-secondary mb-3" rows="4" placeholder="Input text for verification..."></textarea>
+                <button class="btn btn-cyber w-100" onclick="processAction('check')">Scan Protocol</button>
+            </div>
 
-                if (!response.ok) throw new Error("Agent connection failed");
+            <div class="cyber-card p-4">
+                <h5 class="text-white"><i class="fa-solid fa-wand-magic-sparkles me-2"></i> Text Humanizer</h5>
+                <textarea id="humanizeTextInput" class="form-control bg-dark text-white border-secondary mb-3" rows="4" placeholder="Input text for humanization..."></textarea>
+                <button class="btn btn-cyber w-100" onclick="processAction('humanize')">Humanize Protocol</button>
+            </div>
+        </div>
 
-                const data = await response.json();
-                
-                // Отображаем результат
-                resultArea.innerText = data.result;
-                
-                // Обновляем плату за газ (RTL)
-                if (data.fee) {
-                    feeDisplay.innerText = data.fee;
-                }
+        <!-- HERO ACTION SECTION -->
+        <div class="col-lg-7">
+            <h3 class="text-success mb-3"><i class="fa-solid fa-microchip"></i> Agent Evolution</h3>
+            
+            <a href="academy.html" class="train-hero cyber-card mb-4">
+                <h2>TRAIN YOUR AGENT</h2>
+                <p class="text-white opacity-75">Click to access Skill Modules & Vector Training</p>
+            </a>
 
-                console.log("Transaction Hash:", data.txHash);
+            <div class="cyber-card p-4">
+                <h5 class="text-success mb-3"><i class="fa-solid fa-terminal me-2"></i> Execution Logs</h5>
+                <div id="logsOutput" class="bg-black p-3 rounded text-secondary small" style="min-height: 180px; font-family: 'Courier New';">
+                    > System Initialized...<br>
+                    > Ritual Node: Connected<br>
+                    > Waiting for operation...
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
 
-            } catch (error) {
-                console.error("Fetch Error:", error);
-                resultArea.innerText = "Error: Could not connect to the Ritual Agent. Check your terminal.";
-                alert("Connection failed!");
-            }
+<script>
+    const API_URL = 'https://recipient-riverside-duckling.ngrok-free.dev';
+
+    async function processAction(type) {
+        const inputId = type === 'check' ? 'checkTextInput' : 'humanizeTextInput';
+        const text = document.getElementById(inputId).value;
+        const logBox = document.getElementById('logsOutput');
+
+        if (!text) return alert("Input is empty!");
+
+        logBox.innerHTML += `<br><span class="text-success">> Initiating ${type.toUpperCase()} via Groq...</span>`;
+        
+        try {
+            const response = await fetch(API_URL, {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json', 'ngrok-skip-browser-warning': 'true' },
+                body: JSON.stringify({ text, action: type })
+            });
+            const data = await response.json();
+            
+            logBox.innerHTML += `<br><span class="text-white">> Result: ${data.result}</span>`;
+            logBox.innerHTML += `<br><span class="text-info">> Fee: ${data.fee} | TX: ${data.txHash.slice(0,10)}...</span>`;
+        } catch (e) {
+            logBox.innerHTML += `<br><span class="text-danger">> Error: Connection lost</span>`;
         }
+    }
 
-        console.log("✅ Ritual Dashboard successfully initialized");
-    </script>
+    async function connectWallet() {
+        if (window.ethereum) {
+            const accounts = await window.ethereum.request({ method: 'eth_requestAccounts' });
+            document.getElementById('connectWalletBtn').innerText = accounts[0].slice(0,6) + "..." + accounts[0].slice(-4);
+        }
+    }
+</script>
 </body>
 </html>
