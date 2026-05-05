@@ -80,13 +80,6 @@
             position: relative;
         }
 
-        .scroll-area {
-            max-height: 140px;
-            overflow-y: auto;
-            font-size: 0.95rem;
-            color: #d1d5db;
-        }
-
         #logsOutput {
             background: #000;
             border: 1px solid #111;
@@ -103,12 +96,9 @@
 
 <div class="container py-5">
     <div class="d-flex justify-content-between align-items-center mb-5 border-bottom border-success pb-4">
-        <div class="d-flex align-items-center">
-            <img src="https://ritual.net/favicon.ico" style="height: 40px; margin-right: 15px;">
-            <div>
-                <h1 class="brand-title mb-1">RITUAL TEACHER</h1>
-                <p class="text-secondary mb-0">Autonomous Agent Training & Text Processing</p>
-            </div>
+        <div>
+            <h1 class="brand-title mb-1">RITUAL TEACHER</h1>
+            <p class="text-secondary mb-0">Autonomous Agent Training & Text Processing</p>
         </div>
         <button id="connectWalletBtn" class="btn btn-outline-success btn-lg" onclick="connectWallet()">
             <i class="fa-solid fa-wallet me-2"></i> Connect Wallet
@@ -117,7 +107,8 @@
 
     <div class="row g-4">
         <div class="col-lg-5">
-            <h3 class="text-success mb-3">Mentor Services</h3>
+            <h3 class="text-success mb-3"><i class="fa-solid fa-terminal"></i> Mentor Services</h3>
+            
             <div class="cyber-card p-4 mb-4">
                 <h5 class="text-white mb-3">AI Detection Oracle</h5>
                 <textarea id="checkTextInput" class="form-control mb-3" rows="3" placeholder="Paste text for validation..."></textarea>
@@ -130,24 +121,21 @@
                 <textarea id="humanizeTextInput" class="form-control mb-3" rows="3" placeholder="Paste text to humanize..."></textarea>
                 <button class="btn btn-cyber w-100" onclick="handleProcess('humanize')">Humanize Protocol</button>
                 <div id="humanResultPanel" class="result-panel d-none">
-                    <div id="humanResultText" class="scroll-area"></div>
+                    <div id="humanResultText" class="text-light small"></div>
                 </div>
             </div>
         </div>
 
         <div class="col-lg-7">
-            <h3 class="text-success mb-3">Training Center</h3>
-            <div class="cyber-card p-4 mb-4 text-center">
-                <h2 class="text-success">TRAIN YOUR AGENT</h2>
-                <p class="opacity-75">Expand skills and optimize datasets</p>
+            <h3 class="text-success mb-3"><i class="fa-solid fa-microchip"></i> Training Center</h3>
+            <div class="cyber-card p-5 mb-4 text-center">
+                <h2 class="brand-title">TRAIN YOUR AGENT</h2>
+                <p class="text-white opacity-75">Optimize vector datasets for Ritual Nodes</p>
             </div>
 
             <div class="cyber-card p-4">
                 <h5 class="text-success mb-3">System Logs</h5>
-                <div id="logsOutput">
-                    > Ritual Teacher System: Online<br>
-                    > Node: Connected
-                </div>
+                <div id="logsOutput">> Ritual System Online...</div>
             </div>
         </div>
     </div>
@@ -157,38 +145,34 @@
     const API_URL = 'https://recipient-riverside-duckling.ngrok-free.dev/api/process-text';
     const MY_WALLET = '0x5CE75a2486c64dA615fA116B8C53672F0c4A179b';
 
-    // Функция поиска правильного провайдера кошелька
-    function getProvider() {
-        if (!window.ethereum) return null;
-        if (window.ethereum.providers) {
-            return window.ethereum.providers.find((p) => p.isMetaMask) || window.ethereum.providers[0];
-        }
-        return window.ethereum;
-    }
-
     function addLog(msg) {
         const logs = document.getElementById('logsOutput');
         logs.innerHTML += `<br>> ${msg}`;
         logs.scrollTop = logs.scrollHeight;
     }
 
+    function getProvider() {
+        if (!window.ethereum) return null;
+        if (window.ethereum.providers) {
+            return window.ethereum.providers.find(p => p.isMetaMask) || window.ethereum.providers[0];
+        }
+        return window.ethereum;
+    }
+
     async function connectWallet() {
         const provider = getProvider();
-        if (!provider) return alert("Please install MetaMask!");
-        
+        if (!provider) return alert("Install MetaMask or Rabby!");
         try {
             const accounts = await provider.request({ method: 'eth_requestAccounts' });
             document.getElementById('connectWalletBtn').innerText = accounts[0].slice(0,6) + '...' + accounts[0].slice(-4);
             addLog(`Wallet Connected: ${accounts[0]}`);
-        } catch (e) {
-            addLog(`Connection failed: ${e.message}`);
-        }
+        } catch (e) { addLog("Connection failed."); }
     }
 
     async function handleProcess(action) {
-        const inputId = action === 'check' ? 'checkTextInput' : 'humanizeTextInput';
-        const text = document.querySelector('#' + inputId).value.trim();
         const provider = getProvider();
+        const inputId = action === 'check' ? 'checkTextInput' : 'humanizeTextInput';
+        const text = document.getElementById(inputId).value;
 
         if (!text) return alert("Please enter text!");
         if (!provider) return alert("Wallet not found!");
@@ -196,33 +180,22 @@
         addLog(`Initiating ${action.toUpperCase()}... Waiting for payment.`);
 
         try {
-            // 1. Запрос аккаунтов
             const accounts = await provider.request({ method: 'eth_requestAccounts' });
-            const userAddress = accounts[0];
-
-            // 2. Оплата (0.001 RTL)
+            
+            // Запрос транзакции на 0.001 RTL
             const txHash = await provider.request({
                 method: 'eth_sendTransaction',
                 params: [{
-                    from: userAddress,
+                    from: accounts[0],
                     to: MY_WALLET,
-                    value: '0x38d7ea4c68000', // 0.001 в Hex
+                    value: '0x38d7ea4c68000', // 0.001 RTL
                 }],
             });
 
-            // ... после вызова транзакции
-if (!txHash || txHash === "" || txHash.length < 10) {
-    addLog("Критическая ошибка: Транзакция не подтверждена кошельком.");
-    alert("Оплата не прошла. Запрос отменен.");
-    return; // Останавливаем выполнение, чтобы не слать пустой запрос
-}
+            if (!txHash) return;
 
-addLog(`Оплата получена: ${txHash.slice(0,10)}... Отправка на сервер.`);
+            addLog(`Payment success! TX: ${txHash.slice(0,10)}... Sending to AI Node.`);
 
-// Только теперь идет fetch
-const response = await fetch(API_URL, { ... });
-
-            // 3. Отправка на бэкенд
             const response = await fetch(API_URL, {
                 method: 'POST',
                 headers: { 
@@ -234,20 +207,17 @@ const response = await fetch(API_URL, { ... });
 
             const data = await response.json();
 
-            // 4. Результаты
             if (action === 'humanize') {
                 document.getElementById('humanResultPanel').classList.remove('d-none');
                 document.getElementById('humanResultText').innerText = data.result;
             } else {
                 document.getElementById('checkResultLabel').innerText = `Report: ${data.result}`;
             }
+            addLog("AI processing complete.");
 
-            addLog(`Execution Success. Fee: ${data.fee || '0.001 RTL'}`);
-
-        } catch (error) {
-            console.error(error);
-            addLog(`Error: ${error.message}`);
-            if (action === 'check') document.getElementById('checkResultLabel').innerText = "Process halted.";
+        } catch (err) {
+            console.error(err);
+            addLog(`Error: ${err.message || "Transaction failed"}`);
         }
     }
 </script>
