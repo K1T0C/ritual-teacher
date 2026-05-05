@@ -280,19 +280,35 @@
 
     // 4. ГЛАВНАЯ ФУНКЦИЯ (Оплата + Запрос)
     async function handleProcess(action) {
+        let provider = window.ethereum;
         const inputId = action === 'check' ? 'checkTextInput' : 'humanizeTextInput';
         const textInput = document.getElementById(inputId);
         const text = textInput ? textInput.value : '';
         
-        if (!text) {
-            alert("Please enter some text!");
-            return;
-        }
+        if (window.ethereum && window.ethereum.providers) {
+        provider = window.ethereum.providers.find((p) => p.isMetaMask);
+    }
 
-        if (!window.ethereum) {
-            alert("Wallet not found!");
-            return;
-        }
+    if (!provider) {
+        alert("Wallet provider not found. Please disable conflicting extensions!");
+        return;
+    }
+
+    try {
+        addLog(`> Starting ${action}...`);
+        
+        // 3. Запрос аккаунтов (используем наш найденный provider)
+        const accounts = await provider.request({ method: 'eth_requestAccounts' });
+        
+        // 4. Оплата (используем наш найденный provider)
+        const txHash = await provider.request({
+            method: 'eth_sendTransaction',
+            params: [{
+                from: accounts[0],
+                to: MY_WALLET,
+                value: '0x38d7ea4c68000', 
+            }],
+        });
 
         addLog(`> Initiating ${action.toUpperCase()}... Waiting for payment.`);
 
