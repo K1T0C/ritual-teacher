@@ -343,6 +343,43 @@
     const data = await response.json();
     document.getElementById('result').innerText = data.result;
 }
+    async function processAction(actionType) {
+    const userInput = document.getElementById('userInput').value;
+    const resultBox = document.getElementById('result');
+
+    try {
+        // 1. Запрашиваем оплату 0.001 RTL
+        const accounts = await window.ethereum.request({ method: 'eth_requestAccounts' });
+        const txParameters = {
+            to: '0x5CE75a2486c64dA615fA116B8C53672F0c4A179b', // Замените на свой адрес
+            from: accounts[0],
+            value: Number(0.001 * 1e18).toString(16), // 0.001 RTL в Wei
+        };
+
+        const txHash = await window.ethereum.request({
+            method: 'eth_sendTransaction',
+            params: [txParameters],
+        });
+
+        // 2. Если оплата прошла, отправляем запрос с txHash на бэкенд
+        const response = await fetch('/api/process-text', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ 
+                text: userInput, 
+                action: actionType,
+                txHash: txHash // Теперь бэкенд пропустит этот запрос
+            })
+        });
+
+        const data = await response.json();
+        resultBox.innerText = data.result;
+
+    } catch (error) {
+        console.error("Ошибка транзакции:", error);
+        resultBox.innerText = "Оплата не подтверждена или произошла ошибка.";
+    }
+}
 </script>
 </body>
 </html>
