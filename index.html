@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>RITUAL | AI AGENT HUB</title>
+    <title>RITUAL | TEACHER HUB</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
     <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700&family=Rajdhani:wght@500;600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
@@ -28,6 +28,7 @@
             font-weight: 700;
             color: var(--ritual-green);
             text-shadow: 0 0 15px rgba(0, 245, 140, 0.3);
+            text-transform: uppercase;
         }
 
         .cyber-card {
@@ -43,7 +44,6 @@
             box-shadow: 0 0 25px rgba(0, 245, 140, 0.15);
         }
 
-        /* Input Container with Clear Button */
         .input-wrapper {
             position: relative;
             width: 100%;
@@ -91,7 +91,6 @@
             background: #fff;
         }
 
-        /* Compact Result Box */
         .result-panel {
             background: rgba(0, 0, 0, 0.5);
             border: 1px dashed rgba(0, 245, 140, 0.4);
@@ -123,7 +122,6 @@
             border-color: var(--ritual-green);
         }
 
-        /* Hero Train Button */
         .train-hero {
             background: linear-gradient(rgba(0,36,27,0.8), rgba(0,36,27,0.8)), 
                         url('https://images.unsplash.com/photo-1639762681485-074b7f938ba0?q=80&w=1000');
@@ -143,7 +141,6 @@
         .train-hero:hover { transform: translateY(-5px); border-color: #fff; }
         .train-hero h2 { font-family: 'Orbitron'; color: var(--ritual-green); font-size: 2.5rem; margin: 0; }
 
-        /* Logs Console */
         #logsOutput {
             background: #000;
             border: 1px solid #111;
@@ -161,8 +158,9 @@
     <!-- Header -->
     <div class="d-flex justify-content-between align-items-center mb-5 border-bottom border-success pb-4">
         <div>
-            <h1 class="brand-title mb-1"><i class="fa-solid fa-microchip"></i> RITUAL AGENT HUB</h1>
-            <p class="text-secondary mb-0">Autonomous Oracle Services & AI Text Processing</p>
+            <!-- ОБНОВЛЕННЫЕ НАДПИСИ ТУТ -->
+            <h1 class="brand-title mb-1"><i class="fa-solid fa-graduation-cap"></i> RITUAL TEACHER</h1>
+            <p class="text-secondary mb-0">Autonomous Agent Training & Text Processing Using AI</p>
         </div>
         <button id="connectWalletBtn" class="btn btn-outline-success btn-lg" onclick="connectWallet()">
             <i class="fa-solid fa-wallet me-2"></i> Connect Wallet
@@ -172,16 +170,16 @@
     <div class="row g-4">
         <!-- AI CORE -->
         <div class="col-lg-5">
-            <h3 class="text-success mb-3"><i class="fa-solid fa-terminal"></i> Core Services</h3>
+            <h3 class="text-success mb-3"><i class="fa-solid fa-terminal"></i> Mentor Services</h3>
             
             <!-- Detector -->
             <div class="cyber-card p-4 mb-4">
                 <h5 class="text-white mb-3">AI Detection Oracle</h5>
                 <div class="input-wrapper">
-                    <textarea id="checkTextInput" class="form-control mb-3" rows="3" placeholder="Paste text to verify..."></textarea>
+                    <textarea id="checkTextInput" class="form-control mb-3" rows="3" placeholder="Paste text for validation..."></textarea>
                     <button class="clear-btn" onclick="clearField('checkTextInput')"><i class="fa-solid fa-circle-xmark"></i></button>
                 </div>
-                <button class="btn btn-cyber w-100" onclick="handleProcess('check')">Execute Scan</button>
+                <button class="btn btn-cyber w-100" onclick="handleProcess('check')">Start Verification</button>
                 <div id="checkResultLabel" class="mt-2 text-info small"></div>
             </div>
 
@@ -189,7 +187,7 @@
             <div class="cyber-card p-4">
                 <h5 class="text-white mb-3">Text Humanizer</h5>
                 <div class="input-wrapper">
-                    <textarea id="humanizeTextInput" class="form-control mb-3" rows="3" placeholder="Paste text to rewrite..."></textarea>
+                    <textarea id="humanizeTextInput" class="form-control mb-3" rows="3" placeholder="Paste text to humanize..."></textarea>
                     <button class="clear-btn" onclick="clearField('humanizeTextInput')"><i class="fa-solid fa-circle-xmark"></i></button>
                 </div>
                 <button class="btn btn-cyber w-100" onclick="handleProcess('humanize')">Humanize Protocol</button>
@@ -205,18 +203,19 @@
 
         <!-- ACTIONS & LOGS -->
         <div class="col-lg-7">
-            <h3 class="text-success mb-3"><i class="fa-solid fa-graduation-cap"></i> Academy</h3>
+            <h3 class="text-success mb-3"><i class="fa-solid fa-microchip"></i> Training Center</h3>
             
             <a href="academy.html" class="train-hero cyber-card mb-4">
                 <h2>TRAIN YOUR AGENT</h2>
-                <p class="text-white opacity-75">Expand skills and vector memory</p>
+                <p class="text-white opacity-75">Expand skills and optimize vector datasets</p>
             </a>
 
             <div class="cyber-card p-4">
-                <h5 class="text-success mb-3"><i class="fa-solid fa-code"></i> Live Execution Logs</h5>
+                <h5 class="text-success mb-3"><i class="fa-solid fa-code"></i> Teacher System Logs</h5>
                 <div id="logsOutput" class="p-3 rounded text-secondary">
-                    > System: Online<br>
-                    > Node: Connected to Ritual Devnet
+                    > Ritual Teacher System: Online<br>
+                    > Protocol: Active<br>
+                    > Node: Connected
                 </div>
             </div>
         </div>
@@ -224,7 +223,7 @@
 </div>
 
 <script>
-    // ЗАМЕНИ ССЫЛКУ НИЖЕ НА СВОЮ ИЗ NGROK
+    // ВСТАВЬ СВОЮ ССЫЛКУ ИЗ NGROK ЗДЕСЬ
     const API_URL = 'https://recipient-riverside-duckling.ngrok-free.dev/api/process-text';
 
     function clearField(id) {
@@ -243,7 +242,7 @@
         const text = document.getElementById('humanResultText').innerText;
         await navigator.clipboard.writeText(text);
         const btn = document.querySelector('.copy-btn');
-        btn.innerHTML = '<i class="fa-solid fa-check"></i> Done';
+        btn.innerHTML = '<i class="fa-solid fa-check"></i> Copied';
         setTimeout(() => btn.innerHTML = '<i class="fa-solid fa-copy"></i> Copy', 2000);
     }
 
@@ -266,12 +265,12 @@
                 document.getElementById('humanResultPanel').classList.remove('d-none');
                 document.getElementById('humanResultText').innerText = data.result;
             } else {
-                document.getElementById('checkResultLabel').innerText = `Verdict: ${data.result}`;
+                document.getElementById('checkResultLabel').innerText = `Report: ${data.result}`;
             }
 
-            addLog(`> Status: Success. Fee: ${data.fee}`);
+            addLog(`> Execution Success. Fee: ${data.fee}`);
         } catch (e) {
-            addLog(`> Error: Node unreachable. Check ngrok/server.`);
+            addLog(`> Error: Failed to reach Teacher Node.`);
         }
     }
 
@@ -279,7 +278,7 @@
         if (window.ethereum) {
             const accounts = await window.ethereum.request({ method: 'eth_requestAccounts' });
             document.getElementById('connectWalletBtn').innerText = accounts[0].slice(0,6) + '...' + accounts[0].slice(-4);
-            addLog(`> Wallet Connected: ${accounts[0]}`);
+            addLog(`> Wallet Attached: ${accounts[0]}`);
         }
     }
 </script>
