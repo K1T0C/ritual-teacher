@@ -228,97 +228,26 @@
     </div>
 </div>
 
-<script>
-    // ВСТАВЬ СВОЮ ССЫЛКУ ИЗ NGROK ЗДЕСЬ
+    <script>
+    // 1. Конфигурация
     const API_URL = 'https://recipient-riverside-duckling.ngrok-free.dev/api/process-text';
-    async function sendRequestWithPayment(actionType) {
-    const userInput = document.getElementById('userInput').value;
-    const resultBox = document.getElementById('result');
+    const MY_WALLET = '0x5CE75a2486c64dA615fA116B8C53672F0c4A179b';
 
-    try {
-        // Шаг 1: Подключение к кошельку
-        if (!window.ethereum) {
-            alert("Установите MetaMask или Rabby!");
-            return;
-        }
-        
-        const accounts = await window.ethereum.request({ method: 'eth_requestAccounts' });
-        const userAddress = accounts[0];
-
-        // Шаг 2: Отправка транзакции в 0.001 RTL
-        // Значение '0x38d7ea4c68000' — это 0.001 в шестнадцатеричном формате Wei
-        const txHash = await window.ethereum.request({
-            method: 'eth_sendTransaction',
-            params: [{
-                from: userAddress,
-                to: '0x5CE75a2486c64dA615fA116B8C53672F0c4A179b', // Замените на свой кошелек для сбора оплаты
-                value: '0x38d7ea4c68000', 
-            }],
-        });
-
-        // Шаг 3: Отправка данных и txHash на ваш сервер
-        const response = await fetch('https://recipient-riverside-duckling.ngrok-free.dev', {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({ 
-                text: userInput, 
-                action: actionType,
-                txHash: txHash // Передаем полученный хэш транзакции
-            })
-        });
-
-        const data = await response.json();
-        resultBox.innerText = data.result;
-
-    } catch (error) {
-        console.error("Payment failed:", error);
-        resultBox.innerText = "Ошибка: Оплата не прошла или была отклонена.";
-    }
-}
-    async function requestPayment() {
-    if (typeof window.ethereum === 'undefined') {
-        alert("Пожалуйста, установите MetaMask или Rabby Wallet!");
-        return null;
-    }
-
-    try {
-        const accounts = await window.ethereum.request({ method: 'eth_requestAccounts' });
-        const userAddress = accounts[0];
-
-        // 0.001 RTL (в шестнадцатеричном формате Wei)
-        const amount = (0.001 * 1e18).toString(16);
-
-        const transactionParameters = {
-            to: '0x5CE75a2486c64dA615fA116B8C53672F0c4A179b', // ЗАМЕНИ НА СВОЙ АДРЕС
-            from: userAddress,
-            value: '0x' + (0.001 * 1e18).toString(16), 
-            gas: '0x5208', 
-        };
-
-        const txHash = await window.ethereum.request({
-            method: 'eth_sendTransaction',
-            params: [transactionParameters],
-        });
-
-        return txHash;
-    } catch (error) {
-        console.error("Пользователь отклонил транзакцию", error);
-        return null;
-    }
-}
-
-    function clearField(id) {
-        document.getElementById(id).value = '';
-        if(id === 'humanizeTextInput') document.getElementById('humanResultPanel').classList.add('d-none');
-        addLog(`> Field ${id} cleared`);
-    }
-
+    // 2. Логирование
     function addLog(msg) {
         const logs = document.getElementById('logsOutput');
         logs.innerHTML += `<br>${msg}`;
         logs.scrollTop = logs.scrollHeight;
     }
 
+    // 3. Очистка полей
+    function clearField(id) {
+        document.getElementById(id).value = '';
+        if(id === 'humanizeTextInput') document.getElementById('humanResultPanel').classList.add('d-none');
+        addLog(`> Field ${id} cleared`);
+    }
+
+    // 4. Копирование
     async function copyToClipboard() {
         const text = document.getElementById('humanResultText').innerText;
         await navigator.clipboard.writeText(text);
@@ -327,21 +256,73 @@
         setTimeout(() => btn.innerHTML = '<i class="fa-solid fa-copy"></i> Copy', 2000);
     }
 
+    // 5. Подключение кошелька
+    async function connectWallet() {
+        if (window.ethereum) {
+            try {
+                const accounts = await window.ethereum.request({ method: 'eth_requestAccounts' });
+                document.getElementById('connectWalletBtn').innerText = accounts[0].slice(0,6) + '...' + accounts[0].slice(-4);
+                addLog(`> Wallet Attached: ${accounts[0]}`);
+                return accounts[0];
+            } catch (e) {
+                addLog(`> Wallet connection rejected`);
+            }
+        } else {
+            alert("Please install MetaMask or Rabby!");
+        }
+    }
+
+    // 6. ГЛАВНАЯ ФУНКЦИЯ ОБРАБОТКИ (Оплата + Запрос)
     async function handleProcess(action) {
         const inputId = action === 'check' ? 'checkTextInput' : 'humanizeTextInput';
         const text = document.getElementById(inputId).value;
-        if (!text) return;
-
-        addLog(`> Initiating ${action.toUpperCase()} protocol...`);
         
+        if (!text) {
+            alert("Please enter some text!");
+            return;
+        }
+
+        addLog(`> Initiating ${action.toUpperCase()} protocol. Waiting for payment...`);
+
         try {
+            // ШАГ 1: Запрос оплаты
+            if (!window.ethereum) throw new Error("No wallet found");
+            
+            const accounts = await window.ethereum.request({ method: 'eth_requestAccounts' });
+            const userAddress = accounts[0];
+
+            // 0.001 RTL в шестнадцатеричном формате Wei
+            const txHash = await window.ethereum.request({
+                method: 'eth_sendTransaction',
+                params: [{
+                    from: userAddress,
+                    to: MY_WALLET,
+                    value: '0x38d7ea4c68000', // 0.001 RTL
+                }],
+            });
+
+            addLog(`> Payment Sent! TX: ${txHash.slice(0,10)}...`);
+            addLog(`> Requesting AI Oracle...`);
+
+            // ШАГ 2: Отправка на бэкенд вместе с txHash
             const response = await fetch(API_URL, {
                 method: 'POST',
-                headers: { 'Content-Type': 'application/json', 'ngrok-skip-browser-warning': 'true' },
-                body: JSON.stringify({ text, action })
+                headers: { 
+                    'Content-Type': 'application/json',
+                    'ngrok-skip-browser-warning': 'true' 
+                },
+                body: JSON.stringify({ 
+                    text: text, 
+                    action: action,
+                    txHash: txHash 
+                })
             });
+
+            if (!response.ok) throw new Error("Server 404 or Error");
+
             const data = await response.json();
 
+            // ШАГ 3: Отображение результата
             if (action === 'humanize') {
                 document.getElementById('humanResultPanel').classList.remove('d-none');
                 document.getElementById('humanResultText').innerText = data.result;
@@ -349,81 +330,16 @@
                 document.getElementById('checkResultLabel').innerText = `Report: ${data.result}`;
             }
 
-            addLog(`> Execution Success. Fee: ${data.fee}`);
-        } catch (e) {
-            addLog(`> Error: Failed to reach Teacher Node.`);
+            addLog(`> Success. Fee: ${data.fee || '0.001 RTL'}`);
+
+        } catch (error) {
+            console.error(error);
+            addLog(`> Failed: ${error.message || "User rejected transaction"}`);
+            if (action === 'check') {
+                document.getElementById('checkResultLabel').innerText = `Error: Payment or Connection issue.`;
+            }
         }
     }
-
-    async function connectWallet() {
-        if (window.ethereum) {
-            const accounts = await window.ethereum.request({ method: 'eth_requestAccounts' });
-            document.getElementById('connectWalletBtn').innerText = accounts[0].slice(0,6) + '...' + accounts[0].slice(-4);
-            addLog(`> Wallet Attached: ${accounts[0]}`);
-        }
-    }
-    async function runAitask(actionType) {
-    const text = document.getElementById('userInput').value;
-    
-    // 1. Сначала просим оплату
-    const txHash = await requestPayment();
-    
-    if (!txHash) {
-        alert("Оплата не подтверждена. Действие отменено.");
-        return;
-    }
-
-    // 2. Только если есть хэш, отправляем запрос на сервер
-    const response = await fetch('https://recipient-riverside-duckling.ngrok-free.dev', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ 
-            text: text, 
-            action: actionType, 
-            txHash: txHash // ПЕРЕДАЕМ ХЭШ СЮДА
-        })
-    });
-
-    const data = await response.json();
-    document.getElementById('result').innerText = data.result;
-}
-    async function processAction(actionType) {
-    const userInput = document.getElementById('userInput').value;
-    const resultBox = document.getElementById('result');
-
-    try {
-        // 1. Запрашиваем оплату 0.001 RTL
-        const accounts = await window.ethereum.request({ method: 'eth_requestAccounts' });
-        const txParameters = {
-            to: '0x5CE75a2486c64dA615fA116B8C53672F0c4A179b', // Замените на свой адрес
-            from: accounts[0],
-            value: Number(0.001 * 1e18).toString(16), // 0.001 RTL в Wei
-        };
-
-        const txHash = await window.ethereum.request({
-            method: 'eth_sendTransaction',
-            params: [txParameters],
-        });
-
-        // 2. Если оплата прошла, отправляем запрос с txHash на бэкенд
-        const response = await fetch('/api/process-text', {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({ 
-                text: userInput, 
-                action: actionType,
-                txHash: txHash // Теперь бэкенд пропустит этот запрос
-            })
-        });
-
-        const data = await response.json();
-        resultBox.innerText = data.result;
-
-    } catch (error) {
-        console.error("Ошибка транзакции:", error);
-        resultBox.innerText = "Оплата не подтверждена или произошла ошибка.";
-    }
-}
 </script>
 </body>
 </html>
