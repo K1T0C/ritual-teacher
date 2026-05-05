@@ -140,22 +140,21 @@
     // Замени на свою ссылку ngrok
     const API_URL = "https://recipient-riverside-duckling.ngrok-free.app";
 
-    async function connectWallet() {
-        if (!window.ethereum) return alert("MetaMask not found!");
-        const accounts = await window.ethereum.request({ method: 'eth_requestAccounts' });
-        document.getElementById('walletInfo').classList.remove('d-none');
-        document.getElementById('walletAddress').innerText = accounts[0];
-        document.getElementById('connectWalletBtn').innerText = "Wallet Connected";
-    }
+    <!-- Твои кнопки -->
+<button onclick="handleText('check')">Check AI</button>
+<button onclick="handleText('humanize')">Humanize</button>
 
-    <script>
-    // Добавили async!
+<!-- РЕЗУЛЬТАТ -->
+<div id="resultArea"></div>
+
+<script>
+    // Убедись, что здесь НЕТ никаких тегов <div> или лишних <script>
     async function handleText(action) {
-        console.log("Кнопка нажата, действие:", action);
+        console.log("Запуск функции:", action);
         
         const inputElement = document.getElementById('textInput');
         if (!inputElement) {
-            console.error("Ошибка: Поле с id='textInput' не найдено!");
+            alert("Поле ввода не найдено!");
             return;
         }
 
@@ -173,20 +172,13 @@
             });
 
             const data = await response.json();
-            // Убедись, что у тебя есть элемент с id="resultArea"
-            const resultArea = document.getElementById('resultArea');
-            if (resultArea) {
-                resultArea.innerText = data.result;
-            } else {
-                alert("Результат: " + data.result);
-            }
-
+            document.getElementById('resultArea').innerText = data.result;
+            
         } catch (error) {
             console.error("Ошибка связи:", error);
-            alert("Ошибка: Не удалось связаться с Агентом.");
+            alert("Агент не отвечает. Проверь терминал!");
         }
     }
-</script>
 </script>
 </body>
 </html>
