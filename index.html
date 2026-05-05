@@ -149,7 +149,8 @@
     }
 
     async function handleText(action) {
-    const textInput = document.getElementById('textInput').value;
+    <!-- Проверь, чтобы id был именно textInput -->
+<textarea id="textInput" placeholder="Введите текст здесь..."></textarea>
     
     try {
         // ОБЯЗАТЕЛЬНО ДОБАВЬ /api/process-text В КОНЦЕ
