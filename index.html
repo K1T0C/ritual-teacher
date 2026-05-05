@@ -149,23 +149,27 @@
     }
 
     async function handleText(action) {
-        const text = action === 'check' ? document.getElementById('checkTextInput').value : document.getElementById('humanizeTextInput').value;
-        const resultDiv = action === 'check' ? document.getElementById('checkResult') : document.getElementById('humanizeResult');
+    const textInput = document.getElementById('textInput').value;
+    
+    try {
+        // ОБЯЗАТЕЛЬНО ДОБАВЬ /api/process-text В КОНЦЕ
+        const response = await fetch(`${API_URL}/api/process-text`, { 
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                'ngrok-skip-browser-warning': 'true' // Чтобы ngrok не блокировал
+            },
+            body: JSON.stringify({ text: textInput, action: action })
+        });
+
+        const data = await response.json();
+        document.getElementById('resultArea').innerText = data.result;
         
-        if (!text) return;
-        resultDiv.innerHTML = "Processing Inference...";
-        
-        try {
-            const response = await fetch(API_URL, {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json', 'ngrok-skip-browser-warning': 'true' },
-                body: JSON.stringify({ text, action })
-            });
-            const data = await response.json();
-            resultDiv.innerHTML = data.result;
-            document.getElementById('terminalLog').innerHTML += `<br>> ${action.toUpperCase()} complete.`;
-        } catch (e) { resultDiv.innerHTML = "Error: Connection failed"; }
+    } catch (error) {
+        console.error("Ошибка связи:", error);
+        alert("Ошибка: Connection failed. Проверь терминал Агента!");
     }
+}
 </script>
 </body>
 </html>
