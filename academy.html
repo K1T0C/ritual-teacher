@@ -9,12 +9,19 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
         body { 
-            background: #050808; 
-            color: #e2e8f0; 
-            font-family: 'Rajdhani', sans-serif;
-            margin: 0;
-            overflow-x: hidden;
-        }
+    background-color: #050808; 
+    color: #e2e8f0; 
+    font-family: 'Rajdhani', sans-serif;
+    margin: 0;
+    /* Добавляем логотип прямо в фон body через SVG */
+    background-image: 
+        linear-gradient(rgba(5, 8, 8, 0.8), rgba(5, 8, 8, 0.8)), /* Затемнение */
+        url("data:image/svg+xml;charset=UTF-8,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3e%3cdefs%3e%3clinearGradient id='g' x1='0%25' y1='0%25' x2='100%25' y2='100%25'%3e%3cstop offset='0%25' style='stop-color:%2300ff87;stop-opacity:1' /%3e%3cstop offset='50%25' style='stop-color:%237cfc00;stop-opacity:1' /%3e%3cstop offset='100%25' style='stop-color:%2300d4ff;stop-opacity:1' /%3e%3c/linearGradient%3e%3c/defs%3e%3cpath d='M50 10 L90 50 L50 90 L10 50 Z' fill='none' stroke='url(%23g)' stroke-width='2'/%3e%3cpath d='M50 25 L75 50 L50 75 L25 50 Z' fill='none' stroke='url(%23g)' stroke-width='4'/%3e%3c/svg%3e");
+    background-repeat: no-repeat, repeat;
+    background-position: center;
+    background-size: cover, 600px; /* Размер логотипа */
+    background-attachment: fixed;
+}
 
         /* Контейнер для фонового арта */
         .ritual-bg-container {
