@@ -93,35 +93,64 @@
     </div>
 
     <div class="container">
-        <div class="row g-4" id="skillGrid">
-            <!-- Блок 1 -->
-            <div class="col-md-4">
-                <div class="cyber-card p-4 d-flex flex-column">
-                    <i class="fa-solid fa-shield-halved skill-icon"></i>
-                    <h3 style="font-family: 'Orbitron'; font-size: 1.2rem;">Self-Diagnostic</h3>
-                    <p class="text-secondary small mb-4">Code for SecOps and EVM error extraction to fix node crashes.</p>
-                    <button class="btn btn-train" onclick="startTraining('train-diagnostic', this)">0.001 RTL</button>
-                </div>
+       <div class="row g-4" id="skillGrid">
+    <!-- Module 1: Self-Diagnostic -->
+    <div class="col-md-4">
+        <div class="cyber-card p-4 d-flex flex-column">
+            <i class="fa-solid fa-shield-halved skill-icon"></i>
+            <h3 style="font-family: 'Orbitron'; font-size: 1.1rem;">Self-Diagnostic</h3>
+            <p class="text-secondary small mb-4">SecOps & EVM error decoding logic.</p>
+            
+            <button class="btn btn-outline-info btn-sm mb-3" onclick="toggleLocalGuide('guide-diag')">USER GUIDE</button>
+            <div id="guide-diag" class="d-none small text-start mb-3 p-2 border-start border-info" style="background: rgba(0,255,135,0.05);">
+                <b class="text-info">HOW TO USE:</b><br>
+                1. Copy the <b>Bash script</b> provided after payment.<br>
+                2. Create a file: <code>nano check.sh</code> on your server.<br>
+                3. Paste the code, save, and run: <code>bash check.sh</code>.
             </div>
-            <!-- Блок 2 -->
-            <div class="col-md-4">
-                <div class="cyber-card p-4 d-flex flex-column">
-                    <i class="fa-solid fa-terminal skill-icon"></i>
-                    <h3 style="font-family: 'Orbitron'; font-size: 1.2rem;">Web3 Prompting</h3>
-                    <p class="text-secondary small mb-4">Lexical syntax for effortless interaction with Ritual RPC.</p>
-                    <button class="btn btn-train" onclick="startTraining('train-prompting', this)">0.001 RTL</button>
-                </div>
-            </div>
-            <!-- Блок 3 -->
-            <div class="col-md-4">
-                <div class="cyber-card p-4 d-flex flex-column">
-                    <i class="fa-solid fa-bolt skill-icon"></i>
-                    <h3 style="font-family: 'Orbitron'; font-size: 1.2rem;">Auto Web3 Action</h3>
-                    <p class="text-secondary small mb-4">Autonomous transaction signing and gas estimation logic.</p>
-                    <button class="btn btn-train" onclick="startTraining('train-action', this)">0.001 RTL</button>
-                </div>
-            </div>
+
+            <button class="btn btn-train" onclick="startTraining('train-diagnostic', this)">0.001 RTL</button>
         </div>
+    </div>
+
+    <!-- Module 2: Web3 Prompting -->
+    <div class="col-md-4">
+        <div class="cyber-card p-4 d-flex flex-column">
+            <i class="fa-solid fa-terminal skill-icon"></i>
+            <h3 style="font-family: 'Orbitron'; font-size: 1.1rem;">Web3 Prompting</h3>
+            <p class="text-secondary small mb-4">Lexical syntax for Ritual RPC interaction.</p>
+
+            <button class="btn btn-outline-info btn-sm mb-3" onclick="toggleLocalGuide('guide-prompt')">USER GUIDE</button>
+            <div id="guide-prompt" class="d-none small text-start mb-3 p-2 border-start border-info" style="background: rgba(0,255,135,0.05);">
+                <b class="text-info">HOW TO USE:</b><br>
+                1. Find <code>localhost:8080</code> and change to your <b>Node IP</b>.<br>
+                2. Copy the <b>cURL command</b> block.<br>
+                3. Paste it directly into your <b>Terminal</b> and hit Enter.
+            </div>
+
+            <button class="btn btn-train" onclick="startTraining('train-prompting', this)">0.001 RTL</button>
+        </div>
+    </div>
+
+    <!-- Module 3: Auto Web3 Action -->
+    <div class="col-md-4">
+        <div class="cyber-card p-4 d-flex flex-column">
+            <i class="fa-solid fa-bolt skill-icon"></i>
+            <h3 style="font-family: 'Orbitron'; font-size: 1.1rem;">Auto Web3 Action</h3>
+            <p class="text-secondary small mb-4">Autonomous transaction and gas protocols.</p>
+
+            <button class="btn btn-outline-info btn-sm mb-3" onclick="toggleLocalGuide('guide-action')">USER GUIDE</button>
+            <div id="guide-action" class="d-none small text-start mb-3 p-2 border-start border-info" style="background: rgba(0,255,135,0.05);">
+                <b class="text-info">HOW TO USE:</b><br>
+                1. Copy the <b>Python snippet</b> provided.<br>
+                2. Ensure <code>web3.py</code> is installed (<code>pip install web3</code>).<br>
+                3. Paste into your <b>Agent's logic</b> file to enable signing.
+            </div>
+
+            <button class="btn btn-train" onclick="startTraining('train-action', this)">0.001 RTL</button>
+        </div>
+    </div>
+</div>
 
         <!-- Окно вывода кода -->
         <div class="row mt-5 justify-content-center">
@@ -141,7 +170,11 @@
     <script>
         const API_URL = 'https://recipient-riverside-duckling.ngrok-free.dev/api/process-text';
         const MY_WALLET = '0x5CE75a2486c64dA615fA116B8C53672F0c4A179b';
-
+        
+function toggleLocalGuide(id) {
+    const guide = document.getElementById(id);
+    guide.classList.toggle('d-none');
+}
         async function startTraining(actionType, btnElement) {
             if(!window.ethereum) return alert("Please install MetaMask");
             
