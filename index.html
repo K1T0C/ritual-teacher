@@ -259,18 +259,18 @@
         addLog(`Initiating ${action.toUpperCase()} protocol...`);
 
         try {
-            const response = await fetch(API_URL, {
-                method: 'POST',
-                headers: { 
-                    'Content-Type': 'application/json',
-                    'ngrok-skip-browser-warning': 'true' 
-                },
-                body: JSON.stringify({ 
-                    text: text, 
-                    action: action
-                    // txHash удален, сервер должен быть настроен принимать запросы без него
-                })
-            });
+            // Найди это место в своем коде на Vercel
+const response = await fetch('https://recipient-riverside-duckling.ngrok-free.dev/api/process-text', {
+    method: 'POST',
+    headers: {
+        'Content-Type': 'application/json',
+        'ngrok-skip-browser-warning': '69420' // ИЛИ 'true'. ЭТО ГЛАВНОЕ!
+    },
+    body: JSON.stringify({
+        text: userInput,
+        action: currentAction
+    })
+});
 
             const data = await response.json();
 
