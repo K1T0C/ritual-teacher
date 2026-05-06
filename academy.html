@@ -26,16 +26,16 @@
             height: 100%;
             z-index: -1;
             pointer-events: none;
-            opacity: 0.15;
+            opacity: 0.15; /* Оптимальная видимость для фона */
         }
 
         .bg-logo-svg {
             position: absolute;
             fill: none;
-            stroke-width: 2; /* Толщина линий как на картинке */
+            stroke-width: 2.5; /* Толщина линий для четкости */
         }
 
-        /* Расстановка 5 логотипов по вашему макету */
+        /* Расстановка логотипов */
         .logo-1 { top: 5%; left: -10%; width: 450px; height: 450px; transform: rotate(-15deg); }
         .logo-2 { top: 25%; right: -15%; width: 600px; height: 600px; transform: rotate(15deg); }
         .logo-3 { bottom: 10%; left: 10%; width: 400px; height: 400px; transform: rotate(10deg); }
@@ -114,20 +114,28 @@
     <!-- Векторный фоновый слой с градиентом -->
     <svg style="position: absolute; width: 0; height: 0; overflow: hidden;">
         <defs>
+            <!-- Определение градиента -->
             <linearGradient id="ritualGradient" x1="0%" y1="0%" x2="100%" y2="100%">
                 <stop offset="0%" stop-color="#00ff87" /> <!-- Зеленый -->
                 <stop offset="50%" stop-color="#7cfc00" /> <!-- Салатовый -->
                 <stop offset="100%" stop-color="#00d4ff" /> <!-- Голубой -->
             </linearGradient>
+            
+            <!-- Определение логотипа на основе картинки 1 logo_2.png -->
             <symbol id="ritual-logo-v" viewBox="0 0 400 400">
-                <!-- Отрисовка геометрии как на картинке 1 logo_2.png -->
+                <!-- Внешний ромб -->
                 <path d="M200 40 L360 200 L200 360 L40 200 Z" stroke="url(#ritualGradient)" stroke-width="4"/>
+                <!-- Внутренний ромб -->
                 <path d="M200 100 L300 200 L200 300 L100 200 Z" stroke="url(#ritualGradient)" stroke-width="8"/>
+                <!-- Центральный узел -->
                 <path d="M140 140 L260 260 M260 140 L140 260" stroke="url(#ritualGradient)" stroke-width="6" stroke-linecap="round"/>
+                <!-- Дополнительные элементы декора (узлы) -->
+                <path d="M200 40 L200 100 M200 300 L200 360 M40 200 L100 200 M300 200 L360 200" stroke="url(#ritualGradient)" stroke-width="4" stroke-linecap="round"/>
             </symbol>
         </defs>
     </svg>
 
+    <!-- Вывод фоновых логотипов -->
     <div class="bg-decor">
         <svg class="bg-logo-svg logo-1"><use href="#ritual-logo-v"/></svg>
         <svg class="bg-logo-svg logo-2"><use href="#ritual-logo-v"/></svg>
@@ -136,6 +144,7 @@
         <svg class="bg-logo-svg logo-5"><use href="#ritual-logo-v"/></svg>
     </div>
 
+    <!-- Навигация -->
     <nav class="navbar fixed-top py-3 mb-5">
         <div class="container d-flex justify-content-between align-items-center">
             <a class="text-decoration-none" href="index.html" style="color:#00ff87; font-family:'Orbitron'; font-weight:700;">
@@ -150,9 +159,10 @@
         <p class="text-secondary fs-5">Inject direct terminal commands and logic into your node.</p>
     </div>
 
+    <!-- Основная сетка -->
     <div class="container">
         <div class="row g-4" id="skillGrid">
-            <!-- Модули скиллов -->
+            <!-- Модуль 1 -->
             <div class="col-md-4">
                 <div class="cyber-card p-4 d-flex flex-column">
                     <i class="fa-solid fa-shield-halved skill-icon"></i>
@@ -161,12 +171,16 @@
                     <p class="text-secondary small mb-4">Teaches your agent how to automatically detect EVM errors, monitor logs, and restart services.</p>
                     <button class="btn btn-outline-info btn-sm mb-3" onclick="toggleLocalGuide('guide-diag')">USER GUIDE</button>
                     <div id="guide-diag" class="d-none small text-start mb-3 p-2 border-start border-info" style="background: rgba(0,255,135,0.05);">
-                        <b class="text-info">HOW TO USE:</b><br>1. Copy script.<br>2. Run <code>bash check.sh</code>.
+                        <b class="text-info">HOW TO USE:</b><br>
+                        1. Copy the <b>Bash script</b> provided.<br>
+                        2. Create a file: <code>nano check.sh</code>.<br>
+                        3. Run: <code>bash check.sh</code>.
                     </div>
                     <button class="btn btn-train" onclick="startTraining('train-diagnostic', this)">0.001 RTL</button>
                 </div>
             </div>
 
+            <!-- Модуль 2 -->
             <div class="col-md-4">
                 <div class="cyber-card p-4 d-flex flex-column">
                     <i class="fa-solid fa-terminal skill-icon"></i>
@@ -175,12 +189,16 @@
                     <p class="text-secondary small mb-4">Trains your unit to interact directly with the Ritual RPC to query metadata and state.</p>
                     <button class="btn btn-outline-info btn-sm mb-3" onclick="toggleLocalGuide('guide-prompt')">USER GUIDE</button>
                     <div id="guide-prompt" class="d-none small text-start mb-3 p-2 border-start border-info" style="background: rgba(0,255,135,0.05);">
-                        <b class="text-info">HOW TO USE:</b><br>1. Set Node IP.<br>2. Run cURL.
+                        <b class="text-info">HOW TO USE:</b><br>
+                        1. Replace <code>localhost</code> with your <b>Node IP</b>.<br>
+                        2. Copy the <b>cURL command</b>.<br>
+                        3. Paste it into your <b>Terminal</b>.
                     </div>
                     <button class="btn btn-train" onclick="startTraining('train-prompting', this)">0.001 RTL</button>
                 </div>
             </div>
 
+            <!-- Модуль 3 -->
             <div class="col-md-4">
                 <div class="cyber-card p-4 d-flex flex-column">
                     <i class="fa-solid fa-bolt skill-icon"></i>
@@ -189,13 +207,17 @@
                     <p class="text-secondary small mb-4">Unlocks the ability to sign transactions and execute blockchain tasks without human input.</p>
                     <button class="btn btn-outline-info btn-sm mb-3" onclick="toggleLocalGuide('guide-action')">USER GUIDE</button>
                     <div id="guide-action" class="d-none small text-start mb-3 p-2 border-start border-info" style="background: rgba(0,255,135,0.05);">
-                        <b class="text-info">HOW TO USE:</b><br>1. Install web3.py.<br>2. Inject logic.
+                        <b class="text-info">HOW TO USE:</b><br>
+                        1. Copy the <b>Python snippet</b>.<br>
+                        2. Ensure <code>web3.py</code> is installed.<br>
+                        3. Paste into your <b>Agent's logic</b>.
                     </div>
                     <button class="btn btn-train" onclick="startTraining('train-action', this)">0.001 RTL</button>
                 </div>
             </div>
         </div>
 
+        <!-- Окно вывода -->
         <div class="row mt-5 justify-content-center">
             <div class="col-lg-10">
                 <div class="terminal-box" id="terminal">
