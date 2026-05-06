@@ -1,286 +1,269 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>AI Training Academy | Level Up Your Agent</title>
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
-    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@700&family=Rajdhani:wght@500;700&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    <style>
-        body { 
-            background: #040707; 
-            color: #e2e8f0; 
-            font-family: 'Rajdhani', sans-serif;
-            letter-spacing: 0.5px;
-            margin: 0;
-            overflow-x: hidden;
-        }
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AI Training Academy | Level Up Your Agent</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@700&family=Rajdhani:wght@500;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        :root {
+            /* СЮДА ВСТАВЬ СВОЙ BASE64 (строка должна начинаться с data:image/...) */
+            --logo-base64: url(""); 
+        }
 
-        /* Фоновый слой для векторов */
-        .bg-decor {
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            z-index: -1;
-            pointer-events: none;
-            opacity: 0.15; /* Оптимальная видимость для фона */
-        }
+        body { 
+            background: #040707; 
+            color: #e2e8f0; 
+            font-family: 'Rajdhani', sans-serif;
+            letter-spacing: 0.5px;
+            margin: 0;
+            overflow-x: hidden;
+        }
 
-        .bg-logo-svg {
-            position: absolute;
-            fill: none;
-            stroke-width: 2.5; /* Толщина линий для четкости */
-        }
+        /* Фоновые логотипы */
+        .bg-decor {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: -1;
+            pointer-events: none;
+            opacity: 0.15; /* Прозрачность декора */
+        }
 
-        /* Расстановка логотипов */
-        .logo-1 { top: 5%; left: -10%; width: 450px; height: 450px; transform: rotate(-15deg); }
-        .logo-2 { top: 25%; right: -15%; width: 600px; height: 600px; transform: rotate(15deg); }
-        .logo-3 { bottom: 10%; left: 10%; width: 400px; height: 400px; transform: rotate(10deg); }
-        .logo-4 { top: 60%; left: 45%; width: 500px; height: 500px; transform: rotate(-5deg); opacity: 0.1; }
-        .logo-5 { top: -10%; right: 15%; width: 350px; height: 350px; transform: rotate(30deg); }
+        .bg-logo {
+            position: absolute;
+            background-image: var(--logo-base64);
+            background-repeat: no-repeat;
+            background-size: contain;
+            filter: hue-rotate(10deg) brightness(1.2); /* Легкая коррекция цвета под палитру */
+        }
 
-        .navbar {
-            background: rgba(4, 7, 7, 0.8);
-            backdrop-filter: blur(12px);
-            border-bottom: 1px solid rgba(0, 255, 135, 0.15);
-        }
+        /* Расстановка 5 логотипов */
+        .logo-1 { top: 5%; left: -10%; width: 450px; height: 450px; transform: rotate(-15deg); }
+        .logo-2 { top: 25%; right: -15%; width: 600px; height: 600px; transform: rotate(15deg); }
+        .logo-3 { bottom: 10%; left: 10%; width: 400px; height: 400px; transform: rotate(10deg); }
+        .logo-4 { top: 60%; left: 40%; width: 500px; height: 500px; transform: rotate(-5deg); opacity: 0.1; }
+        .logo-5 { top: -10%; right: 15%; width: 350px; height: 350px; transform: rotate(30deg); }
 
-        .cyber-card { 
-            background: rgba(11, 23, 19, 0.7); 
-            border: 1px solid rgba(0, 255, 135, 0.12); 
-            border-radius: 12px; 
-            backdrop-filter: blur(8px);
-            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-            height: 100%;
-        }
+        .navbar {
+            background: rgba(4, 7, 7, 0.8);
+            backdrop-filter: blur(12px);
+            border-bottom: 1px solid rgba(0, 255, 135, 0.15);
+        }
 
-        .cyber-card:hover { 
-            border-color: #00ff87; 
-            box-shadow: 0 0 25px rgba(0, 255, 135, 0.15); 
-            transform: translateY(-2px);
-        }
+        .cyber-card { 
+            background: rgba(11, 23, 19, 0.7); 
+            border: 1px solid rgba(0, 255, 135, 0.12); 
+            border-radius: 12px; 
+            backdrop-filter: blur(8px);
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            height: 100%;
+        }
 
-        .skill-icon { 
-            font-size: 2.3rem; 
-            color: #00ff87; 
-            margin-bottom: 1.2rem; 
-            text-shadow: 0 0 10px rgba(0, 255, 135, 0.3);
-        }
+        .cyber-card:hover { 
+            border-color: #00ff87; 
+            box-shadow: 0 0 25px rgba(0, 255, 135, 0.15); 
+            transform: translateY(-2px);
+        }
 
-        .btn-train { 
-            background: transparent; 
-            border: 1px solid rgba(0, 255, 135, 0.3); 
-            color: #00ff87; 
-            font-weight: 700; 
-            width: 100%; 
-            margin-top: auto; 
-            padding: 10px;
-            letter-spacing: 1px;
-            text-transform: uppercase;
-            transition: all 0.3s ease;
-        }
+        .skill-icon { 
+            font-size: 2.3rem; 
+            color: #00ff87; 
+            margin-bottom: 1.2rem; 
+            text-shadow: 0 0 10px rgba(0, 255, 135, 0.3);
+        }
 
-        .btn-train:hover:not(:disabled) { 
-            background: #00ff87; 
-            color: #040707; 
-        }
+        .btn-train { 
+            background: transparent; 
+            border: 1px solid rgba(0, 255, 135, 0.3); 
+            color: #00ff87; 
+            font-weight: 700; 
+            width: 100%; 
+            margin-top: auto; 
+            padding: 10px;
+            letter-spacing: 1px;
+            text-transform: uppercase;
+            transition: all 0.3s ease;
+        }
 
-        .terminal-box {
-            background: rgba(0, 0, 0, 0.9);
-            border: 1px solid #00ff87;
-            border-radius: 8px;
-            font-family: 'Courier New', monospace;
-            padding: 20px;
-            min-height: 250px;
-            color: #00ff87;
-            text-align: left;
-            white-space: pre-wrap;
-            box-shadow: inset 0 0 10px rgba(0, 255, 135, 0.2);
-        }
+        .btn-train:hover:not(:disabled) { 
+            background: #00ff87; 
+            color: #040707; 
+        }
 
-        .terminal-header {
-            border-bottom: 1px solid rgba(0, 255, 135, 0.3);
-            margin-bottom: 15px;
-            font-size: 0.8rem;
-            color: rgba(0, 255, 135, 0.6);
-        }
-    </style>
+        .terminal-box {
+            background: rgba(0, 0, 0, 0.9);
+            border: 1px solid #00ff87;
+            border-radius: 8px;
+            font-family: 'Courier New', monospace;
+            padding: 20px;
+            min-height: 250px;
+            color: #00ff87;
+            text-align: left;
+            white-space: pre-wrap;
+            box-shadow: inset 0 0 10px rgba(0, 255, 135, 0.2);
+        }
+
+        .terminal-header {
+            border-bottom: 1px solid rgba(0, 255, 135, 0.3);
+            margin-bottom: 15px;
+            font-size: 0.8rem;
+            color: rgba(0, 255, 135, 0.6);
+        }
+    </style>
 </head>
 <body>
 
-    <!-- Векторный фоновый слой с градиентом -->
-    <svg style="position: absolute; width: 0; height: 0; overflow: hidden;">
-        <defs>
-            <!-- Определение градиента -->
-            <linearGradient id="ritualGradient" x1="0%" y1="0%" x2="100%" y2="100%">
-                <stop offset="0%" stop-color="#00ff87" /> <!-- Зеленый -->
-                <stop offset="50%" stop-color="#7cfc00" /> <!-- Салатовый -->
-                <stop offset="100%" stop-color="#00d4ff" /> <!-- Голубой -->
-            </linearGradient>
-            
-            <!-- Определение логотипа на основе картинки 1 logo_2.png -->
-            <symbol id="ritual-logo-v" viewBox="0 0 400 400">
-                <!-- Внешний ромб -->
-                <path d="M200 40 L360 200 L200 360 L40 200 Z" stroke="url(#ritualGradient)" stroke-width="4"/>
-                <!-- Внутренний ромб -->
-                <path d="M200 100 L300 200 L200 300 L100 200 Z" stroke="url(#ritualGradient)" stroke-width="8"/>
-                <!-- Центральный узел -->
-                <path d="M140 140 L260 260 M260 140 L140 260" stroke="url(#ritualGradient)" stroke-width="6" stroke-linecap="round"/>
-                <!-- Дополнительные элементы декора (узлы) -->
-                <path d="M200 40 L200 100 M200 300 L200 360 M40 200 L100 200 M300 200 L360 200" stroke="url(#ritualGradient)" stroke-width="4" stroke-linecap="round"/>
-            </symbol>
-        </defs>
-    </svg>
+    <!-- Фоновый слой -->
+    <div class="bg-decor">
+        <div class="bg-logo logo-1"></div>
+        <div class="bg-logo logo-2"></div>
+        <div class="bg-logo logo-3"></div>
+        <div class="bg-logo logo-4"></div>
+        <div class="bg-logo logo-5"></div>
+    </div>
 
-    <!-- Вывод фоновых логотипов -->
-    <div class="bg-decor">
-        <svg class="bg-logo-svg logo-1"><use href="#ritual-logo-v"/></svg>
-        <svg class="bg-logo-svg logo-2"><use href="#ritual-logo-v"/></svg>
-        <svg class="bg-logo-svg logo-3"><use href="#ritual-logo-v"/></svg>
-        <svg class="bg-logo-svg logo-4"><use href="#ritual-logo-v"/></svg>
-        <svg class="bg-logo-svg logo-5"><use href="#ritual-logo-v"/></svg>
-    </div>
+    <nav class="navbar fixed-top py-3 mb-5">
+        <div class="container d-flex justify-content-between align-items-center">
+            <a class="text-decoration-none" href="index.html" style="color:#00ff87; font-family:'Orbitron'; font-weight:700;">
+                <i class="fa-solid fa-arrow-left me-2"></i> BACK TO DASHBOARD
+            </a>
+            <span class="text-secondary opacity-75">Academy Portal v1.0</span>
+        </div>
+    </nav>
 
-    <!-- Навигация -->
-    <nav class="navbar fixed-top py-3 mb-5">
-        <div class="container d-flex justify-content-between align-items-center">
-            <a class="text-decoration-none" href="index.html" style="color:#00ff87; font-family:'Orbitron'; font-weight:700;">
-                <i class="fa-solid fa-arrow-left me-2"></i> BACK TO DASHBOARD
-            </a>
-            <span class="text-secondary opacity-75">Academy Portal v1.0</span>
-        </div>
-    </nav>
+    <div class="container text-center mb-5" style="margin-top: 130px;">
+        <h1 style="font-family: 'Orbitron'; font-weight:700;" class="mb-2 text-uppercase">Select Training Module</h1>
+        <p class="text-secondary fs-5">Inject direct terminal commands and logic into your node.</p>
+    </div>
 
-    <div class="container text-center mb-5" style="margin-top: 130px;">
-        <h1 style="font-family: 'Orbitron'; font-weight:700;" class="mb-2 text-uppercase">Select Training Module</h1>
-        <p class="text-secondary fs-5">Inject direct terminal commands and logic into your node.</p>
-    </div>
+    <div class="container">
+        <div class="row g-4" id="skillGrid">
+            <!-- Module 1 -->
+            <div class="col-md-4">
+                <div class="cyber-card p-4 d-flex flex-column">
+                    <i class="fa-solid fa-shield-halved skill-icon"></i>
+                    <h3 style="font-family: 'Orbitron'; font-size: 1.1rem; margin-bottom: 5px;">Self-Diagnostic</h3>
+                    <p style="color: #00ff87; font-size: 0.85rem; font-weight: 600; text-transform: uppercase; margin-bottom: 15px;">Master node health & error recovery</p>
+                    <p class="text-secondary small mb-4">Teaches your agent how to automatically detect EVM errors, monitor logs, and restart services.</p>
+                    
+                    <button class="btn btn-outline-info btn-sm mb-3" onclick="toggleLocalGuide('guide-diag')">USER GUIDE</button>
+                    <div id="guide-diag" class="d-none small text-start mb-3 p-2 border-start border-info" style="background: rgba(0,255,135,0.05);">
+                        <b class="text-info">HOW TO USE:</b><br>
+                        1. Copy the <b>Bash script</b> provided.<br>
+                        2. Create a file: <code>nano check.sh</code>.<br>
+                        3. Run: <code>bash check.sh</code>.
+                    </div>
+                    <button class="btn btn-train" onclick="startTraining('train-diagnostic', this)">0.001 RTL</button>
+                </div>
+            </div>
 
-    <!-- Основная сетка -->
-    <div class="container">
-        <div class="row g-4" id="skillGrid">
-            <!-- Модуль 1 -->
-            <div class="col-md-4">
-                <div class="cyber-card p-4 d-flex flex-column">
-                    <i class="fa-solid fa-shield-halved skill-icon"></i>
-                    <h3 style="font-family: 'Orbitron'; font-size: 1.1rem; margin-bottom: 5px;">Self-Diagnostic</h3>
-                    <p style="color: #00ff87; font-size: 0.85rem; font-weight: 600; text-transform: uppercase; margin-bottom: 15px;">Master node health & error recovery</p>
-                    <p class="text-secondary small mb-4">Teaches your agent how to automatically detect EVM errors, monitor logs, and restart services.</p>
-                    <button class="btn btn-outline-info btn-sm mb-3" onclick="toggleLocalGuide('guide-diag')">USER GUIDE</button>
-                    <div id="guide-diag" class="d-none small text-start mb-3 p-2 border-start border-info" style="background: rgba(0,255,135,0.05);">
-                        <b class="text-info">HOW TO USE:</b><br>
-                        1. Copy the <b>Bash script</b> provided.<br>
-                        2. Create a file: <code>nano check.sh</code>.<br>
-                        3. Run: <code>bash check.sh</code>.
-                    </div>
-                    <button class="btn btn-train" onclick="startTraining('train-diagnostic', this)">0.001 RTL</button>
-                </div>
-            </div>
+            <!-- Module 2 -->
+            <div class="col-md-4">
+                <div class="cyber-card p-4 d-flex flex-column">
+                    <i class="fa-solid fa-terminal skill-icon"></i>
+                    <h3 style="font-family: 'Orbitron'; font-size: 1.1rem; margin-bottom: 5px;">Web3 Prompting</h3>
+                    <p style="color: #00ff87; font-size: 0.85rem; font-weight: 600; text-transform: uppercase; margin-bottom: 15px;">Direct RPC communication mastery</p>
+                    <p class="text-secondary small mb-4">Trains your unit to interact directly with the Ritual RPC to query metadata and state.</p>
 
-            <!-- Модуль 2 -->
-            <div class="col-md-4">
-                <div class="cyber-card p-4 d-flex flex-column">
-                    <i class="fa-solid fa-terminal skill-icon"></i>
-                    <h3 style="font-family: 'Orbitron'; font-size: 1.1rem; margin-bottom: 5px;">Web3 Prompting</h3>
-                    <p style="color: #00ff87; font-size: 0.85rem; font-weight: 600; text-transform: uppercase; margin-bottom: 15px;">Direct RPC communication mastery</p>
-                    <p class="text-secondary small mb-4">Trains your unit to interact directly with the Ritual RPC to query metadata and state.</p>
-                    <button class="btn btn-outline-info btn-sm mb-3" onclick="toggleLocalGuide('guide-prompt')">USER GUIDE</button>
-                    <div id="guide-prompt" class="d-none small text-start mb-3 p-2 border-start border-info" style="background: rgba(0,255,135,0.05);">
-                        <b class="text-info">HOW TO USE:</b><br>
-                        1. Replace <code>localhost</code> with your <b>Node IP</b>.<br>
-                        2. Copy the <b>cURL command</b>.<br>
-                        3. Paste it into your <b>Terminal</b>.
-                    </div>
-                    <button class="btn btn-train" onclick="startTraining('train-prompting', this)">0.001 RTL</button>
-                </div>
-            </div>
+                    <button class="btn btn-outline-info btn-sm mb-3" onclick="toggleLocalGuide('guide-prompt')">USER GUIDE</button>
+                    <div id="guide-prompt" class="d-none small text-start mb-3 p-2 border-start border-info" style="background: rgba(0,255,135,0.05);">
+                        <b class="text-info">HOW TO USE:</b><br>
+                        1. Replace <code>localhost</code> with your <b>Node IP</b>.<br>
+                        2. Copy the <b>cURL command</b>.<br>
+                        3. Paste it into your <b>Terminal</b>.
+                    </div>
+                    <button class="btn btn-train" onclick="startTraining('train-prompting', this)">0.001 RTL</button>
+                </div>
+            </div>
 
-            <!-- Модуль 3 -->
-            <div class="col-md-4">
-                <div class="cyber-card p-4 d-flex flex-column">
-                    <i class="fa-solid fa-bolt skill-icon"></i>
-                    <h3 style="font-family: 'Orbitron'; font-size: 1.1rem; margin-bottom: 5px;">Auto Web3 Action</h3>
-                    <p style="color: #00ff87; font-size: 0.85rem; font-weight: 600; text-transform: uppercase; margin-bottom: 15px;">Automated on-chain execution</p>
-                    <p class="text-secondary small mb-4">Unlocks the ability to sign transactions and execute blockchain tasks without human input.</p>
-                    <button class="btn btn-outline-info btn-sm mb-3" onclick="toggleLocalGuide('guide-action')">USER GUIDE</button>
-                    <div id="guide-action" class="d-none small text-start mb-3 p-2 border-start border-info" style="background: rgba(0,255,135,0.05);">
-                        <b class="text-info">HOW TO USE:</b><br>
-                        1. Copy the <b>Python snippet</b>.<br>
-                        2. Ensure <code>web3.py</code> is installed.<br>
-                        3. Paste into your <b>Agent's logic</b>.
-                    </div>
-                    <button class="btn btn-train" onclick="startTraining('train-action', this)">0.001 RTL</button>
-                </div>
-            </div>
-        </div>
+            <!-- Module 3 -->
+            <div class="col-md-4">
+                <div class="cyber-card p-4 d-flex flex-column">
+                    <i class="fa-solid fa-bolt skill-icon"></i>
+                    <h3 style="font-family: 'Orbitron'; font-size: 1.1rem; margin-bottom: 5px;">Auto Web3 Action</h3>
+                    <p style="color: #00ff87; font-size: 0.85rem; font-weight: 600; text-transform: uppercase; margin-bottom: 15px;">Automated on-chain execution</p>
+                    <p class="text-secondary small mb-4">Unlocks the ability to sign transactions and execute blockchain tasks without human input.</p>
 
-        <!-- Окно вывода -->
-        <div class="row mt-5 justify-content-center">
-            <div class="col-lg-10">
-                <div class="terminal-box" id="terminal">
-                    <div class="terminal-header">SYS_OUTPUT // AWAITING_SKILL_INJECTION...</div>
-                    <div id="output-content">Select a module to begin training. Payment of 0.001 RTL is required per skill injection.</div>
-                </div>
-            </div>
-        </div>
-    </div>
+                    <button class="btn btn-outline-info btn-sm mb-3" onclick="toggleLocalGuide('guide-action')">USER GUIDE</button>
+                    <div id="guide-action" class="d-none small text-start mb-3 p-2 border-start border-info" style="background: rgba(0,255,135,0.05);">
+                        <b class="text-info">HOW TO USE:</b><br>
+                        1. Copy the <b>Python snippet</b>.<br>
+                        2. Ensure <code>web3.py</code> is installed.<br>
+                        3. Paste into your <b>Agent's logic</b>.
+                    </div>
+                    <button class="btn btn-train" onclick="startTraining('train-action', this)">0.001 RTL</button>
+                </div>
+            </div>
+        </div>
 
-    <footer class="py-5 text-center text-secondary border-top border-dark mt-5">
-        <small>Official Certification Program | Ritual Network Infrastructure</small>
-    </footer>
+        <div class="row mt-5 justify-content-center">
+            <div class="col-lg-10">
+                <div class="terminal-box" id="terminal">
+                    <div class="terminal-header">SYS_OUTPUT // AWAITING_SKILL_INJECTION...</div>
+                    <div id="output-content">Select a module to begin training. Payment of 0.001 RTL is required per skill injection.</div>
+                </div>
+            </div>
+        </div>
+    </div>
 
-    <script>
-        const API_URL = 'https://recipient-riverside-duckling.ngrok-free.dev/api/process-text';
-        const MY_WALLET = '0x5CE75a2486c64dA615fA116B8C53672F0c4A179b';
+    <footer class="py-5 text-center text-secondary border-top border-dark mt-5">
+        <small>Official Certification Program | Ritual Network Infrastructure</small>
+    </footer>
 
-        function toggleLocalGuide(id) {
-            const guide = document.getElementById(id);
-            guide.classList.toggle('d-none');
-        }
+    <script>
+        const API_URL = 'https://recipient-riverside-duckling.ngrok-free.dev/api/process-text';
+        const MY_WALLET = '0x5CE75a2486c64dA615fA116B8C53672F0c4A179b';
 
-        async function startTraining(actionType, btnElement) {
-            if(!window.ethereum) return alert("Please install MetaMask");
-            const output = document.getElementById('output-content');
-            const terminalHeader = document.querySelector('.terminal-header');
+        function toggleLocalGuide(id) {
+            const guide = document.getElementById(id);
+            guide.classList.toggle('d-none');
+        }
 
-            try {
-                const accounts = await window.ethereum.request({ method: 'eth_requestAccounts' });
-                output.innerText = "> Initializing payment sequence...";
+        async function startTraining(actionType, btnElement) {
+            if(!window.ethereum) return alert("Please install MetaMask");
+            const output = document.getElementById('output-content');
+            const terminalHeader = document.querySelector('.terminal-header');
 
-                const txHash = await window.ethereum.request({
-                    method: 'eth_sendTransaction',
-                    params: [{
-                        from: accounts[0],
-                        to: MY_WALLET,
-                        value: (0.001 * 1e18).toString(16), 
-                    }],
-                });
+            try {
+                const accounts = await window.ethereum.request({ method: 'eth_requestAccounts' });
+                output.innerText = "> Initializing payment sequence...";
 
-                btnElement.disabled = true;
-                btnElement.innerText = "INJECTING...";
-                terminalHeader.innerText = "SYS_OUTPUT // INJECTING_SKILL: " + actionType.toUpperCase();
-                output.innerText = "> Payment Success! TX: " + txHash + "\n> Requesting skill-code from Ritual Node...";
+                const txHash = await window.ethereum.request({
+                    method: 'eth_sendTransaction',
+                    params: [{
+                        from: accounts[0],
+                        to: MY_WALLET,
+                        value: (0.001 * 1e18).toString(16), 
+                    }],
+                });
 
-                const response = await fetch(API_URL, {
-                    method: 'POST',
-                    headers: { 'Content-Type': 'application/json', 'ngrok-skip-browser-warning': 'true' },
-                    body: JSON.stringify({ text: "Provide me the functional code for this module.", action: actionType, txHash: txHash })
-                });
+                btnElement.disabled = true;
+                btnElement.innerText = "INJECTING...";
+                terminalHeader.innerText = "SYS_OUTPUT // INJECTING_SKILL: " + actionType.toUpperCase();
+                output.innerText = "> Payment Success! TX: " + txHash + "\n> Requesting skill-code from Ritual Node...";
 
-                const data = await response.json();
-                output.innerText = data.result;
-                terminalHeader.innerText = "SYS_OUTPUT // SYNC_COMPLETE";
+                const response = await fetch(API_URL, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json', 'ngrok-skip-browser-warning': 'true' },
+                    body: JSON.stringify({ text: "Provide me the functional code for this module.", action: actionType, txHash: txHash })
+                });
 
-            } catch (e) {
-                output.innerText = "> Error: " + (e.message || "User denied transaction");
-            } finally {
-                btnElement.disabled = false;
-                btnElement.innerText = "0.001 RTL";
-            }
-        }
-    </script>
+                const data = await response.json();
+                output.innerText = data.result;
+                terminalHeader.innerText = "SYS_OUTPUT // SYNC_COMPLETE";
+
+            } catch (e) {
+                output.innerText = "> Error: " + (e.message || "User denied transaction");
+            } finally {
+                btnElement.disabled = false;
+                btnElement.innerText = "0.001 RTL";
+            }
+        }
+    </script>
 </body>
 </html>
