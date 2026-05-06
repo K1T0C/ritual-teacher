@@ -248,29 +248,51 @@
 
     // Главная функция (теперь без оплаты)
     async function handleProcess(action) {
-        const inputId = action === 'check' ? 'checkTextInput' : 'humanizeTextInput';
-        const text = document.getElementById(inputId).value;
+    const inputId = action === 'check' ? 'checkTextInput' : 'humanizeTextInput';
+    const text = document.getElementById(inputId).value;
 
-        if (!text) {
-            alert("Please enter some text!");
-            return;
+    if (!text) {
+        alert("Please enter some text!");
+        return;
+    }
+
+    addLog(`> Initiating ${action.toUpperCase()} protocol...`);
+
+    try {
+        const response = await fetch(API_URL, {
+            method: 'POST',
+            headers: { 
+                'Content-Type': 'application/json',
+                'ngrok-skip-browser-warning': 'true' 
+            },
+            // Мы отправляем только текст и действие, без txHash
+            body: JSON.stringify({ 
+                text: text, 
+                action: action 
+            })
+        });
+
+        const data = await response.json();
+
+        if (response.ok) {
+            if (action === 'humanize') {
+                document.getElementById('humanResultPanel').classList.remove('d-none');
+                document.getElementById('humanResultText').innerText = data.result;
+            } else {
+                document.getElementById('checkResultLabel').innerText = `Report: ${data.result}`;
+            }
+            addLog(`> Success. Method: Free Access`);
+        } else {
+            // Если сервер вернул ошибку (например, 402 Payment Required)
+            document.getElementById('checkResultLabel').innerText = `Report: ${data.error || 'Error'}`;
+            addLog(`> Server rejected request: ${data.error}`);
         }
 
-        addLog(`Initiating ${action.toUpperCase()} protocol...`);
-
-        try {
-            const response = await fetch(API_URL, {
-                method: 'POST',
-                headers: { 
-                    'Content-Type': 'application/json',
-                    'ngrok-skip-browser-warning': 'true' 
-                },
-                body: JSON.stringify({ 
-                    text: text, 
-                    action: action
-                    // txHash удален, сервер должен быть настроен принимать запросы без него
-                })
-            });
+    } catch (error) {
+        console.error(error);
+        addLog(`> Error connecting to server.`);
+    }
+}
 
             const data = await response.json();
 
