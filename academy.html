@@ -50,10 +50,29 @@
             text-transform: uppercase;
             transition: all 0.3s ease;
         }
-        .btn-train:hover { 
+        .btn-train:hover:not(:disabled) { 
             background: #00ff87; 
             color: #040707; 
-            box-shadow: 0 0 15px rgba(0, 255, 135, 0.2);
+        }
+
+        /* Окно терминала для вывода кода */
+        .terminal-box {
+            background: rgba(0, 0, 0, 0.9);
+            border: 1px solid #00ff87;
+            border-radius: 8px;
+            font-family: 'Courier New', monospace;
+            padding: 20px;
+            min-height: 250px;
+            color: #00ff87;
+            text-align: left;
+            white-space: pre-wrap;
+            box-shadow: inset 0 0 10px rgba(0, 255, 135, 0.2);
+        }
+        .terminal-header {
+            border-bottom: 1px solid rgba(0, 255, 135, 0.3);
+            margin-bottom: 15px;
+            font-size: 0.8rem;
+            color: rgba(0, 255, 135, 0.6);
         }
     </style>
 </head>
@@ -61,7 +80,7 @@
 
     <nav class="navbar fixed-top py-3 mb-5">
         <div class="container d-flex justify-content-between align-items-center">
-            <a class="text-decoration-none" href="/" style="color:#00ff87; font-family:'Orbitron'; font-weight:700;">
+            <a class="text-decoration-none" href="index.html" style="color:#00ff87; font-family:'Orbitron'; font-weight:700;">
                 <i class="fa-solid fa-arrow-left me-2"></i> BACK TO DASHBOARD
             </a>
             <span class="text-secondary opacity-75">Academy Portal v1.0</span>
@@ -69,95 +88,115 @@
     </nav>
 
     <div class="container text-center mb-5" style="margin-top: 130px;">
-        <h1 style="font-family: 'Orbitron'; font-weight:700;" class="mb-2">SELECT TRAINING MODULE</h1>
-        <p class="text-secondary fs-5">Decentralized, automated node validation skills for autonomous units.</p>
+        <h1 style="font-family: 'Orbitron'; font-weight:700;" class="mb-2 text-uppercase">Select Training Module</h1>
+        <p class="text-secondary fs-5">Inject direct terminal commands and logic into your node.</p>
     </div>
 
     <div class="container">
         <div class="row g-4" id="skillGrid">
+            <!-- Блок 1 -->
             <div class="col-md-4">
                 <div class="cyber-card p-4 d-flex flex-column">
                     <i class="fa-solid fa-shield-halved skill-icon"></i>
-                    <h3 style="font-family: 'Orbitron'; font-size: 1.35rem;">Self-Diagnostic</h3>
-                    <p class="text-secondary small mb-4">Complete module on security operations, EVM error extraction, and self-debugging in node crashes.</p>
-                    <button class="btn btn-train" onclick="buySkill('Self-Diagnostic-SecOps')">0.001 RTL</button>
+                    <h3 style="font-family: 'Orbitron'; font-size: 1.2rem;">Self-Diagnostic</h3>
+                    <p class="text-secondary small mb-4">Code for SecOps and EVM error extraction to fix node crashes.</p>
+                    <button class="btn btn-train" onclick="startTraining('train-diagnostic', this)">0.001 RTL</button>
                 </div>
             </div>
+            <!-- Блок 2 -->
             <div class="col-md-4">
                 <div class="cyber-card p-4 d-flex flex-column">
                     <i class="fa-solid fa-terminal skill-icon"></i>
-                    <h3 style="font-family: 'Orbitron'; font-size: 1.35rem;">Web3 Prompting</h3>
-                    <p class="text-secondary small mb-4">Advanced lexical syntax. Instructs your model how to interact with the Ritual RPC effortlessly.</p>
-                    <button class="btn btn-train" onclick="buySkill('Web3-Prompt-Master')">0.001 RTL</button>
+                    <h3 style="font-family: 'Orbitron'; font-size: 1.2rem;">Web3 Prompting</h3>
+                    <p class="text-secondary small mb-4">Lexical syntax for effortless interaction with Ritual RPC.</p>
+                    <button class="btn btn-train" onclick="startTraining('train-prompting', this)">0.001 RTL</button>
                 </div>
             </div>
+            <!-- Блок 3 -->
             <div class="col-md-4">
                 <div class="cyber-card p-4 d-flex flex-column">
                     <i class="fa-solid fa-bolt skill-icon"></i>
-                    <h3 style="font-family: 'Orbitron'; font-size: 1.35rem;">Auto Web3 Action</h3>
-                    <p class="text-secondary small mb-4">Unlocks autonomous transaction signing, gas estimation, and dynamic blockchain task execution.</p>
-                    <button class="btn btn-train" onclick="buySkill('Autonomous-Web3-Action')">0.001 RTL</button>
+                    <h3 style="font-family: 'Orbitron'; font-size: 1.2rem;">Auto Web3 Action</h3>
+                    <p class="text-secondary small mb-4">Autonomous transaction signing and gas estimation logic.</p>
+                    <button class="btn btn-train" onclick="startTraining('train-action', this)">0.001 RTL</button>
                 </div>
             </div>
         </div>
-        <div id="status" class="mt-5 text-center fs-5 text-info" style="font-family:'Orbitron';"></div>
+
+        <!-- Окно вывода кода -->
+        <div class="row mt-5 justify-content-center">
+            <div class="col-lg-10">
+                <div class="terminal-box" id="terminal">
+                    <div class="terminal-header">SYS_OUTPUT // AWAITING_SKILL_INJECTION...</div>
+                    <div id="output-content">Select a module to begin training. Payment of 0.001 RTL is required per skill injection.</div>
+                </div>
+            </div>
+        </div>
     </div>
 
     <footer class="py-5 text-center text-secondary border-top border-dark mt-5">
         <small>Official Certification Program | Ritual Network Infrastructure</small>
     </footer>
 
-    <script src="https://cdn.jsdelivr.net/npm/ethers@6.13.1/dist/ethers.umd.min.js"></script>
     <script>
-        const CONTRACT_ADDRESS = "0x28896efaAC147A262C6754Ea827Bd0e2f1D0189C"; 
-        const ABI = [
-            "function requestTraining(string memory _skillName) external payable", 
-            "function trainingFee() external view returns (uint256)"
-        ];
-// Используем прямую отправку транзакции через MetaMask без вызова функций контракта
-async function startTraining(actionType, btnElement) {
-    if(!window.ethereum) return alert("Please install MetaMask");
-    
-    const accounts = await window.ethereum.request({ method: 'eth_requestAccounts' });
-    const userAddress = accounts[0];
+        const API_URL = 'https://recipient-riverside-duckling.ngrok-free.dev/api/process-text';
+        const MY_WALLET = '0x5CE75a2486c64dA615fA116B8C53672F0c4A179b';
 
-    try {
-        // Просто отправляем 0.001 RTL на ваш кошелек
-        const txHash = await window.ethereum.request({
-            method: 'eth_sendTransaction',
-            params: [{
-                from: userAddress,
-                to: '0x5CE75a2486c64dA615fA116B8C53672F0c4A179b', // ВАШ АДРЕС
-                value: (0.001 * 1e18).toString(16), 
-            }],
-        });
-
-        // Если транзакция инициирована, запрашиваем код у ИИ
-        handleAiInfection(actionType, txHash); 
-
-    } catch (e) {
-        console.error("Payment failed", e);
-    }
-}
-        async function buySkill(name) {
-            if(!window.ethereum) return alert("Install MetaMask");
-            const provider = new ethers.BrowserProvider(window.ethereum);
-            const signer = await provider.getSigner();
-            const contract = new ethers.Contract(CONTRACT_ADDRESS, ABI, signer);
+        async function startTraining(actionType, btnElement) {
+            if(!window.ethereum) return alert("Please install MetaMask");
             
-            document.getElementById('status').innerText = "Initiating training: " + name + "...";
-            
+            const output = document.getElementById('output-content');
+            const terminalHeader = document.querySelector('.terminal-header');
+
             try {
-                // Получаем актуальную цену из контракта
-                const fee = await contract.trainingFee();
+                // 1. Запрос кошелька
+                const accounts = await window.ethereum.request({ method: 'eth_requestAccounts' });
+                const userAddress = accounts[0];
+
+                output.innerText = "> Initializing payment sequence...";
+
+                // 2. Прямая транзакция
+                const txHash = await window.ethereum.request({
+                    method: 'eth_sendTransaction',
+                    params: [{
+                        from: userAddress,
+                        to: MY_WALLET,
+                        value: (0.001 * 1e18).toString(16), 
+                    }],
+                });
+
+                // 3. Визуализация загрузки
+                btnElement.disabled = true;
+                btnElement.innerText = "INJECTING...";
+                terminalHeader.innerText = "SYS_OUTPUT // INJECTING_SKILL: " + actionType.toUpperCase();
+                output.innerText = "> Payment Success! TX: " + txHash + "\n> Requesting skill-code from Ritual Node...";
+
+                // 4. Запрос к вашему agent.ts
+                const response = await fetch(API_URL, {
+                    method: 'POST',
+                    headers: { 
+                        'Content-Type': 'application/json',
+                        'ngrok-skip-browser-warning': 'true' 
+                    },
+                    body: JSON.stringify({ 
+                        text: "Provide me the functional code for this module.", 
+                        action: actionType,
+                        txHash: txHash
+                    })
+                });
+
+                const data = await response.json();
                 
-                const tx = await contract.requestTraining(name, { value: fee });
-                document.getElementById('status').innerText = "Awaiting block verification... TX: " + tx.hash;
-                
-                await tx.wait();
-                document.getElementById('status').innerText = "✅ Successfully trained! Your certificate is registered.";
-            } catch(e) { 
-                document.getElementById('status').innerText = "Error: " + e.message; 
+                // 5. Вывод результата (кода для терминала)
+                output.innerText = data.result;
+                terminalHeader.innerText = "SYS_OUTPUT // SYNC_COMPLETE";
+
+            } catch (e) {
+                console.error("Training failed", e);
+                output.innerText = "> Error: " + (e.message || "User denied transaction");
+            } finally {
+                btnElement.disabled = false;
+                btnElement.innerText = "0.001 RTL";
             }
         }
     </script>
