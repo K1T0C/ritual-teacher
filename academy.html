@@ -3,22 +3,21 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>AI Training Academy | Level Up Your Agent</title>
+    <title>AI Training Academy | Ritual Ecosystem</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
     <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@700&family=Rajdhani:wght@500;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
         body { 
-            background: #040707; 
+            background: #050808; 
             color: #e2e8f0; 
             font-family: 'Rajdhani', sans-serif;
-            letter-spacing: 0.5px;
             margin: 0;
             overflow-x: hidden;
         }
 
-        /* Контейнер для фоновых SVG логотипов */
-        .bg-decor {
+        /* Контейнер для фонового арта */
+        .ritual-bg-container {
             position: fixed;
             top: 0;
             left: 0;
@@ -26,294 +25,210 @@
             height: 100%;
             z-index: -1;
             pointer-events: none;
-            opacity: 0.12; /* Прозрачность фона */
+            overflow: hidden;
         }
 
-        .bg-logo {
+        .ritual-bg-item {
             position: absolute;
-            width: 500px;
-            height: 500px;
+            opacity: 0.15;
+            filter: blur(1px); /* Легкое размытие для глубины */
         }
 
-        /* Расстановка логотипов */
-        .logo-1 { top: -5%; left: -10%; width: 450px; transform: rotate(-15deg); }
-        .logo-2 { top: 20%; right: -12%; width: 650px; transform: rotate(15deg); }
-        .logo-3 { bottom: -5%; left: 5%; width: 400px; transform: rotate(25deg); }
-        .logo-4 { top: 60%; left: 45%; width: 550px; transform: rotate(-10deg); opacity: 0.08; }
-        .logo-5 { top: -10%; right: 15%; width: 350px; transform: rotate(45deg); }
+        /* Позиции логотипов как на референсе */
+        .pos-1 { top: -10%; left: -5%; width: 500px; transform: rotate(-15deg); opacity: 0.1; }
+        .pos-2 { top: 15%; right: -10%; width: 700px; transform: rotate(15deg); opacity: 0.12; }
+        .pos-3 { bottom: -5%; left: 10%; width: 450px; transform: rotate(25deg); }
+        .pos-4 { top: 55%; left: 40%; width: 600px; transform: rotate(-10deg); opacity: 0.05; filter: blur(5px); }
+        .pos-5 { top: -5%; right: 20%; width: 300px; transform: rotate(45deg); opacity: 0.08; }
 
         .navbar {
-            background: rgba(4, 7, 7, 0.8);
-            backdrop-filter: blur(12px);
-            border-bottom: 1px solid rgba(0, 255, 135, 0.15);
+            background: rgba(5, 8, 8, 0.7);
+            backdrop-filter: blur(15px);
+            border-bottom: 1px solid rgba(0, 255, 135, 0.1);
         }
 
         .cyber-card { 
-            background: rgba(11, 23, 19, 0.75); 
-            border: 1px solid rgba(0, 255, 135, 0.12); 
-            border-radius: 12px; 
-            backdrop-filter: blur(10px);
-            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            background: rgba(10, 15, 15, 0.6); 
+            border: 1px solid rgba(0, 255, 135, 0.08); 
+            border-radius: 16px; 
+            backdrop-filter: blur(12px);
+            transition: all 0.4s ease;
             height: 100%;
         }
 
         .cyber-card:hover { 
-            border-color: #00ff87; 
-            box-shadow: 0 0 25px rgba(0, 255, 135, 0.15); 
-            transform: translateY(-2px);
+            border-color: rgba(0, 255, 135, 0.4); 
+            background: rgba(10, 15, 15, 0.8);
+            transform: translateY(-5px);
         }
 
         .skill-icon { 
-            font-size: 2.3rem; 
+            font-size: 2.5rem; 
             color: #00ff87; 
-            margin-bottom: 1.2rem; 
-            text-shadow: 0 0 10px rgba(0, 255, 135, 0.3);
+            margin-bottom: 1.5rem; 
+            filter: drop-shadow(0 0 10px rgba(0, 255, 135, 0.4));
         }
 
         .btn-train { 
             background: transparent; 
-            border: 1px solid rgba(0, 255, 135, 0.3); 
+            border: 1px solid rgba(0, 255, 135, 0.2); 
             color: #00ff87; 
             font-weight: 700; 
             width: 100%; 
             margin-top: auto; 
-            padding: 10px;
-            letter-spacing: 1px;
+            padding: 12px;
             text-transform: uppercase;
             transition: all 0.3s ease;
         }
 
         .btn-train:hover:not(:disabled) { 
             background: #00ff87; 
-            color: #040707; 
+            color: #050808; 
+            box-shadow: 0 0 20px rgba(0, 255, 135, 0.3);
         }
 
         .terminal-box {
-            background: rgba(0, 0, 0, 0.9);
-            border: 1px solid #00ff87;
-            border-radius: 8px;
+            background: rgba(0, 0, 0, 0.8);
+            border: 1px solid rgba(0, 255, 135, 0.2);
+            border-radius: 12px;
             font-family: 'Courier New', monospace;
-            padding: 20px;
-            min-height: 250px;
+            padding: 25px;
             color: #00ff87;
             text-align: left;
-            white-space: pre-wrap;
-            box-shadow: inset 0 0 10px rgba(0, 255, 135, 0.2);
-        }
-
-        .terminal-header {
-            border-bottom: 1px solid rgba(0, 255, 135, 0.3);
-            margin-bottom: 15px;
-            font-size: 0.8rem;
-            color: rgba(0, 255, 135, 0.6);
+            box-shadow: 0 10px 30px rgba(0,0,0,0.5);
         }
     </style>
 </head>
 <body>
 
-    <!-- Векторный фоновый слой с градиентом -->
-    <svg style="display: none;">
-        <symbol id="ritual-logo" viewBox="0 0 400 400">
-            <defs>
-                <linearGradient id="cyber-gradient" x1="0%" y1="0%" x2="100%" y2="100%">
-                    <stop offset="0%" style="stop-color:#00ff87;stop-opacity:1" /> <!-- Зеленый -->
-                    <stop offset="50%" style="stop-color:#7cfc00;stop-opacity:1" /> <!-- Салатовый -->
-                    <stop offset="100%" style="stop-color:#00d4ff;stop-opacity:1" /> <!-- Голубой -->
-                </linearGradient>
-            </defs>
-            <path d="M200 40 L360 200 L200 360 L40 200 Z" fill="none" stroke="url(#cyber-gradient)" stroke-width="8"/>
-            <path d="M200 80 L320 200 L200 320 L80 200 Z" fill="none" stroke="url(#cyber-gradient)" stroke-width="12" stroke-linecap="round" stroke-linejoin="round"/>
-            <path d="M140 140 L260 260 M260 140 L140 260" stroke="url(#cyber-gradient)" stroke-width="10" stroke-linecap="round"/>
-        </symbol>
-    </svg>
-
-    <!-- Фоновый слой с логотипами -->
-    <div class="bg-decor">
-        <!-- Повторяем этот блок 5 раз с разными классами -->
-        <div class="bg-logo logo-1">
-            <svg viewBox="0 0 400 300" xmlns="http://www.w3.org/2000/svg">
+    <!-- Фоновый слой Ritual -->
+    <div class="ritual-bg-container">
+        <!-- Определение одного логотипа для повторного использования -->
+        <svg style="display:none">
+            <symbol id="ritual-node-logo" viewBox="0 0 100 100">
                 <defs>
-                    <linearGradient id="grad1" x1="0%" y1="0%" x2="100%" y2="100%">
+                    <linearGradient id="ritual-grad" x1="0%" y1="0%" x2="100%" y2="100%">
                         <stop offset="0%" style="stop-color:#00ff87;stop-opacity:1" />
-                        <stop offset="50%" style="stop-color:#7cfc00;stop-opacity:1" />
-                        <stop offset="100%" style="stop-color:#00d4ff;stop-opacity:1" />
+                        <stop offset="60%" style="stop-color:#7cfc00;stop-opacity:0.8" />
+                        <stop offset="100%" style="stop-color:#00d4ff;stop-opacity:0.6" />
                     </linearGradient>
                 </defs>
-                <path d="M200 20 L330 150 L200 280 L70 150 Z" fill="none" stroke="url(#grad1)" stroke-width="4" opacity="0.8"/>
-                <path d="M200 50 L290 150 L200 250 L110 150 Z" fill="none" stroke="url(#grad1)" stroke-width="8"/>
-                <path d="M160 110 L240 190 M240 110 L160 190" stroke="url(#grad1)" stroke-width="6" stroke-linecap="round"/>
-            </svg>
-        </div>
+                <!-- Геометрия узла Ritual -->
+                <path d="M50 5 L95 50 L50 95 L5 50 Z" fill="none" stroke="url(#ritual-grad)" stroke-width="1.5" />
+                <path d="M50 20 L80 50 L50 80 L20 50 Z" fill="none" stroke="url(#ritual-grad)" stroke-width="2.5" />
+                <path d="M35 35 L65 65 M65 35 L35 65" stroke="url(#ritual-grad)" stroke-width="2" stroke-linecap="round" />
+            </symbol>
+        </svg>
 
-        <div class="bg-logo logo-2">
-            <svg viewBox="0 0 400 300" xmlns="http://www.w3.org/2000/svg">
-                <path d="M200 20 L330 150 L200 280 L70 150 Z" fill="none" stroke="url(#grad1)" stroke-width="4" opacity="0.8"/>
-                <path d="M200 50 L290 150 L200 250 L110 150 Z" fill="none" stroke="url(#grad1)" stroke-width="8"/>
-                <path d="M160 110 L240 190 M240 110 L160 190" stroke="url(#grad1)" stroke-width="6" stroke-linecap="round"/>
-            </svg>
-        </div>
-
-        <div class="bg-logo logo-3">
-            <svg viewBox="0 0 400 300" xmlns="http://www.w3.org/2000/svg">
-                <path d="M200 20 L330 150 L200 280 L70 150 Z" fill="none" stroke="url(#grad1)" stroke-width="4" opacity="0.8"/>
-                <path d="M200 50 L290 150 L200 250 L110 150 Z" fill="none" stroke="url(#grad1)" stroke-width="8"/>
-                <path d="M160 110 L240 190 M240 110 L160 190" stroke="url(#grad1)" stroke-width="6" stroke-linecap="round"/>
-            </svg>
-        </div>
-
-        <div class="bg-logo logo-4">
-            <svg viewBox="0 0 400 300" xmlns="http://www.w3.org/2000/svg">
-                <path d="M200 20 L330 150 L200 280 L70 150 Z" fill="none" stroke="url(#grad1)" stroke-width="4" opacity="0.8"/>
-                <path d="M200 50 L290 150 L200 250 L110 150 Z" fill="none" stroke="url(#grad1)" stroke-width="8"/>
-                <path d="M160 110 L240 190 M240 110 L160 190" stroke="url(#grad1)" stroke-width="6" stroke-linecap="round"/>
-            </svg>
-        </div>
-
-        <div class="bg-logo logo-5">
-            <svg viewBox="0 0 400 300" xmlns="http://www.w3.org/2000/svg">
-                <path d="M200 20 L330 150 L200 280 L70 150 Z" fill="none" stroke="url(#grad1)" stroke-width="4" opacity="0.8"/>
-                <path d="M200 50 L290 150 L200 250 L110 150 Z" fill="none" stroke="url(#grad1)" stroke-width="8"/>
-                <path d="M160 110 L240 190 M240 110 L160 190" stroke="url(#grad1)" stroke-width="6" stroke-linecap="round"/>
-            </svg>
-        </div>
+        <!-- Размещение элементов фона -->
+        <svg class="ritual-bg-item pos-1"><use xlink:href="#ritual-node-logo"/></svg>
+        <svg class="ritual-bg-item pos-2"><use xlink:href="#ritual-node-logo"/></svg>
+        <svg class="ritual-bg-item pos-3"><use xlink:href="#ritual-node-logo"/></svg>
+        <svg class="ritual-bg-item pos-4"><use xlink:href="#ritual-node-logo"/></svg>
+        <svg class="ritual-bg-item pos-5"><use xlink:href="#ritual-node-logo"/></svg>
     </div>
 
-    <!-- Основной контент (без изменений) -->
-    <nav class="navbar fixed-top py-3 mb-5">
+    <nav class="navbar fixed-top py-3">
         <div class="container d-flex justify-content-between align-items-center">
-            <a class="text-decoration-none" href="index.html" style="color:#00ff87; font-family:'Orbitron'; font-weight:700;">
+            <a class="text-decoration-none" href="index.html" style="color:#00ff87; font-family:'Orbitron';">
                 <i class="fa-solid fa-arrow-left me-2"></i> BACK TO DASHBOARD
             </a>
-            <span class="text-secondary opacity-75">Academy Portal v1.0</span>
+            <span class="text-secondary opacity-50 small">RITUAL ACADEMY // SECURE_PORTAL</span>
         </div>
     </nav>
 
-    <div class="container text-center mb-5" style="margin-top: 130px;">
-        <h1 style="font-family: 'Orbitron'; font-weight:700;" class="mb-2 text-uppercase">Select Training Module</h1>
-        <p class="text-secondary fs-5">Inject direct terminal commands and logic into your node.</p>
+    <div class="container text-center" style="margin-top: 150px; margin-bottom: 60px;">
+        <h1 style="font-family: 'Orbitron'; letter-spacing: 2px;" class="mb-3 text-uppercase">Training Center</h1>
+        <p class="text-secondary fs-5 mx-auto" style="max-width: 600px;">Enhance your agent's capabilities via secure on-chain skill injection.</p>
     </div>
 
     <div class="container">
         <div class="row g-4" id="skillGrid">
-            <!-- Module 1 -->
+            <!-- Diagnostics -->
             <div class="col-md-4">
                 <div class="cyber-card p-4 d-flex flex-column">
                     <i class="fa-solid fa-shield-halved skill-icon"></i>
-                    <h3 style="font-family: 'Orbitron'; font-size: 1.1rem; margin-bottom: 5px;">Self-Diagnostic</h3>
-                    <p style="color: #00ff87; font-size: 0.85rem; font-weight: 600; text-transform: uppercase; margin-bottom: 15px;">Master node health & error recovery</p>
-                    <p class="text-secondary small mb-4">Teaches your agent how to automatically detect EVM errors, monitor logs, and restart services.</p>
-                    
+                    <h3 style="font-family:'Orbitron'; font-size:1rem;">Self-Diagnostic</h3>
+                    <p class="text-info small fw-bold text-uppercase mb-2">Health & Recovery</p>
+                    <p class="text-secondary small mb-4">Enables automated error detection and self-healing protocols for node infrastructure.</p>
                     <button class="btn btn-outline-info btn-sm mb-3" onclick="toggleLocalGuide('guide-diag')">USER GUIDE</button>
                     <div id="guide-diag" class="d-none small text-start mb-3 p-2 border-start border-info" style="background: rgba(0,255,135,0.05);">
-                        <b class="text-info">HOW TO USE:</b><br>
-                        1. Copy the <b>Bash script</b> provided.<br>
-                        2. Create a file: <code>nano check.sh</code>.<br>
-                        3. Run: <code>bash check.sh</code>.
+                        1. Copy script. 2. Run <code>bash check.sh</code>.
                     </div>
                     <button class="btn btn-train" onclick="startTraining('train-diagnostic', this)">0.001 RTL</button>
                 </div>
             </div>
 
-            <!-- Module 2 -->
+            <!-- Prompting -->
             <div class="col-md-4">
                 <div class="cyber-card p-4 d-flex flex-column">
                     <i class="fa-solid fa-terminal skill-icon"></i>
-                    <h3 style="font-family: 'Orbitron'; font-size: 1.1rem; margin-bottom: 5px;">Web3 Prompting</h3>
-                    <p style="color: #00ff87; font-size: 0.85rem; font-weight: 600; text-transform: uppercase; margin-bottom: 15px;">Direct RPC communication mastery</p>
-                    <p class="text-secondary small mb-4">Trains your unit to interact directly with the Ritual RPC to query metadata and state.</p>
-
+                    <h3 style="font-family:'Orbitron'; font-size:1rem;">Web3 Prompting</h3>
+                    <p class="text-info small fw-bold text-uppercase mb-2">Direct RPC Mastery</p>
+                    <p class="text-secondary small mb-4">Master direct interaction with Ritual RPC for advanced model and state querying.</p>
                     <button class="btn btn-outline-info btn-sm mb-3" onclick="toggleLocalGuide('guide-prompt')">USER GUIDE</button>
                     <div id="guide-prompt" class="d-none small text-start mb-3 p-2 border-start border-info" style="background: rgba(0,255,135,0.05);">
-                        <b class="text-info">HOW TO USE:</b><br>
-                        1. Replace <code>localhost</code> with your <b>Node IP</b>.<br>
-                        2. Copy the <b>cURL command</b>.<br>
-                        3. Paste it into your <b>Terminal</b>.
+                        1. Update IP. 2. Paste cURL to Terminal.
                     </div>
                     <button class="btn btn-train" onclick="startTraining('train-prompting', this)">0.001 RTL</button>
                 </div>
             </div>
 
-            <!-- Module 3 -->
+            <!-- Actions -->
             <div class="col-md-4">
                 <div class="cyber-card p-4 d-flex flex-column">
                     <i class="fa-solid fa-bolt skill-icon"></i>
-                    <h3 style="font-family: 'Orbitron'; font-size: 1.1rem; margin-bottom: 5px;">Auto Web3 Action</h3>
-                    <p style="color: #00ff87; font-size: 0.85rem; font-weight: 600; text-transform: uppercase; margin-bottom: 15px;">Automated on-chain execution</p>
-                    <p class="text-secondary small mb-4">Unlocks the ability to sign transactions and execute blockchain tasks without human input.</p>
-
+                    <h3 style="font-family:'Orbitron'; font-size:1rem;">Auto Web3 Action</h3>
+                    <p class="text-info small fw-bold text-uppercase mb-2">On-Chain Automation</p>
+                    <p class="text-secondary small mb-4">Automate transaction signing and gas management across all EVM networks.</p>
                     <button class="btn btn-outline-info btn-sm mb-3" onclick="toggleLocalGuide('guide-action')">USER GUIDE</button>
                     <div id="guide-action" class="d-none small text-start mb-3 p-2 border-start border-info" style="background: rgba(0,255,135,0.05);">
-                        <b class="text-info">HOW TO USE:</b><br>
-                        1. Copy the <b>Python snippet</b>.<br>
-                        2. Ensure <code>web3.py</code> is installed.<br>
-                        3. Paste into your <b>Agent's logic</b>.
+                        1. Install web3.py. 2. Inject Python logic.
                     </div>
                     <button class="btn btn-train" onclick="startTraining('train-action', this)">0.001 RTL</button>
                 </div>
             </div>
         </div>
 
+        <!-- Terminal Section -->
         <div class="row mt-5 justify-content-center">
             <div class="col-lg-10">
-                <div class="terminal-box" id="terminal">
-                    <div class="terminal-header">SYS_OUTPUT // AWAITING_SKILL_INJECTION...</div>
-                    <div id="output-content">Select a module to begin training. Payment of 0.001 RTL is required per skill injection.</div>
+                <div class="terminal-box">
+                    <div class="pb-2 mb-3 border-bottom border-dark opacity-50 small">SYSLOG // DATA_STREAM</div>
+                    <div id="output-content" class="opacity-75">Awaiting module selection...</div>
                 </div>
             </div>
         </div>
     </div>
-
-    <footer class="py-5 text-center text-secondary border-top border-dark mt-5">
-        <small>Official Certification Program | Ritual Network Infrastructure</small>
-    </footer>
 
     <script>
         const API_URL = 'https://recipient-riverside-duckling.ngrok-free.dev/api/process-text';
         const MY_WALLET = '0x5CE75a2486c64dA615fA116B8C53672F0c4A179b';
 
         function toggleLocalGuide(id) {
-            const guide = document.getElementById(id);
-            guide.classList.toggle('d-none');
+            document.getElementById(id).classList.toggle('d-none');
         }
 
-        async function startTraining(actionType, btnElement) {
-            if(!window.ethereum) return alert("Please install MetaMask");
+        async function startTraining(actionType, btn) {
+            if(!window.ethereum) return alert("Install MetaMask");
             const output = document.getElementById('output-content');
-            const terminalHeader = document.querySelector('.terminal-header');
-
             try {
-                const accounts = await window.ethereum.request({ method: 'eth_requestAccounts' });
-                output.innerText = "> Initializing payment sequence...";
-
-                const txHash = await window.ethereum.request({
+                const accs = await window.ethereum.request({ method: 'eth_requestAccounts' });
+                output.innerText = "> Requesting signature...";
+                const tx = await window.ethereum.request({
                     method: 'eth_sendTransaction',
-                    params: [{
-                        from: accounts[0],
-                        to: MY_WALLET,
-                        value: (0.001 * 1e18).toString(16), 
-                    }],
+                    params: [{ from: accs[0], to: MY_WALLET, value: (0.001 * 1e18).toString(16) }]
                 });
-
-                btnElement.disabled = true;
-                btnElement.innerText = "INJECTING...";
-                terminalHeader.innerText = "SYS_OUTPUT // INJECTING_SKILL: " + actionType.toUpperCase();
-                output.innerText = "> Payment Success! TX: " + txHash + "\n> Requesting skill-code from Ritual Node...";
-
-                const response = await fetch(API_URL, {
+                output.innerText = "> TX: " + tx + "\n> Downloading skill data...";
+                const res = await fetch(API_URL, {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json', 'ngrok-skip-browser-warning': 'true' },
-                    body: JSON.stringify({ text: "Provide me the functional code for this module.", action: actionType, txHash: txHash })
+                    body: JSON.stringify({ text: "Get code", action: actionType, txHash: tx })
                 });
-
-                const data = await response.json();
+                const data = await res.json();
                 output.innerText = data.result;
-                terminalHeader.innerText = "SYS_OUTPUT // SYNC_COMPLETE";
-
             } catch (e) {
-                output.innerText = "> Error: " + (e.message || "User denied transaction");
-            } finally {
-                btnElement.disabled = false;
-                btnElement.innerText = "0.001 RTL";
+                output.innerText = "> Error: " + (e.message || "Auth failed");
             }
         }
     </script>
