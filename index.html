@@ -246,44 +246,38 @@
         setTimeout(() => btn.innerHTML = '<i class="fa-solid fa-copy"></i> Copy', 2000);
     }
 
-    // Главная функция (теперь без оплаты)
-    async function handleProcess() {
-    // 1. Сначала получаем значение из поля ввода
-    const userInputField = document.getElementById('user-input'); // Проверь ID!
-    const textToSend = userInputField.value; 
+    // Исправленная главная функция
+    async function handleProcess(action) {
+        // 1. Определяем, из какого поля брать текст в зависимости от кнопки
+        const inputId = (action === 'check') ? 'checkTextInput' : 'humanizeTextInput';
+        const userInput = document.getElementById(inputId).value;
 
-    // 2. Теперь отправляем его
-    const response = await fetch('https://recipient-riverside-duckling.ngrok-free.dev/api/process-text', {
-        method: 'POST',
-        headers: {
-            'Content-Type': 'application/json',
-            'ngrok-skip-browser-warning': 'true' // Это мы добавили раньше
-        },
-        body: JSON.stringify({
-            text: textToSend, // Используем полученную переменную
-            action: currentAction
-        })
-    });
-    // ... дальше твой код обработки ответа
-}
+        if (!userInput) {
+            addLog(`Error: Input field is empty`);
+            return;
+        }
+
         addLog(`Initiating ${action.toUpperCase()} protocol...`);
 
         try {
-            // Найди это место в своем коде на Vercel
-const response = await fetch('https://recipient-riverside-duckling.ngrok-free.dev/api/process-text', {
-    method: 'POST',
-    headers: {
-        'Content-Type': 'application/json',
-        'ngrok-skip-browser-warning': '69420' // ИЛИ 'true'. ЭТО ГЛАВНОЕ!
-    },
-    body: JSON.stringify({
-        text: userInput,
-        action: currentAction
-    })
-});
+            // 2. Отправляем запрос на твой сервер Oracle через ngrok
+            const response = await fetch(API_URL, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'ngrok-skip-browser-warning': 'true' 
+                },
+                body: JSON.stringify({
+                    text: userInput,
+                    action: action
+                })
+            });
+
+            if (!response.ok) throw new Error('Server connection failed');
 
             const data = await response.json();
 
+            // 3. Выводим результат в нужное место
             if (action === 'humanize') {
                 const resPanel = document.getElementById('humanResultPanel');
                 const resText = document.getElementById('humanResultText');
