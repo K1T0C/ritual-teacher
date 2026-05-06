@@ -217,46 +217,57 @@
         </div>
     </div>
 </div>
-
 <script>
-    // Конфигурация API
-    const API_URL = 'https://recipient-riverside-duckling.ngrok-free.dev/api/process-text';
+// Укажите ваш актуальный URL из ngrok
+const API_URL = 'https://recipient-riverside-duckling.ngrok-free.dev/api/process-text';
 
-    function addLog(msg) {
-        const logs = document.getElementById('logsOutput');
-        if (logs) {
-            logs.innerHTML += `<br>> ${msg}`;
-            logs.scrollTop = logs.scrollHeight;
-        }
+// Функция логирования (чтобы видеть процесс в черном окошке справа)
+function addLog(msg) {
+    const logs = document.getElementById('logsOutput');
+    if (logs) {
+        const time = new Date().toLocaleTimeString();
+        logs.innerHTML += `<br><span style="color: #00F58C;">[${time}]</span> > ${msg}`;
+        logs.scrollTop = logs.scrollHeight;
     }
+}
 
-    function clearField(id) {
-        document.getElementById(id).value = '';
-        if(id === 'humanizeTextInput') {
-            document.getElementById('humanResultPanel').classList.add('d-none');
-        }
-        addLog(`Field ${id} cleared`);
+// Очистка полей
+function clearField(id) {
+    document.getElementById(id).value = '';
+    if(id === 'humanizeTextInput') {
+        document.getElementById('humanResultPanel').classList.add('d-none');
     }
+    addLog(`Field ${id} cleared`);
+}
 
-    async function copyToClipboard() {
-        const text = document.getElementById('humanResultText').innerText;
-        await navigator.clipboard.writeText(text);
-        const btn = document.querySelector('.copy-btn');
-        btn.innerHTML = '<i class="fa-solid fa-check"></i> Copied';
-        setTimeout(() => btn.innerHTML = '<i class="fa-solid fa-copy"></i> Copy', 2000);
-    }
+// Копирование результата
+async function copyToClipboard() {
+    const text = document.getElementById('humanResultText').innerText;
+    await navigator.clipboard.writeText(text);
+    const btn = document.querySelector('.copy-btn');
+    btn.innerHTML = '<i class="fa-solid fa-check"></i> Copied';
+    setTimeout(() => btn.innerHTML = '<i class="fa-solid fa-copy"></i> Copy', 2000);
+}
 
-    // Главная функция (теперь без оплаты)
-    async function handleProcess(action) {
+// ОСНОВНАЯ ФУНКЦИЯ ОБРАБОТКИ
+async function handleProcess(action) {
     const inputId = action === 'check' ? 'checkTextInput' : 'humanizeTextInput';
-    const text = document.getElementById(inputId).value;
+    const inputElement = document.getElementById(inputId);
+    const text = inputElement.value.trim();
+
+    // Находим кнопку, которую нажали, чтобы изменить её вид
+    const btn = event.target;
+    const originalBtnText = btn.innerText;
 
     if (!text) {
         alert("Please enter some text!");
         return;
     }
 
-    addLog(`> Initiating ${action.toUpperCase()} protocol...`);
+    // Визуальный отклик
+    btn.disabled = true;
+    btn.innerText = "PROCESSING...";
+    addLog(`Initiating ${action.toUpperCase()}...`);
 
     try {
         const response = await fetch(API_URL, {
@@ -265,53 +276,39 @@
                 'Content-Type': 'application/json',
                 'ngrok-skip-browser-warning': 'true' 
             },
-            // Мы отправляем только текст и действие, без txHash
             body: JSON.stringify({ 
                 text: text, 
                 action: action 
             })
         });
 
+        if (!response.ok) {
+            throw new Error(`Server error: ${response.status}`);
+        }
+
         const data = await response.json();
 
-        if (response.ok) {
-            if (action === 'humanize') {
-                document.getElementById('humanResultPanel').classList.remove('d-none');
-                document.getElementById('humanResultText').innerText = data.result;
-            } else {
-                document.getElementById('checkResultLabel').innerText = `Report: ${data.result}`;
-            }
-            addLog(`> Success. Method: Free Access`);
+        if (action === 'humanize') {
+            const resPanel = document.getElementById('humanResultPanel');
+            const resText = document.getElementById('humanResultText');
+            resPanel.classList.remove('d-none');
+            resText.innerText = data.result || "No result from server";
+            addLog("Humanization complete.");
         } else {
-            // Если сервер вернул ошибку (например, 402 Payment Required)
-            document.getElementById('checkResultLabel').innerText = `Report: ${data.error || 'Error'}`;
-            addLog(`> Server rejected request: ${data.error}`);
+            const label = document.getElementById('checkResultLabel');
+            label.innerText = `Report: ${data.result || "Verification finished"}`;
+            addLog(`Verification result: ${data.result}`);
         }
 
     } catch (error) {
-        console.error(error);
-        addLog(`> Error connecting to server.`);
+        console.error("Fetch Error:", error);
+        addLog(`ERROR: ${error.message}`);
+        alert("Could not connect to AI Node. Check if your backend is running.");
+    } finally {
+        // Возвращаем кнопку в исходное состояние
+        btn.disabled = false;
+        btn.innerText = originalBtnText;
     }
 }
-
-            const data = await response.json();
-
-            if (action === 'humanize') {
-                const resPanel = document.getElementById('humanResultPanel');
-                const resText = document.getElementById('humanResultText');
-                resPanel.classList.remove('d-none');
-                resText.innerText = data.result;
-            } else {
-                document.getElementById('checkResultLabel').innerText = `Report: ${data.result}`;
-            }
-
-            addLog(`Execution Success. Method: Free Access`);
-
-        } catch (error) {
-            console.error(error);
-            addLog(`Error: ${error.message}`);
-        }
-    }
-</script>
 </body>
 </html>
