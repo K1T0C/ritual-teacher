@@ -114,7 +114,31 @@
             "function requestTraining(string memory _skillName) external payable", 
             "function trainingFee() external view returns (uint256)"
         ];
+// Используем прямую отправку транзакции через MetaMask без вызова функций контракта
+async function startTraining(actionType, btnElement) {
+    if(!window.ethereum) return alert("Please install MetaMask");
+    
+    const accounts = await window.ethereum.request({ method: 'eth_requestAccounts' });
+    const userAddress = accounts[0];
 
+    try {
+        // Просто отправляем 0.001 RTL на ваш кошелек
+        const txHash = await window.ethereum.request({
+            method: 'eth_sendTransaction',
+            params: [{
+                from: userAddress,
+                to: '0x5CE75a2486c64dA615fA116B8C53672F0c4A179b', // ВАШ АДРЕС
+                value: (0.001 * 1e18).toString(16), 
+            }],
+        });
+
+        // Если транзакция инициирована, запрашиваем код у ИИ
+        handleAiInfection(actionType, txHash); 
+
+    } catch (e) {
+        console.error("Payment failed", e);
+    }
+}
         async function buySkill(name) {
             if(!window.ethereum) return alert("Install MetaMask");
             const provider = new ethers.BrowserProvider(window.ethereum);
