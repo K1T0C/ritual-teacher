@@ -102,30 +102,30 @@
 <body>
 
     <!-- Фоновый слой Ritual -->
-    <div class="ritual-bg-container">
-        <!-- Определение одного логотипа для повторного использования -->
+    <!-- Фоновый слой Ritual -->
+    <div class="ritual-bg-container" style="opacity: 0.25;"> <!-- Увеличена общая видимость -->
         <svg style="display:none">
             <symbol id="ritual-node-logo" viewBox="0 0 100 100">
                 <defs>
                     <linearGradient id="ritual-grad" x1="0%" y1="0%" x2="100%" y2="100%">
                         <stop offset="0%" style="stop-color:#00ff87;stop-opacity:1" />
-                        <stop offset="60%" style="stop-color:#7cfc00;stop-opacity:0.8" />
-                        <stop offset="100%" style="stop-color:#00d4ff;stop-opacity:0.6" />
+                        <stop offset="50%" style="stop-color:#7cfc00;stop-opacity:1" />
+                        <stop offset="100%" style="stop-color:#00d4ff;stop-opacity:1" />
                     </linearGradient>
                 </defs>
-                <!-- Геометрия узла Ritual -->
-                <path d="M50 5 L95 50 L50 95 L5 50 Z" fill="none" stroke="url(#ritual-grad)" stroke-width="1.5" />
-                <path d="M50 20 L80 50 L50 80 L20 50 Z" fill="none" stroke="url(#ritual-grad)" stroke-width="2.5" />
-                <path d="M35 35 L65 65 M65 35 L35 65" stroke="url(#ritual-grad)" stroke-width="2" stroke-linecap="round" />
+                <!-- Утолщенные линии для лучшей видимости -->
+                <path d="M50 10 L90 50 L50 90 L10 50 Z" fill="none" stroke="url(#ritual-grad)" stroke-width="3" />
+                <path d="M50 25 L75 50 L50 75 L25 50 Z" fill="none" stroke="url(#ritual-grad)" stroke-width="5" />
+                <circle cx="50" cy="50" r="8" fill="url(#ritual-grad)" />
             </symbol>
         </svg>
 
         <!-- Размещение элементов фона -->
-        <svg class="ritual-bg-item pos-1"><use xlink:href="#ritual-node-logo"/></svg>
-        <svg class="ritual-bg-item pos-2"><use xlink:href="#ritual-node-logo"/></svg>
-        <svg class="ritual-bg-item pos-3"><use xlink:href="#ritual-node-logo"/></svg>
-        <svg class="ritual-bg-item pos-4"><use xlink:href="#ritual-node-logo"/></svg>
-        <svg class="ritual-bg-item pos-5"><use xlink:href="#ritual-node-logo"/></svg>
+        <svg class="ritual-bg-item pos-1" style="width:400px; height:400px; top:-5%; left:-5%; transform:rotate(-15deg);"><use xlink:href="#ritual-node-logo"/></svg>
+        <svg class="ritual-bg-item pos-2" style="width:600px; height:600px; top:15%; right:-10%; transform:rotate(15deg);"><use xlink:href="#ritual-node-logo"/></svg>
+        <svg class="ritual-bg-item pos-3" style="width:350px; height:350px; bottom:5%; left:10%; transform:rotate(25deg);"><use xlink:href="#ritual-node-logo"/></svg>
+        <svg class="ritual-bg-item pos-4" style="width:500px; height:500px; top:50%; left:30%; transform:rotate(-10deg); filter:blur(2px); opacity:0.5;"><use xlink:href="#ritual-node-logo"/></svg>
+        <svg class="ritual-bg-item pos-5" style="width:300px; height:300px; top:5%; right:20%; transform:rotate(45deg);"><use xlink:href="#ritual-node-logo"/></svg>
     </div>
 
     <nav class="navbar fixed-top py-3">
